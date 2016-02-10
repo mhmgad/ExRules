@@ -132,7 +132,17 @@ public class AssociationRulesMining {
 
     public static void main(String[]args){
         AssociationRulesMining am=new AssociationRulesMining();
-        am.readFrequentItems("data/patterns-3_pretty_filtered.txt");
-        am.generateRules("data/rules_pretty_filtered.txt");
+        if (args.length<2){
+            System.out.println("Incorrect params");
+        }
+
+        am.readFrequentItems(args[0]);
+        System.out.println("Generating Rules ... ");
+        am.generateRules(args[1]);
+        System.out.println("Done!");
+        //am.readFrequentItems("data/patterns-3_pretty_filtered.txt");
+
+
+        //am.generateRules("data/rules_pretty_filtered.txt");
     }
 }
