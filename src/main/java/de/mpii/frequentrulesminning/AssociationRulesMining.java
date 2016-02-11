@@ -18,6 +18,9 @@ import java.util.*;
  */
 public class AssociationRulesMining {
 
+    private int generatedRulesCount;
+
+
     class Rule{
         String head;
         List<String> body;
@@ -41,7 +44,8 @@ public class AssociationRulesMining {
 
     public AssociationRulesMining(){
       //  frequentitems=new TObjectIntCustomHashMap<>();
-        frequentitems=Maps.newHashMap();
+        this.frequentitems=Maps.newHashMap();
+        this.generatedRulesCount =0;
     }
 
 
@@ -85,14 +89,22 @@ public class AssociationRulesMining {
 
 
     public void generateRules(UTF8Writer outputWriter) throws IOException {
-        for (Map.Entry<ImmutableSet<String>, Integer> ruleValuePair:frequentitems.entrySet()) {
 
+        Set<Map.Entry<ImmutableSet<String>, Integer>> entries=this.frequentitems.entrySet();
+        int itemsSetCount=entries.size();
+        int processed=0;
+        for (Map.Entry<ImmutableSet<String>, Integer> ruleValuePair:entries) {
+            processed++;
             ArrayList<Rule> rules= generateRule(ruleValuePair);
+            System.out.println(processed+"/"+itemsSetCount);
+
             for (Rule r:rules ) {
                 outputWriter.writeln(r.toString());
+
             }
 
         }
+        System.out.println("Total Generate Rules Count: "+this.generatedRulesCount);
     }
 
 
@@ -100,30 +112,36 @@ public class AssociationRulesMining {
         ArrayList<Rule> rules =new ArrayList<>();
         int itemsSupp=ruleValuePair.getValue();
         ImmutableSet<String> itemsSet=ruleValuePair.getKey();
+        //System.out.println(itemsSet);
         if (itemsSet.size()<2)
             return rules;
         String[] itemsList=new String[itemsSet.size()];
         itemsSet.toArray(itemsList);
-        Set<String> examinedHeads=new HashSet<>();
-        for(List<String> permutation:Collections2.orderedPermutations(itemsSet)){
-            String headPredicate=permutation.get(0);
 
-            if(examinedHeads.contains(headPredicate))
-                continue;
-            //System.out.println(permutation);
-            ImmutableSet<String> body=ImmutableSet.copyOf(permutation.subList(1, permutation.size()));
+        Set<String> items=new HashSet<String>(itemsSet) ;
+
+//        /Set<String> examinedHeads=new HashSet<>();
+        //Set<String> tmp ;
+        for(String headPredicate:itemsSet.asList()){
+
+            // Create body and Immutable set.. then restore item set
+            items.remove(headPredicate);
+            ImmutableSet<String> body=ImmutableSet.copyOf(items);
+            items.add(headPredicate);
+
             Integer bodySupp=frequentitems.get(body);
 
             if (bodySupp==null||bodySupp.intValue()==0)
                 continue;
 
-            examinedHeads.add(headPredicate);
             double confidence= (itemsSupp+0.0)/bodySupp.intValue();
 
             Rule frqRule=new Rule(headPredicate,body.asList(),confidence);
-            //System.out.println(frqRule);
             rules.add(frqRule);
+
         }
+        // Count gnerated rules
+        this.generatedRulesCount +=rules.size();
         return rules;
 
     }
