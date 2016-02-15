@@ -1,6 +1,10 @@
 package mpi.tools.javatools.datatypes;
 
-/** 
+import mpi.aida.data.PreparedInputChunk;
+
+import java.io.Serializable;
+
+/**
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
 It is licensed under the Creative Commons Attribution License 
 (see http://creativecommons.org/licenses/by/3.0) by 
@@ -11,11 +15,14 @@ the YAGO-NAGA team (see http://mpii.de/yago-naga).
  
 
 This class provides the simple datatype of a pair */ 
-public class Pair<F,S> implements Comparable<Pair<F,S>> {
+public class Pair<F,S> implements Serializable, Comparable<Pair<F,S>> {
   /** Holds the first component */
   public F first;
   /** Holds the second component */  
   public S second;
+
+
+
   /** Returns the first */
   public F first() {
     return first;

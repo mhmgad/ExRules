@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-import javatools.administrative.D;
+import mpi.tools.javatools.administrative.D;
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
 It is licensed under the Creative Commons Attribution License 
@@ -184,8 +184,7 @@ public abstract class PeekIterator<T> implements Iterator<T>, Iterable<T>, Close
     }
 
     /** Constructs a PeekIterator for a given list of elements */    
-    @SuppressWarnings("unchecked")
-	public SimplePeekIterator(T element) {
+    public SimplePeekIterator(T element) {
       this(Arrays.asList(element));
     }
 

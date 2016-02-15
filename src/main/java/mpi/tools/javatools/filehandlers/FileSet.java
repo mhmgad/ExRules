@@ -4,7 +4,7 @@ import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-import javatools.administrative.D;
+import mpi.tools.javatools.administrative.D;
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
 It is licensed under the Creative Commons Attribution License 

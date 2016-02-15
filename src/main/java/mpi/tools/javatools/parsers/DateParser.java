@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javatools.administrative.D;
-import javatools.datatypes.Triple;
+import mpi.tools.javatools.administrative.D;
+import mpi.tools.javatools.datatypes.Triple;
 
 /**
  * This class is part of the Java Tools (see
@@ -933,7 +933,6 @@ public class DateParser {
     }
     List<String> result = new ArrayList<String>(3);
     for (String date : preresult) {
-      System.out.println(date);
       String[] split = getDate(date);
       if (split.length != 3) {
         split = new String[3];

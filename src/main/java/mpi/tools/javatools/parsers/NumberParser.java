@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javatools.administrative.D;
-import javatools.datatypes.FinalMap;
+import mpi.tools.javatools.administrative.D;
+import mpi.tools.javatools.datatypes.FinalMap;
 
 /**
  * This class is part of the Java Tools (see

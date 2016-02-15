@@ -14,7 +14,9 @@ import java.nio.charset.Charset;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import javatools.filehandlers.FileLines;
+import gnu.trove.iterator.TObjectIntIterator;
+import gnu.trove.map.hash.TObjectIntHashMap;
+import mpi.tools.javatools.filehandlers.FileLines;
 
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
@@ -77,17 +79,30 @@ public class FileUtils {
    */
   public static BufferedWriter getBufferedUTF8Writer(String fileName) throws FileNotFoundException {
     return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), Charset.forName("UTF-8")));
-  }  
-  
+  }
+
   /**
    * Returns the content of the (UTF-8 encoded) file as string. Linebreaks
-   * are encoded as unix newlines (\n)
+   * are encoded as unix newlines (\n).
+   *
+   * @param file  File to get String content from.
+   * @return      String content of file.
+   * @throws IOException
+   */
+  public static String getFileContent(File file) throws IOException {
+    return getFileContent(file, "UTF-8");
+  }
+
+  /**
+   * Returns the content of the file as string. Linebreaks
+   * are encoded as unix newlines (\n).
    * 
-   * @param file  File to get String content from
+   * @param file  File to get String content from.
+   * @param encoding  Character encoding of the file.
    * @return      String content of file.
    * @throws IOException 
    */
-  public static String getFileContent(File file) throws IOException {
+  public static String getFileContent(File file, String encoding) throws IOException {
     StringBuilder sb = new StringBuilder();
     BufferedReader reader = getBufferedUTF8Reader(file);
     for (String line = reader.readLine(); 
@@ -110,6 +125,18 @@ public class FileUtils {
   public static void writeFileContent(File file, String content) throws IOException {
     BufferedWriter writer = getBufferedUTF8Writer(file);
     writer.write(content);
+    writer.flush();
+    writer.close();
+  }
+
+  public static <T> void writeTObjectIntMapToFile(File file, TObjectIntHashMap<T> map) throws IOException {
+    BufferedWriter writer = getBufferedUTF8Writer(file);
+    for (TObjectIntIterator<T> itr = map.iterator(); itr.hasNext(); ) {
+      itr.advance();
+      writer.write(itr.key() + "\t" + itr.value());
+      writer.newLine();
+    }
+    writer.flush();
     writer.close();
   }
     

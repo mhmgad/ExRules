@@ -4,7 +4,7 @@ import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javatools.administrative.D;
+import mpi.tools.javatools.administrative.D;
 
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).

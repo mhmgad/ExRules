@@ -12,7 +12,7 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 
-import javatools.administrative.Announce;
+import mpi.tools.javatools.administrative.Announce;
 import mpi.tools.javatools.datatypes.PeekIterator;
 
 /**
