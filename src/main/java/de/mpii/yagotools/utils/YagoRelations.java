@@ -6,8 +6,8 @@ package de.mpii.yagotools.utils;
 public class YagoRelations {
 
 
-    public final String TYPE="rdf:type";
-    public final String SUB_CLASS_OF="rdfs:subClassOf";
+    public static final String TYPE="rdf:type";
+    public static final String SUB_CLASS_OF="rdfs:subClassOf";
 
 
 }

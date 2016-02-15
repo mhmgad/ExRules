@@ -1,10 +1,9 @@
 package de.mpii.frequentrulesminning;
 
-import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
-import javatools.filehandlers.UTF8Writer;
-import javatools.test.NewUTF8Reader;
+import mpi.tools.javatools.filehandlers.UTF8Writer;
+import mpi.tools.javatools.filehandlers.UTF8Reader;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -50,9 +49,9 @@ public class AssociationRulesMining {
 
 
     public void readFrequentItems(String frequentItemsPath){
-        NewUTF8Reader fileReader;
+        UTF8Reader fileReader;
         try {
-            fileReader=new NewUTF8Reader(new File(frequentItemsPath),"Loading Frequent Items Sets");
+            fileReader=new UTF8Reader(new File(frequentItemsPath),"Loading Frequent Items Sets");
 
 
             String line;

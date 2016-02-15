@@ -1,14 +1,9 @@
 package de.mpii.yagotools;
 
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import de.mpii.yagotools.utils.YagoDataReader;
 import de.mpii.yagotools.utils.YagoRelations;
-import javatools.test.NewUTF8Reader;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 
 /**
@@ -25,7 +20,7 @@ public class YagoTaxonomy {
 
 
     private YagoTaxonomy(){
-        typesParents= YagoDataReader.loadSubjectObjectMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.SUB_CLASS_OF});
+        typesParents= YagoDataReader.loadSubject2ObjectMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.SUB_CLASS_OF});
 
     }
 
