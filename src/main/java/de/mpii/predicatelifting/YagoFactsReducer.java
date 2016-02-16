@@ -18,27 +18,18 @@ import java.util.Set;
  */
 public class YagoFactsReducer {
 
-    final static String COUNTRIES_FILE="resources/countries.tsv";
+
     YagoSimpleTypes yst;
 
-    ImmutableSet<String> countriesSet;
+
 
     public YagoFactsReducer(){
         yst=YagoSimpleTypes.getInstance();
-        //location-based load countries
-        loadLocations();
+
+
 
     }
 
-    private void loadLocations() {
-        try {
-            String fileContect= FileUtils.getFileContent(new File(COUNTRIES_FILE));
-            countriesSet=ImmutableSet.copyOf(fileContect.split("\n"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
 
     public void reduceToType(String factSourceFilePath, String []relations) {

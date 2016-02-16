@@ -10,4 +10,5 @@ public class YagoRelations {
     public static final String SUB_CLASS_OF="rdfs:subClassOf";
 
 
+    public static final String IS_LOCATED_IN="<isLocatedIn>";
 }

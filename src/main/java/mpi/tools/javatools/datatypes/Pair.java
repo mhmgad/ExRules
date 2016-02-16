@@ -1,6 +1,6 @@
 package mpi.tools.javatools.datatypes;
 
-import mpi.aida.data.PreparedInputChunk;
+
 
 import java.io.Serializable;
 
