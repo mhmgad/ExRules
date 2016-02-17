@@ -76,11 +76,6 @@ public class YagoFactsReducer {
 
 
 
-
-
-
-
-
     public Fact reduceFact(Fact orgFact,FactType factType) {
         if (factType==null){
             if(locationRelations.contains(orgFact)){
@@ -91,12 +86,21 @@ public class YagoFactsReducer {
             switch (factType){
                 case LOCATION:
                     return reduceLocationFact(orgFact);
+                case DATE:
+                    return reduceDateFact(orgFact);
 
             }
         }
 
         return orgFact;
 
+    }
+
+    private Fact reduceDateFact(Fact orgFact) {
+        String date=orgFact.getObjectAsJavaString();
+        //System.out.println(date);
+        String reduced=date.substring(0,3);
+        return new Fact(orgFact.getSubject(),orgFact.getRelation(),reduced);
     }
 
 
@@ -113,7 +117,7 @@ public class YagoFactsReducer {
 
 
         if(args.length<2){
-            System.out.println("Incorrect params: fact_reducer <InputFile> <outputFile> [Type<LOCATION>]");
+            System.out.println("Incorrect params: fact_reducer <InputFile> <outputFile> [Type<LOCATION|DATE>]");
             System.exit(1);
         }
 

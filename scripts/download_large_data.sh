@@ -45,6 +45,8 @@ done
 grep '<isLocatedIn>' $DATA_DIR/yagoGeonamesOnlyData.tsv > $BIG_DATA_DIR/isLocatedInData.tsv
 grep '<isLocatedIn>' $DATA_DIR/yagoFacts.tsv >> $BIG_DATA_DIR/isLocatedInData.tsv
 
+mv $DATA_DIR/yagoTaxonomy.tsv $BIG_DATA_DIR/yagoTaxonomy.tsv
+
 #remove archives
 rm $DATA_DIR/*.7z
 

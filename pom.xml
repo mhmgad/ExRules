@@ -69,6 +69,10 @@
                             <mainClass>de.mpii.predicatelifting.YagoFactsReducer</mainClass>
                             <id>fact_reducer</id>
                         </program>
+                        <program>
+                            <mainClass>de.mpii.frequentrulesminning.AssociationRulesFilter</mainClass>
+                            <id>filter_rules</id>
+                    </program>
                     </programs>
                 </configuration>
             </plugin>

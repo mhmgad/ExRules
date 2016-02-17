@@ -20,22 +20,7 @@ public class AssociationRulesMining {
     private int generatedRulesCount;
 
 
-    class Rule{
-        String head;
-        List<String> body;
-        double confidence;
 
-        public Rule(String head, List<String> body, double confidence) {
-            this.head = head;
-            this.body = body;
-            this.confidence = confidence;
-        }
-
-        @Override
-        public String toString() {
-            return String.format( "%.4f",this.confidence)+"\t"+this.head+"\t"+this.body;
-        }
-    }
 
 
     //private TObjectIntCustomHashMap<ImmutableSet<String>> frequentitems;
@@ -56,12 +41,13 @@ public class AssociationRulesMining {
 
             String line;
 
-            while((line=fileReader.readLine())!=null){
-                String[] lineParts=line.split("\t\\[");
+            while((line=fileReader.readLine())!=null&&!line.trim().isEmpty()){
+                String[] lineParts=line.split("\\[");
                 int count=Integer.parseInt(lineParts[0].trim());
 
 
-                ImmutableSet<String> elementsImmutable = ImmutableSet.copyOf(lineParts[1].substring(0,lineParts[1].length()-1).split("\t"));
+                ImmutableSet<String> elementsImmutable = ImmutableSet.copyOf(parseItemsSet(lineParts[1]));
+                //System.out.println(elementsImmutable);
                 //ImmutableSet<String> elementsImmutable2 = ImmutableSet.copyOf(lineParts[1].substring(0,lineParts[1].length()-1).split("\t"));
                 //System.out.println(elementsImmutable.equals(elementsImmutable2));
                 frequentitems.put(elementsImmutable,count);
@@ -76,6 +62,15 @@ public class AssociationRulesMining {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+    }
+
+    private List<String> parseItemsSet(String linePart) {
+        String [] elements =linePart.substring(0,linePart.length()-1).split(" \\(");
+        for (int i=1;i<elements.length;i++){
+            elements[i]="("+elements[i];
+        }
+        //System.out.println("list: "+Arrays.asList(elements));
+        return Arrays.asList(elements);
     }
 
     public void generateRules(String outputFilePath){
@@ -94,10 +89,10 @@ public class AssociationRulesMining {
         int processed=0;
         for (Map.Entry<ImmutableSet<String>, Integer> ruleValuePair:entries) {
             processed++;
-            ArrayList<Rule> rules= generateRule(ruleValuePair);
+            ArrayList<AssociationRule> rules= generateRule(ruleValuePair);
             System.out.println(processed+"/"+itemsSetCount);
 
-            for (Rule r:rules ) {
+            for (AssociationRule r:rules ) {
                 outputWriter.writeln(r.toString());
 
             }
@@ -107,8 +102,8 @@ public class AssociationRulesMining {
     }
 
 
-    private ArrayList<Rule> generateRule(Map.Entry<ImmutableSet<String>, Integer> ruleValuePair) {
-        ArrayList<Rule> rules =new ArrayList<>();
+    private ArrayList<AssociationRule> generateRule(Map.Entry<ImmutableSet<String>, Integer> ruleValuePair) {
+        ArrayList<AssociationRule> rules =new ArrayList<>();
         int itemsSupp=ruleValuePair.getValue();
         ImmutableSet<String> itemsSet=ruleValuePair.getKey();
         //System.out.println(itemsSet);
@@ -135,7 +130,7 @@ public class AssociationRulesMining {
 
             double confidence= (itemsSupp+0.0)/bodySupp.intValue();
 
-            Rule frqRule=new Rule(headPredicate,body.asList(),confidence);
+            AssociationRule frqRule=new AssociationRule(headPredicate,body.asList(),confidence);
             rules.add(frqRule);
 
         }
