@@ -7,11 +7,14 @@ import de.mpii.yagotools.utils.YagoDataReader;
 import de.mpii.yagotools.utils.YagoRelations;
 import mpi.tools.javatools.util.FileUtils;
 
+import java.lang.*;
+import java.io.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Set;
+import java.net.URL;
 
 
 /**
@@ -20,8 +23,8 @@ import java.util.Set;
 public class YagoLocation {
 
     //private static final String SUB_CLASS_OF = "rdfs:subClassOf";
-    String LOCATION_FILE_PATH ="data/isLocatedInData.tsv";
-    final static String COUNTRIES_FILE="src/resources/countries.tsv";
+    String LOCATION_FILE_PATH ="resources/bigData/isLocatedInData.tsv";
+    final static String COUNTRIES_FILE="resources/countries.tsv";
 
     private static YagoLocation instance;
 
@@ -30,15 +33,18 @@ public class YagoLocation {
 
 
     private YagoLocation(){
-        typesParents= YagoDataReader.loadSubject2ObjectMap(LOCATION_FILE_PATH,new String[]{YagoRelations.IS_LOCATED_IN});
         loadCountries();
+        try {
+            typesParents = YagoDataReader.loadDataInMap(LOCATION_FILE_PATH, new String[]{YagoRelations.IS_LOCATED_IN}, YagoDataReader.MapType.SUBJ_2_OBJ);
+
+        }catch (Exception e) {
+            e.printStackTrace();}
     }
 
     private void loadCountries() {
         try {
-            String fileContect= FileUtils.getFileContent(new File(COUNTRIES_FILE));
-            countriesSet= ImmutableSet.copyOf(fileContect.split("\n"));
-        } catch (IOException e) {
+            countriesSet= ImmutableSet.copyOf(FileUtils.getFileContentasList(COUNTRIES_FILE));
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

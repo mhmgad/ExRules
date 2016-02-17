@@ -20,7 +20,7 @@ public class YagoTaxonomy {
 
 
     private YagoTaxonomy(){
-        typesParents= YagoDataReader.loadSubject2ObjectMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.SUB_CLASS_OF});
+        typesParents= YagoDataReader.loadDataInMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.SUB_CLASS_OF}, YagoDataReader.MapType.SUBJ_2_OBJ);
 
     }
 

@@ -10,6 +10,7 @@
 
 
     <build>
+
         <finalName>rules-generator</finalName>
         <plugins>
             <plugin>
@@ -63,6 +64,10 @@
                         <program>
                             <mainClass>de.mpii.frequentrulesminning.AssociationRulesMining</mainClass>
                             <id>association_rules</id>
+                        </program>
+                        <program>
+                            <mainClass>de.mpii.predicatelifting.YagoFactsReducer</mainClass>
+                            <id>fact_reducer</id>
                         </program>
                     </programs>
                 </configuration>

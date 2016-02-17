@@ -20,7 +20,7 @@ public class YagoSimpleTypes {
 
 
     private YagoSimpleTypes(){
-        entityTypes= YagoDataReader.loadSubject2ObjectMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.TYPE});
+        entityTypes= YagoDataReader.loadDataInMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.TYPE}, YagoDataReader.MapType.SUBJ_2_OBJ);
     }
 
 

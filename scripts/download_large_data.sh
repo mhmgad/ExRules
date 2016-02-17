@@ -16,10 +16,12 @@ done
 PRGDIR=`dirname "$PRG"`
 BASEDIR=`cd "$PRGDIR/.." >/dev/null; pwd`
 DATA_DIR=$BASEDIR/data
+BIG_DATA_DIR=$BASEDIR/resources/bigData
 
 
 #make new directory for data
 mkdir -p $DATA_DIR
+mkdir -p $BIG_DATA_DIR
 
 
 #Download
@@ -38,10 +40,10 @@ for f in $DATA_DIR/*.7z; do
     7z x $f -o$DATA_DIR
 done
 
-
+#TODO get bigData out of resources
 #Filter data for reduction
-grep '<isLocatedIn>' $DATA_DIR/yagoGeonamesOnlyData.tsv > $DATA_DIR/isLocatedInData.tsv
-grep '<isLocatedIn>' $DATA_DIR/yagoFacts.tsv >> $DATA_DIR/isLocatedInData.tsv
+grep '<isLocatedIn>' $DATA_DIR/yagoGeonamesOnlyData.tsv > $BIG_DATA_DIR/isLocatedInData.tsv
+grep '<isLocatedIn>' $DATA_DIR/yagoFacts.tsv >> $BIG_DATA_DIR/isLocatedInData.tsv
 
 #remove archives
 rm $DATA_DIR/*.7z

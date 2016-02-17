@@ -11,8 +11,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
+import java.lang.*;
+import java.io.*;
 
 import gnu.trove.iterator.TObjectIntIterator;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -218,6 +222,59 @@ public class FileUtils {
       }
     }
   }
+
+  /**
+   * Returns the content of the file as list. Linebreaks
+   * are encoded as unix newlines (\n).
+   *author: Gad
+   * @param fileName  File to get String content from.
+
+   * @return      String content of file.
+   *
+   * @throws IOException
+   */
+  public static List<String> getFileContentasList(String fileName) throws IOException {
+    return  getFileContentasList(new File(fileName));
+  }
+
+  public static List<String> getFileContentasList(InputStream fileName) throws IOException {
+    ArrayList<String> lines=new ArrayList<>();
+    BufferedReader reader = getBufferedUTF8Reader(fileName);
+    for (String line = reader.readLine();
+         line != null;
+         line = reader.readLine()){
+      lines.add(line);
+    }
+
+
+    reader.close();
+    return lines;
+  }
+
+  /**
+   * Returns the content of the file as list. Linebreaks
+   * are encoded as unix newlines (\n).
+   *author: Gad
+   * @param file  File to get String content from.
+
+   * @return      String content of file.
+   *
+   * @throws IOException
+   */
+  public static List<String> getFileContentasList(File file) throws IOException {
+    ArrayList<String> lines=new ArrayList<>();
+    BufferedReader reader = getBufferedUTF8Reader(file);
+    for (String line = reader.readLine();
+         line != null;
+         line = reader.readLine()){
+      lines.add(line);
+    }
+
+
+    reader.close();
+    return lines;
+  }
+
   
   public static void main(String[] args) throws IOException {
     verifyOrderedFile(new File(args[0]), false);
