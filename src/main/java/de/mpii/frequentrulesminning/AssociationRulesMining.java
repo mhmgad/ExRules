@@ -50,6 +50,10 @@ public class AssociationRulesMining {
                 //System.out.println(elementsImmutable);
                 //ImmutableSet<String> elementsImmutable2 = ImmutableSet.copyOf(lineParts[1].substring(0,lineParts[1].length()-1).split("\t"));
                 //System.out.println(elementsImmutable.equals(elementsImmutable2));
+//                if (frequentitems.containsKey(elementsImmutable)){
+//                    System.out.println("Duplicate");
+//                    count+=frequentitems.get(elementsImmutable);
+//                }
                 frequentitems.put(elementsImmutable,count);
                 //System.out.println(frequentitems.get(elementsImmutable2));
                 //break;
@@ -90,7 +94,9 @@ public class AssociationRulesMining {
         for (Map.Entry<ImmutableSet<String>, Integer> ruleValuePair:entries) {
             processed++;
             ArrayList<AssociationRule> rules= generateRule(ruleValuePair);
-            System.out.println(processed+"/"+itemsSetCount);
+            if (processed%1000==0) {
+                System.out.println(processed + "/" + itemsSetCount);
+            }
 
             for (AssociationRule r:rules ) {
                 outputWriter.writeln(r.toString());
@@ -125,10 +131,10 @@ public class AssociationRulesMining {
 
             Integer bodySupp=frequentitems.get(body);
 
-            if (bodySupp==null||bodySupp.intValue()==0)
+            if (bodySupp==null||bodySupp==0)
                 continue;
 
-            double confidence= (itemsSupp+0.0)/bodySupp.intValue();
+            double confidence= (itemsSupp+0.0)/bodySupp;
 
             AssociationRule frqRule=new AssociationRule(headPredicate,body.asList(),confidence);
             rules.add(frqRule);
