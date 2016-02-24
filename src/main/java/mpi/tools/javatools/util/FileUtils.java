@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -237,19 +239,6 @@ public class FileUtils {
     return  getFileContentasList(new File(fileName));
   }
 
-  public static List<String> getFileContentasList(InputStream fileName) throws IOException {
-    ArrayList<String> lines=new ArrayList<>();
-    BufferedReader reader = getBufferedUTF8Reader(fileName);
-    for (String line = reader.readLine();
-         line != null;
-         line = reader.readLine()){
-      lines.add(line);
-    }
-
-
-    reader.close();
-    return lines;
-  }
 
   /**
    * Returns the content of the file as list. Linebreaks
@@ -275,6 +264,20 @@ public class FileUtils {
     return lines;
   }
 
+
+  /**
+   * Returns file path stored in the java jar
+   *author: Gad
+
+
+   * @return      File path.
+   *
+   * @throws IOException
+   */
+  public static String fileToPath(String filename) throws UnsupportedEncodingException {
+    URL url = FileUtils.class.getResource(filename);
+    return URLDecoder.decode(url.getPath(), "UTF-8");
+  }
   
   public static void main(String[] args) throws IOException {
     verifyOrderedFile(new File(args[0]), false);

@@ -2,6 +2,7 @@ package de.mpii.frequentrulesminning;
 
 import com.google.common.collect.ImmutableSet;
 import de.mpii.yagotools.YagoTaxonomy;
+import de.mpii.yagotools.utils.YagoRelations;
 import mpi.tools.javatools.filehandlers.UTF8Reader;
 import mpi.tools.javatools.filehandlers.UTF8Writer;
 import mpi.tools.javatools.util.FileUtils;
@@ -16,15 +17,16 @@ import java.util.Set;
  * Created by gadelrab on 2/17/16.
  */
 public class AssociationRulesFilter {
-
-    private final double threshold;
+    private final double upperThreshold;
+    private final double lowerThreshold;
     BufferedReader inputFile;
     YagoTaxonomy yt;
     BufferedWriter outputFile;
 
-    public AssociationRulesFilter(String inFilePath,String outFilePath,double threshold) {
+    public AssociationRulesFilter(String inFilePath,String outFilePath,double lowerThreshold,double upperThreshold) {
         yt=YagoTaxonomy.getInstance();
-        this.threshold=threshold;
+        this.lowerThreshold=lowerThreshold;
+        this.upperThreshold=upperThreshold;
         try {
             inputFile=FileUtils.getBufferedUTF8Reader(inFilePath);
             outputFile= FileUtils.getBufferedUTF8Writer(outFilePath);
@@ -43,7 +45,7 @@ public class AssociationRulesFilter {
             while((line=inputFile.readLine())!=null&&!line.trim().isEmpty()){
                 AssociationRule rule=AssociationRule.fromString(line);
 
-                if(rule.getConfidence()<threshold||!interesting(rule))
+                if(rule.getConfidence()<lowerThreshold||rule.getConfidence()>upperThreshold||!interesting(rule))
                     continue;
 
 
@@ -51,6 +53,7 @@ public class AssociationRulesFilter {
                 outputFile.newLine();
 
             }
+            outputFile.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -58,10 +61,14 @@ public class AssociationRulesFilter {
     }
 
     private boolean interesting(AssociationRule rule) {
-        String head=rule.getHead();
-        for (String b :rule.getBody()) {
-            Set<String> parents=yt.getParents(b);
-            if(parents.contains(head))
+        Item head=rule.getHead();
+        if (!head.getPredicate().equals( YagoRelations.TYPE))
+            return true;
+        for (Item b :rule.getBody()) {
+            if(!b.getPredicate().equals( YagoRelations.TYPE))
+                continue;
+            Set<String> parents=yt.getParents(b.getObject());
+            if(parents.contains(head.object))
                 return false;
 
         }
@@ -71,13 +78,18 @@ public class AssociationRulesFilter {
     }
 
     public static void main(String[]args){
+
+        double upperThreshold=100;
         if (args.length<3){
-            System.out.println("filter_rules <input_file_path> <output_file_path> <threshold>");
+            System.out.println("filter_rules <input_file_path> <output_file_path> <lowerThreshold> <upperThreshold>");
+
         }
 
-        double threshold=Double.parseDouble(args[2]);
-
-        AssociationRulesFilter am=new AssociationRulesFilter(args[0],args[1],threshold);
+        double lowerThreshold=Double.parseDouble(args[2]);
+        if (args.length>3) {
+            upperThreshold = Double.parseDouble(args[3]);
+        }
+        AssociationRulesFilter am=new AssociationRulesFilter(args[0],args[1],lowerThreshold,upperThreshold);
         System.out.println("Filtering Rules ... ");
         am.filterRules();
         System.out.println("Done!");

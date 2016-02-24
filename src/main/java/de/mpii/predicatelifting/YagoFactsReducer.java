@@ -44,8 +44,10 @@ public class YagoFactsReducer {
 
     public void reduceFacts(String factSourceFilePath, String outputFile, String []relations, FactType fType) {
         try {
-            reduceFacts( FactSource.from(factSourceFilePath),FileUtils.getBufferedUTF8Writer(outputFile) ,relations,fType);
-
+            BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFile);
+            reduceFacts( FactSource.from(factSourceFilePath),bw ,relations,fType);
+            bw.flush();
+            bw.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -30,6 +30,7 @@ wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/y
 wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoSimpleTypes.tsv.7z
 wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoGeonamesOnlyData.tsv.7z
 wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoFacts.tsv.7z
+wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoGeonamesClasses.tsv.7z
 
 
 
@@ -45,7 +46,9 @@ done
 grep '<isLocatedIn>' $DATA_DIR/yagoGeonamesOnlyData.tsv > $BIG_DATA_DIR/isLocatedInData.tsv
 grep '<isLocatedIn>' $DATA_DIR/yagoFacts.tsv >> $BIG_DATA_DIR/isLocatedInData.tsv
 
-mv $DATA_DIR/yagoTaxonomy.tsv $BIG_DATA_DIR/yagoTaxonomy.tsv
+cat $DATA_DIR/yagoTaxonomy.tsv > $BIG_DATA_DIR/yagoTaxonomy_withGeo.tsv
+cat $DATA_DIR/yagoGeonamesClasses.tsv >> $BIG_DATA_DIR/yagoTaxonomy_withGeo.tsv
+
 
 #remove archives
 rm $DATA_DIR/*.7z

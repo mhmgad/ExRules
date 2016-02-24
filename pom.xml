@@ -72,7 +72,15 @@
                         <program>
                             <mainClass>de.mpii.frequentrulesminning.AssociationRulesFilter</mainClass>
                             <id>filter_rules</id>
-                    </program>
+                        </program>
+                        <program>
+                            <mainClass>de.mpii.frequentrulesminning.AssociationRuleMiningSPMF</mainClass>
+                            <id>rules_smpf</id>
+                        </program>
+                        <program>
+                            <mainClass>de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter</mainClass>
+                            <id>rdf2int</id>
+                        </program>
                     </programs>
                 </configuration>
             </plugin>
@@ -80,26 +88,26 @@
             <!--Add external lib folder to local repository-->
 
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-install-plugin</artifactId>-->
-                <!--<executions>-->
-                    <!--&lt;!&ndash;SMPF library&ndash;&gt;-->
-                    <!--<execution>-->
-                        <!--<phase>install</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>install-file</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<file>spmf.jar</file>-->
-                            <!--<sources>spmf.zip</sources>-->
-                            <!--<groupId>spmf</groupId>-->
-                            <!--<artifactId>spmf</artifactId>-->
-                            <!--<version>1.0</version>-->
-                            <!--<packaging>jar</packaging>-->
-                            <!--<generatePom>true</generatePom>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-install-plugin</artifactId>-->
+            <!--<executions>-->
+            <!--&lt;!&ndash;SMPF library&ndash;&gt;-->
+            <!--<execution>-->
+            <!--<phase>install</phase>-->
+            <!--<goals>-->
+            <!--<goal>install-file</goal>-->
+            <!--</goals>-->
+            <!--<configuration>-->
+            <!--<file>spmf.jar</file>-->
+            <!--<sources>spmf.zip</sources>-->
+            <!--<groupId>spmf</groupId>-->
+            <!--<artifactId>spmf</artifactId>-->
+            <!--<version>1.0</version>-->
+            <!--<packaging>jar</packaging>-->
+            <!--<generatePom>true</generatePom>-->
+            <!--</configuration>-->
+            <!--</execution>-->
+            <!--</executions>-->
 
             <!--</plugin>-->
 
@@ -155,7 +163,6 @@
             <artifactId>trove4j</artifactId>
             <version>3.0.3</version>
         </dependency>
-
 
 
         <dependency>

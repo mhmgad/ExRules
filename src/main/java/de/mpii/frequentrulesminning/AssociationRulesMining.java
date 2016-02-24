@@ -24,7 +24,7 @@ public class AssociationRulesMining {
 
 
     //private TObjectIntCustomHashMap<ImmutableSet<String>> frequentitems;
-    private HashMap<ImmutableSet<String>,Integer> frequentitems;
+    private HashMap<ImmutableSet<Item>,Integer> frequentitems;
 
     public AssociationRulesMining(){
       //  frequentitems=new TObjectIntCustomHashMap<>();
@@ -46,15 +46,20 @@ public class AssociationRulesMining {
                 int count=Integer.parseInt(lineParts[0].trim());
 
 
-                ImmutableSet<String> elementsImmutable = ImmutableSet.copyOf(parseItemsSet(lineParts[1]));
-                //System.out.println(elementsImmutable);
-                //ImmutableSet<String> elementsImmutable2 = ImmutableSet.copyOf(lineParts[1].substring(0,lineParts[1].length()-1).split("\t"));
-                //System.out.println(elementsImmutable.equals(elementsImmutable2));
+                ImmutableSet<Item> elementsImmutable = ImmutableSet.copyOf(parseItemsSet(lineParts[1]));
+//                System.out.println(elementsImmutable+" "+elementsImmutable.hashCode());
+                frequentitems.put(elementsImmutable,count);
+//                ImmutableSet<Item> elementsImmutable2 = ImmutableSet.copyOf(parseItemsSet(lineParts[1]));
+//                System.out.println(elementsImmutable2+" "+elementsImmutable.hashCode());
+//                System.out.println(frequentitems.containsKey(elementsImmutable2));
+//                System.out.println(elementsImmutable.equals(elementsImmutable2));
+
+
 //                if (frequentitems.containsKey(elementsImmutable)){
 //                    System.out.println("Duplicate");
 //                    count+=frequentitems.get(elementsImmutable);
 //                }
-                frequentitems.put(elementsImmutable,count);
+
                 //System.out.println(frequentitems.get(elementsImmutable2));
                 //break;
 
@@ -68,13 +73,21 @@ public class AssociationRulesMining {
         }
     }
 
-    private List<String> parseItemsSet(String linePart) {
+    private List<Item> parseItemsSet(String linePart) {
         String [] elements =linePart.substring(0,linePart.length()-1).split(" \\(");
-        for (int i=1;i<elements.length;i++){
-            elements[i]="("+elements[i];
+        List<Item> items=new ArrayList<>(elements.length);
+        for (int i=0;i<elements.length;i++){
+            if(i!=0) {
+                elements[i] = "(" + elements[i];
+            }
+            items.add(Item.fromString(elements[i]));
+
+
         }
         //System.out.println("list: "+Arrays.asList(elements));
-        return Arrays.asList(elements);
+        // l= Arrays.asList(elements);
+
+        return items;
     }
 
     public void generateRules(String outputFilePath){
@@ -88,10 +101,10 @@ public class AssociationRulesMining {
 
     public void generateRules(UTF8Writer outputWriter) throws IOException {
 
-        Set<Map.Entry<ImmutableSet<String>, Integer>> entries=this.frequentitems.entrySet();
+        Set<Map.Entry<ImmutableSet<Item>, Integer>> entries=this.frequentitems.entrySet();
         int itemsSetCount=entries.size();
         int processed=0;
-        for (Map.Entry<ImmutableSet<String>, Integer> ruleValuePair:entries) {
+        for (Map.Entry<ImmutableSet<Item>, Integer> ruleValuePair:entries) {
             processed++;
             ArrayList<AssociationRule> rules= generateRule(ruleValuePair);
             if (processed%1000==0) {
@@ -108,25 +121,25 @@ public class AssociationRulesMining {
     }
 
 
-    private ArrayList<AssociationRule> generateRule(Map.Entry<ImmutableSet<String>, Integer> ruleValuePair) {
+    private ArrayList<AssociationRule> generateRule(Map.Entry<ImmutableSet<Item>, Integer> ruleValuePair) {
         ArrayList<AssociationRule> rules =new ArrayList<>();
         int itemsSupp=ruleValuePair.getValue();
-        ImmutableSet<String> itemsSet=ruleValuePair.getKey();
+        ImmutableSet<Item> itemsSet=ruleValuePair.getKey();
         //System.out.println(itemsSet);
         if (itemsSet.size()<2)
             return rules;
-        String[] itemsList=new String[itemsSet.size()];
+        Item[] itemsList=new Item[itemsSet.size()];
         itemsSet.toArray(itemsList);
 
-        Set<String> items=new HashSet<String>(itemsSet) ;
+        Set<Item> items=new HashSet<Item>(itemsSet) ;
 
 //        /Set<String> examinedHeads=new HashSet<>();
         //Set<String> tmp ;
-        for(String headPredicate:itemsSet.asList()){
+        for(Item headPredicate:itemsSet.asList()){
 
             // Create body and Immutable set.. then restore item set
             items.remove(headPredicate);
-            ImmutableSet<String> body=ImmutableSet.copyOf(items);
+            ImmutableSet<Item> body=ImmutableSet.copyOf(items);
             items.add(headPredicate);
 
             Integer bodySupp=frequentitems.get(body);

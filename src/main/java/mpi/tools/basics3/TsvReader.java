@@ -57,6 +57,7 @@ public class TsvReader extends PeekIterator<Fact> {
 				id = null;
 			return (new Fact(id, line[1], line[2], line[3]));
 		default:
+			Announce.warning(entireLine);
 			Announce.warning("Unsupported number of columns (", line.length,
 					"), aborting read");
 			return (null);

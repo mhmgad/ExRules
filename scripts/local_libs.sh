@@ -17,4 +17,4 @@ BASEDIR=`cd "$PRGDIR/.." >/dev/null; pwd`
 
 
 
-mvn install:install-file -DgroupId=spmf -DartifactId=spmf -Dversion=1.0 -Dpackaging=jar -Dfile=$BASEDIR/libs/spmf/spmf.jar -DgeneratePom=true
+mvn install:install-file -DgroupId=spmf -DartifactId=spmf -Dversion=1.0 -Dpackaging=jar -Dfile=$BASEDIR/libs/spmf/spmf.jar -DgeneratePom=true -Dsources=$BASEDIR/libs/spmf/spmf.zip

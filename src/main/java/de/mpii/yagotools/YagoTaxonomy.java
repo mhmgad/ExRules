@@ -13,7 +13,7 @@ import java.util.*;
 public class YagoTaxonomy {
 
     //private static final String SUB_CLASS_OF = "rdfs:subClassOf";
-    String TAXONOMY_FILE_PATH="resources/bigData/yagoTaxonomy.tsv";
+    String TAXONOMY_FILE_PATH="resources/bigData/yagoTaxonomy_withGeo.tsv";
 
     private static YagoTaxonomy instance;
 
@@ -78,6 +78,7 @@ public class YagoTaxonomy {
         System.out.println(yt.getParents("<wordnet_hearer_110165448>"));
         System.out.println(yt.getParents("<wikicat_English_fantasy_writers>"));
         System.out.println(yt.getParents("<wikicat_People_from_Monterrey>"));
+        System.out.println(yt.getParents("<wordnet_journalist_110224578>"));
     }
 
 
