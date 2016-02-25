@@ -1,0 +1,1 @@
+sh assemble/bin/rules_smpf.sh /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_integer_transactions.tsv /GW/D5data-5/gadelrab/yago3/spmf/out/rules_spmf_supp0001_conf30_90_body4_filtered.tsv 0.0001 0.3 0.9 HEAD_CONF 0 1 /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_mapping.tsv

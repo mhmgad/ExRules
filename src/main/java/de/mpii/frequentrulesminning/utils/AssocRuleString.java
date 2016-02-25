@@ -24,7 +24,7 @@ public class AssocRuleString extends AssocRule {
     public String toString() {
         String body = Joiner.on(" ").join(items1Str);
         String head=  Joiner.on(" ").join(items2Str);
-        return body+" ==> "+head+"\t";
+        return body+" ==> "+head;
 
     }
 }
