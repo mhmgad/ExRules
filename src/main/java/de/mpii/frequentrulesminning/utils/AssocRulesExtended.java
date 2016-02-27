@@ -59,22 +59,6 @@ public class AssocRulesExtended extends AssocRules{
 
                 return o1.getItemset1().length - o2.getItemset1().length;
 
-//                if(o2.getItemset1()[0]> o1.getItemset1()[0])
-//                    return 1;
-//                if(o2.getItemset1()[0]< o1.getItemset1()[0])
-//                    return -1;
-//
-//                if(o2.getConfidence() > o1.getConfidence())
-//                    return 1;
-//                else if(o2.getConfidence() < o1.getConfidence())
-//                    return -1;
-//                if(o1.getItemset1().length > o2.getItemset1().length)
-//                    return 1;
-//                else
-//                if(o1.getItemset1().length < o2.getItemset1().length)
-//                    return -1;
-//                else return 0;
-
             }
         });
     }

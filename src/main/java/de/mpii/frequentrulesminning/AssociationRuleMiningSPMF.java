@@ -15,6 +15,8 @@ import de.mpii.frequentrulesminning.utils.AssocRuleString;
 import de.mpii.frequentrulesminning.utils.AssocRulesExtended;
 import de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter;
 
+import de.mpii.yagotools.YagoTaxonomy;
+import de.mpii.yagotools.utils.YagoRelations;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedWriter;
@@ -43,6 +45,8 @@ public class AssociationRuleMiningSPMF {
     RDF2IntegerTransactionsConverter rdf2TransactionsConverter;
     private String temperorayTransactiosFile;
     private String temporaryMappingFile;
+    private YagoTaxonomy yagoTaxonomy;
+
 
     public AssociationRuleMiningSPMF(double minsupp,double minconf,double maxconf) {
         this.fpgrowth = new AlgoFPGrowth();
@@ -56,9 +60,9 @@ public class AssociationRuleMiningSPMF {
     }
 
     public Itemsets getFrequentItemsets(String inputIntegerTransactionsFilePath) throws IOException {
-
+        System.out.println("Start Mining Items...");
         Itemsets patterns = fpgrowth.runAlgorithm(inputIntegerTransactionsFilePath, (String)null, minsupp);
-
+        System.out.println("Start Rule Mining ...");
         fpgrowth.printStats();
         return patterns;
 
@@ -70,12 +74,9 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public AssocRulesExtended getFrequentAssociationRules(String inputIntegerTransactionsFilePath) throws IOException {
+    public AssocRulesExtended getFrequentAssociationRules(Itemsets frequentItemsets) throws IOException {
         System.out.println("Start Rule Mining ...");
-        Itemsets patterns=getFrequentItemsets(inputIntegerTransactionsFilePath);
-
-        AssocRulesExtended rules=new AssocRulesExtended(algoAgrawal.runAlgorithm(patterns, null,getDatabaseSize(), minconf));
-        //wc -lrules.sortByConfidence();
+        AssocRulesExtended rules=new AssocRulesExtended(algoAgrawal.runAlgorithm(frequentItemsets, null,getDatabaseSize(), minconf));
         algoAgrawal.printStats();
         System.out.println("Done Rule Mining ...");
         return rules;
@@ -86,8 +87,11 @@ public class AssociationRuleMiningSPMF {
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
 
+        // mine Frequent patterns
+        Itemsets frequentPatterns=getFrequentItemsets(transactionsFilePath);
+
         // generate Association rules
-        AssocRulesExtended rules=getFrequentAssociationRules(transactionsFilePath);
+        AssocRulesExtended rules=getFrequentAssociationRules(frequentPatterns);
 
         if(filter)
             filterRules(rules);
@@ -95,21 +99,34 @@ public class AssociationRuleMiningSPMF {
         // decode
         rules=decodeRules( rules, mappingFilePath,decode,!encode);
 
-        // Sort based on confidence
-        rules.sortByConfidence();
+        if(decode&&filter){
+            filterAfterDecoding(rules);
+        }
 
         return rules;
+    }
+
+
+
+
+
+
+    private void filterAfterDecoding(AssocRulesExtended rules) {
+        System.out.println("Start Filtering 2...");
+        this.yagoTaxonomy=YagoTaxonomy.getInstance();
+        rules.getRules().removeIf(rule -> isMimickingHierarchy((AssocRuleString) rule));
+        System.out.println("Done Filtering 2!");
     }
 
     private void filterRules(AssocRulesExtended rules) {
 
         System.out.println("Start Filtering...");
+
         rules.getRules().removeIf(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
 
         removeContainingRules(rules);
 
-        System.out.println("Done Filtering...");
-
+        System.out.println("Done Filtering!");
 
     }
 
@@ -119,16 +136,32 @@ public class AssociationRuleMiningSPMF {
 
         for(int i=0;i<rules.getRules().size();i++){
             final int  c=i;
-            rules.getRules().removeIf(assocRule -> isSubset(rules.getRules().get(c),assocRule));
+            rules.getRules().removeIf(assocRule -> isSubsetBody(rules.getRules().get(c),assocRule));
         }
 
     }
 
+    /**
+     * Checks is body predicates are just subclassof the head predicate ..
+     * currently supports only single predicate head rules
+     * @param rule
+     * @return
+     */
+    private boolean isMimickingHierarchy(AssocRuleString rule) {
+            Item head=rule.getHeadItems()[0];
+
+        for (Item b :rule.getbodyItems()) {
+            if(!b.getPredicate().equals( head.getPredicate()))
+                continue;
+            Set<String> parents=yagoTaxonomy.getParents(b.getObject());
+            if(parents.contains(head.getObject()))
+                return true;
+        }
+        return false;
+    }
 
 
-
-
-    private boolean isSubset(AssocRule assocRule, AssocRule assocRule1) {
+    private boolean isSubsetBody(AssocRule assocRule, AssocRule assocRule1) {
         if(assocRule==assocRule1)
             return false;
 
