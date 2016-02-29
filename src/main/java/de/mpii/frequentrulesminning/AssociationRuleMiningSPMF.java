@@ -2,17 +2,19 @@ package de.mpii.frequentrulesminning;
 
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AlgoAgrawalFaster94;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
-import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRules;
+
 
 import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPGrowth;
 
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 
+import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
 import com.google.common.collect.*;
 
 import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.utils.AssocRuleString;
 import de.mpii.frequentrulesminning.utils.AssocRulesExtended;
+import de.mpii.frequentrulesminning.utils.ItemsetString;
 import de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter;
 
 import de.mpii.yagotools.YagoTaxonomy;
@@ -26,6 +28,7 @@ import java.io.IOException;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -83,7 +86,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile,String mappingFilePath,boolean encode,boolean decode, boolean filter) throws IOException {
+    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile,String mappingFilePath,boolean encode,boolean decode, boolean filter, boolean withExceptions) throws IOException {
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
 
@@ -103,12 +106,32 @@ public class AssociationRuleMiningSPMF {
             filterAfterDecoding(rules);
         }
 
+
+        //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
+        mineExceptions(transactionsFilePath,rules);
+
         return rules;
     }
 
+    private void mineExceptions(String transactionsFilePath, AssocRulesExtended rules) throws IOException {
+        System.out.println("Start Mining Exception Candidates ...");
+        ExceptionMining em=new ExceptionMining(transactionsFilePath,rdf2TransactionsConverter);
+
+        int i=0;
+        for (AssocRule rule: rules.getRules()) {
+            i++;
+            List<ItemsetString> exceptionCandidates=em.mineExceptions(rule);
 
 
+            ((AssocRuleString)rule).setExceptionCandidates(exceptionCandidates);
 
+
+            if(i%1000==0)
+                System.out.println(i+"/"+rules.getRules().size());
+
+        }
+        System.out.println("Done Mining Exception Candidates!");
+    }
 
 
     private void filterAfterDecoding(AssocRulesExtended rules) {
@@ -259,7 +282,7 @@ public class AssociationRuleMiningSPMF {
 
 
         if(args.length<4){
-            System.out.println("Usage: rules_spmf.sh <infile> <outFile>  <minsupp> <minConf> <maxConf> [<Sorting (CONF|HEAD_CONF)> <encode(1|0)> <decode(1|0)> <rdf2intMapping file>]");
+            System.out.println("Usage: rules_spmf.sh <infile> <outFile>  <minsupp> <minConf> <maxConf> [<Sorting (CONF|HEAD_CONF)> <encode(1|0)> <decode(1|0)> <rdf2intMapping file>] <withExceptions(0|1)>");
             System.exit(0);
         }
 
@@ -274,6 +297,7 @@ public class AssociationRuleMiningSPMF {
 
         boolean encode=true;
         boolean decode=true;
+        boolean withExceptions=false;
 
         String rdf2idsMappingFile=null;
         AssocRulesExtended.SortingType outputSorting= AssocRulesExtended.SortingType.CONF;
@@ -292,10 +316,14 @@ public class AssociationRuleMiningSPMF {
             rdf2idsMappingFile=args[8];
         }
 
+        if(args.length>9){
+            withExceptions=args[9].equals("1");
+        }
+
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
 
-        AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true);
+        AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true, withExceptions);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting);
 
     }

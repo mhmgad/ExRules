@@ -1,23 +1,34 @@
 package de.mpii.frequentrulesminning;
 
-import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
-import ca.pfv.spmf.test.MainTestDCharm_bitset_saveToMemory;
+import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
+import ca.pfv.spmf.algorithms.frequentpatterns.charm.AlgoDCharm_Bitset;
+import ca.pfv.spmf.input.transaction_database_list_integers.TransactionDatabase;
+
+
+import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
+import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemsets;
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
+import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.utils.AssocRuleString;
+import de.mpii.frequentrulesminning.utils.ItemsetString;
+import de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter;
 import de.mpii.frequentrulesminning.utils.Transaction;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by gadelrab on 2/26/16.
  */
 public class ExceptionMining {
 
+    private  RDF2IntegerTransactionsConverter converter;
     TObjectIntHashMap<Transaction> transactionsSet;
 
     SetMultimap<Integer,Transaction> items2transactions;
@@ -34,6 +45,13 @@ public class ExceptionMining {
 
         this(new FileInputStream(transactionsFile));
 
+
+    }
+
+    public ExceptionMining(String transactionsFilePath, RDF2IntegerTransactionsConverter rdf2TransactionsConverter) throws IOException {
+        this(transactionsFilePath);
+
+        this.converter=rdf2TransactionsConverter;
 
     }
 
@@ -75,7 +93,7 @@ public class ExceptionMining {
 
     }
 
-    private Set<Transaction> getNegativeExamples(AssocRuleString rule) {
+    private Set<Transaction> getNegativeExamples(AssocRule rule) {
 
 
         // transactions contain body
@@ -91,31 +109,85 @@ public class ExceptionMining {
             transactions = new HashSet(Sets.difference(transactions, items2transactions.get(head[i])));
         }
 
-        for (Transaction transaction:transactions){
-            int transactionCount = this.transactionsSet.get(transaction);
-            transaction.setCout(transactionCount);
+        // adding transactions to list after removing body items
+        Set<Integer> bodyset= ImmutableSet.copyOf(Ints.asList(body));
+        Iterator<Transaction> itr = transactions.iterator();
+        while (itr.hasNext()) {
+
+
+            Transaction transaction=itr.next();
+            Set <Integer> transDiff=Sets.difference(ImmutableSet.copyOf(transaction.getItemsAsList()),bodyset);
+            if(transDiff.size()==0){
+                itr.remove();
+            }
+            else {
+                transaction.setItems(Ints.toArray(transDiff));
+                int transactionCount = this.transactionsSet.get(transaction);
+                transaction.setCout(transactionCount);
+            }
 
         }
         return transactions;
     }
 
 
-    public Itemsets mineExceptions(AssocRuleString rule) throws IOException {
+    public  List<ItemsetString> mineExceptions(AssocRule rule) throws IOException {
 
         Set<Transaction> negativeTransactions = getNegativeExamples(rule);
 
-        String negativeTransactionsFilePath = writeToTmpFile(negativeTransactions);
+        //String negativeTransactionsFilePath = writeToTmpFile(negativeTransactions);
 
-        getClosedFrequentItemSets(negativeTransactionsFilePath);
+        List<List<Itemset>> patterns =getClosedFrequentItemSets(negativeTransactions).getLevels();
+        List<Itemset> patternsFlat =  patterns.stream().flatMap(List::stream).collect(Collectors.toList());
+        List<ItemsetString> patternsFlatItems=new ArrayList<>(patternsFlat.size());
+        for (Itemset it:patternsFlat) {
+            patternsFlatItems.add(new ItemsetString(converter.convertIntegers2Strings(it.getItems()),it.getItems(),it.getAbsoluteSupport()));
+
+        }
+        
 
 
-    return null;
+    return patternsFlatItems;
     }
 
-    private void getClosedFrequentItemSets(String negativeTransactionsFilePath) {
-        MainTestDCharm_bitset_saveToMemory
+
+    private TransactionDatabase getTransactionDatabase(Collection<Transaction> transactions){
+        TransactionDatabase tDb=new TransactionDatabase();
+
+        for (Transaction t:transactions) {
+            List<Integer> transAsList=t.getItemsAsList();
+            int count=t.getCount();
+            for (int i = 0; i < count; i++) {
+                tDb.addTransaction(transAsList);
+            }
+        }
+        return tDb;
+    }
+
+    private Itemsets getClosedFrequentItemSets(Collection<Transaction> negativeTransactions) throws IOException {
+
+        TransactionDatabase tDb=getTransactionDatabase(negativeTransactions);
+
+        AlgoDCharm_Bitset algo = new AlgoDCharm_Bitset();
+        Itemsets patterns = algo.runAlgorithm((String)null, tDb, 0.5D, true, (negativeTransactions.size()+10)/10);
+        //algo.printStats();
+
+        return patterns;
 
     }
+//
+//    private Itemsets getClosedFrequentItemSets(Collection<Transaction> negativeTransactions) throws IOException {
+//
+//        FPClose
+//        TransactionDatabase tDb=getTransactionDatabase(negativeTransactions);
+//
+//        AlgoDCharm_Bitset algo = new AlgoDCharm_Bitset();
+//        Itemsets patterns = algo.runAlgorithm((String)null, tDb, 0.5D, true, (negativeTransactions.size()+10)/10);
+//        algo.printStats();
+//
+//        return patterns;
+//
+//    }
 
 
     public static void main(String[] args) throws IOException {

@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.primitives.Ints;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by gadelrab on 2/26/16.
@@ -40,6 +41,10 @@ public class Transaction{
     @Override
     public boolean equals(Object obj) {
         return Arrays.equals(((Transaction)obj).getItems(),getItems());
+    }
+
+    public List<Integer> getItemsAsList() {
+        return Ints.asList(items);
     }
 
     public int[] getItems() {

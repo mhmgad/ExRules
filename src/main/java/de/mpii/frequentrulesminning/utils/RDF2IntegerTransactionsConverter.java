@@ -10,7 +10,6 @@ import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
@@ -23,14 +22,14 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
-    private HashBiMap<Item,Integer> items;
+    private HashBiMap<Item,Integer> items2Ids;
     private SetMultimap<String, Integer> subjects2ItemsIds;
     private int itemsIDs;
 
 
     public RDF2IntegerTransactionsConverter() {
 
-        items = HashBiMap.create();
+        items2Ids = HashBiMap.create();
         subjects2ItemsIds = HashMultimap.create();
         itemsIDs=0;
     }
@@ -45,18 +44,18 @@ public class RDF2IntegerTransactionsConverter {
 
                 //String key=f.getRelation()+"\t"+f.getObject();
                 Item key=new Item(f.getRelation(),f.getObject());
-                if (!items.containsKey(key)) {
+                if (!items2Ids.containsKey(key)) {
                     itemsIDs++;
-                    items.put(key,itemsIDs);
+                    items2Ids.put(key,itemsIDs);
                 }
 
 
 
-                int id=items.get(key);
+                int id= items2Ids.get(key);
                 subjects2ItemsIds.put(value, id);
             }
 
-            System.out.println("Items size: " + items.size());
+            System.out.println("Items size: " + items2Ids.size());
             System.out.println("Transactions Size: "+subjects2ItemsIds.size());
 
         } catch (MalformedURLException e2) {
@@ -85,12 +84,12 @@ public class RDF2IntegerTransactionsConverter {
     public void exportIds(String idsFilePath) {
         try {
             BufferedWriter bw = FileUtils.getBufferedUTF8Writer(idsFilePath);
-            //List<String> keysList= new ArrayList<>(items.keySet());
-            List<Item> keysList= new ArrayList<>(items.keySet());
+            //List<String> keysList= new ArrayList<>(items2Ids.keySet());
+            List<Item> keysList= new ArrayList<>(items2Ids.keySet());
             Collections.sort(keysList);
            // for (String item : keysList) {
             for (Item item : keysList) {
-                String itemText = items.get(item) + "\t" + item;//.toString();
+                String itemText = items2Ids.get(item) + "\t" + item;//.toString();
                 bw.write(itemText);
                 bw.newLine();
             }
@@ -129,17 +128,17 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
-    public void convertIntegers2Strings(String inputTransactionFilePath, String inputMappingFilePath,String outputTransactionFilePath){
-
-        loadMappingFromFile(inputMappingFilePath);
-
-        convertIntegers2Strings(inputTransactionFilePath,outputTransactionFilePath);
-
-
-    }
+//    public void convertIntegers2Strings(String inputTransactionFilePath, String inputMappingFilePath,String outputTransactionFilePath){
+//
+//        loadMappingFromFile(inputMappingFilePath);
+//
+//        convertIntegers2Strings(inputTransactionFilePath,outputTransactionFilePath);
+//
+//
+//    }
 
     public Item[]convertIntegers2Strings(int [] itemsList){
-        BiMap<Integer,Item> id2Item=items.inverse();
+        BiMap<Integer,Item> id2Item= items2Ids.inverse();
         Item[] itemsStrList=new Item[itemsList.length];
         for (int i=0; i<itemsList.length;i++){
             itemsStrList[i]=id2Item.get(itemsList[i]);
@@ -150,28 +149,40 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
-    private void convertIntegers2Strings(String inputTransactionFilePath, String outputTransactionFilePath) {
-        try {
-            BiMap<Integer,Item> id2Item=items.inverse();
-            System.out.println("Reading Mapping ...");
-            BufferedReader br= FileUtils.getBufferedUTF8Reader(inputTransactionFilePath);
-            for(String line=br.readLine();line!=null;line=br.readLine()){
-               // String[] parts=line.split("\\s");
-                //Collections.
-//                ArrayList<Item> itemsList=new ArrayList<>(parts.length);
-//                for (String part:parts) {
-//                    itemsList.add(id2Item.get(Integer.getInteger(part)));
-//
-//                }
-                String [] parts=splitLine(line);
+    public int[]convertItems2Integer(String [] itemsList){
 
-            }
-            System.out.println("Done!");
-        } catch (IOException e) {
-            e.printStackTrace();
+        int[] itemsInt=new int[itemsList.length];
+        for (int i=0; i<itemsList.length;i++){
+            itemsInt[i]= items2Ids.get(itemsList[i]);
+
         }
 
+        return itemsInt;
+
     }
+
+//    private void convertIntegers2Strings(String inputTransactionFilePath, String outputTransactionFilePath) {
+//        try {
+//            BiMap<Integer,Item> id2Item=items2Ids.inverse();
+//            System.out.println("Reading Mapping ...");
+//            BufferedReader br= FileUtils.getBufferedUTF8Reader(inputTransactionFilePath);
+//            for(String line=br.readLine();line!=null;line=br.readLine()){
+//               // String[] parts=line.split("\\s");
+//                //Collections.
+////                ArrayList<Item> itemsList=new ArrayList<>(parts.length);
+////                for (String part:parts) {
+////                    itemsList.add(id2Item.get(Integer.getInteger(part)));
+////
+////                }
+//                String [] parts=splitLine(line);
+//
+//            }
+//            System.out.println("Done!");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     private String[] splitLine(String line) {
     String [] parts=new String[2];
@@ -187,7 +198,7 @@ public class RDF2IntegerTransactionsConverter {
             BufferedReader br= FileUtils.getBufferedUTF8Reader(inputMappingFilePath);
             for(String line=br.readLine();line!=null;line=br.readLine()){
                 String[] parts=line.split("\t");
-                items.put(Item.fromString(parts[1]),Integer.valueOf(parts[0]));
+                items2Ids.put(Item.fromString(parts[1]),Integer.valueOf(parts[0]));
 
             }
             System.out.println("Done!");

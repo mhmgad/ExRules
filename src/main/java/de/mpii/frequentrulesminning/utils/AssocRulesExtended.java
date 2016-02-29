@@ -3,10 +3,12 @@ package de.mpii.frequentrulesminning.utils;
 
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRules;
+import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by gadelrab on 2/25/16.
@@ -98,6 +100,12 @@ public class AssocRulesExtended extends AssocRules{
             buffer.append("\tsupp: ");
             buffer.append(rule.getAbsoluteSupport());
             buffer.append("\n");
+            List<ItemsetString> exceptionCandidate=((AssocRuleString)rule).getExceptionCandidates();
+            if(exceptionCandidate!=null&&exceptionCandidate.size()>0){
+                buffer.append("Exceptions: ");
+                buffer.append(((AssocRuleString)rule).getExceptionCandidates());
+                buffer.append('\n');
+            }
         }
 
         return buffer.toString();
