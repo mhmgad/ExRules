@@ -1,6 +1,7 @@
 package de.mpii.frequentrulesminning;
 
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
+import ca.pfv.spmf.test.MainTestDCharm_bitset_saveToMemory;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
@@ -112,6 +113,8 @@ public class ExceptionMining {
     }
 
     private void getClosedFrequentItemSets(String negativeTransactionsFilePath) {
+        MainTestDCharm_bitset_saveToMemory
+
     }
 
 
