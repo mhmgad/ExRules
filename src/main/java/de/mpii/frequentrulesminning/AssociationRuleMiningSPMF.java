@@ -8,7 +8,7 @@ import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPGrowth;
 
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 
-import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
+
 import com.google.common.collect.*;
 
 import com.google.common.primitives.Ints;
@@ -28,7 +28,6 @@ import java.io.IOException;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -86,7 +85,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile,String mappingFilePath,boolean encode,boolean decode, boolean filter, boolean withExceptions) throws IOException {
+    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp) throws IOException {
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
 
@@ -108,14 +107,15 @@ public class AssociationRuleMiningSPMF {
 
 
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
-        mineExceptions(transactionsFilePath,rules);
+        if(withExceptions)
+            mineExceptions(transactionsFilePath,rules,exceptionMinSupp);
 
         return rules;
     }
 
-    private void mineExceptions(String transactionsFilePath, AssocRulesExtended rules) throws IOException {
+    private void mineExceptions(String transactionsFilePath, AssocRulesExtended rules, double exceptionMinSupp) throws IOException {
         System.out.println("Start Mining Exception Candidates ...");
-        ExceptionMining em=new ExceptionMining(transactionsFilePath,rdf2TransactionsConverter);
+        ExceptionMining em=new ExceptionMining(transactionsFilePath,rdf2TransactionsConverter,exceptionMinSupp);
 
         int i=0;
         for (AssocRule rule: rules.getRules()) {
@@ -282,7 +282,7 @@ public class AssociationRuleMiningSPMF {
 
 
         if(args.length<4){
-            System.out.println("Usage: rules_spmf.sh <infile> <outFile>  <minsupp> <minConf> <maxConf> [<Sorting (CONF|HEAD_CONF)> <encode(1|0)> <decode(1|0)> <rdf2intMapping file>] <withExceptions(0|1)>");
+            System.out.println("Usage: rules_spmf.sh <infile> <outFile>  <minsupp> <minConf> <maxConf> [<Sorting (CONF|HEAD_CONF)> <encode(1|0)> <decode(1|0)> <rdf2intMapping file>] <withExceptions(0|1)> <Exception Minsupp>");
             System.exit(0);
         }
 
@@ -293,6 +293,8 @@ public class AssociationRuleMiningSPMF {
         double minsupp = Double.valueOf(args[2]);
         double minconf = Double.valueOf(args[3]);//0.01D;
         double maxconf = Double.valueOf(args[4]);//0.01D;
+
+        double excepminSupp =0.5D;
 
 
         boolean encode=true;
@@ -318,12 +320,17 @@ public class AssociationRuleMiningSPMF {
 
         if(args.length>9){
             withExceptions=args[9].equals("1");
+
+        }
+
+        if(args.length>10){
+            excepminSupp=Double.valueOf(args[10]);
         }
 
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
 
-        AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true, withExceptions);
+        AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true, withExceptions,excepminSupp);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting);
 
     }

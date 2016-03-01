@@ -28,31 +28,43 @@ import java.util.stream.Collectors;
  */
 public class ExceptionMining {
 
+    private  double exceptionMinSupp;
     private  RDF2IntegerTransactionsConverter converter;
     TObjectIntHashMap<Transaction> transactionsSet;
 
     SetMultimap<Integer,Transaction> items2transactions;
 
 
-    public ExceptionMining(InputStream transactions) throws IOException {
+    public ExceptionMining(InputStream transactions,double exceptionMinSupp) throws IOException {
         this.items2transactions = HashMultimap.create();
         this.transactionsSet = new TObjectIntHashMap<>();
         loadTransactions( transactions);
+        this.exceptionMinSupp=exceptionMinSupp;
     }
 
 
-    public ExceptionMining(String transactionsFile) throws IOException {
+    public ExceptionMining(String transactionsFile,double exceptionMinSupp) throws IOException {
 
-        this(new FileInputStream(transactionsFile));
+        this(new FileInputStream(transactionsFile),exceptionMinSupp);
 
+
+    }
+
+    public ExceptionMining(String transactionsFilePath, RDF2IntegerTransactionsConverter rdf2TransactionsConverter,double exceptionMinSupp) throws IOException {
+        this(transactionsFilePath,exceptionMinSupp);
+
+        this.converter=rdf2TransactionsConverter;
+
+    }
+
+    public ExceptionMining(String transactionsFilePath, String rdf2IdMappingFilePath, double exceptionMinSupp) throws IOException {
+        this(transactionsFilePath,new RDF2IntegerTransactionsConverter());
+        this.converter.loadMappingFromFile(rdf2IdMappingFilePath);
 
     }
 
     public ExceptionMining(String transactionsFilePath, RDF2IntegerTransactionsConverter rdf2TransactionsConverter) throws IOException {
-        this(transactionsFilePath);
-
-        this.converter=rdf2TransactionsConverter;
-
+        this(transactionsFilePath,rdf2TransactionsConverter,0.5D);
     }
 
 
@@ -169,7 +181,7 @@ public class ExceptionMining {
         TransactionDatabase tDb=getTransactionDatabase(negativeTransactions);
 
         AlgoDCharm_Bitset algo = new AlgoDCharm_Bitset();
-        Itemsets patterns = algo.runAlgorithm((String)null, tDb, 0.5D, true, (negativeTransactions.size()+10)/10);
+        Itemsets patterns = algo.runAlgorithm((String)null, tDb, this.exceptionMinSupp, true, (negativeTransactions.size()+10)/10);
         //algo.printStats();
 
         return patterns;
