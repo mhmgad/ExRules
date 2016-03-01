@@ -12,7 +12,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
-import de.mpii.frequentrulesminning.utils.AssocRuleString;
 import de.mpii.frequentrulesminning.utils.ItemsetString;
 import de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter;
 import de.mpii.frequentrulesminning.utils.Transaction;
@@ -105,15 +104,10 @@ public class ExceptionMining {
 
     }
 
-    private Set<Transaction> getNegativeExamples(AssocRule rule) {
-
-
+    private Set<Transaction> getNegativeTransactions(AssocRule rule) {
         // transactions contain body
         int [] body=rule.getItemset1();
-        Set<Transaction> transactions=new HashSet<>(items2transactions.get(body[0]));
-        for (int i=1;i<body.length;i++){
-            transactions = new HashSet(Sets.intersection(transactions, items2transactions.get(body[i])));
-        }
+        Set<Transaction> transactions = getTransactionsWithBody(rule);
 
         // exclude transactions contain head
         int [] head=rule.getItemset2();
@@ -121,23 +115,67 @@ public class ExceptionMining {
             transactions = new HashSet(Sets.difference(transactions, items2transactions.get(head[i])));
         }
 
+
+        return transactions;
+    }
+
+
+    private Set<Transaction> getPositiveTransactions(AssocRule rule) {
+
+        // transactions contain body
+        int [] body=rule.getItemset1();
+        Set<Transaction> transactions = getTransactionsWithBody(rule);
+
+        // exclude transactions contain head
+        int [] head=rule.getItemset2();
+        for (int i=0;i<head.length;i++){
+            transactions = new HashSet(Sets.intersection(transactions, items2transactions.get(head[i])));
+        }
+
+
+        return transactions;
+    }
+
+    private void removeBodyItemsFromTransactions(AssocRule rule,Set<Transaction> transactions) {
+        int [] body=rule.getItemset1();
         // adding transactions to list after removing body items
         Set<Integer> bodyset= ImmutableSet.copyOf(Ints.asList(body));
+
+        transactions.stream().forEach((x)->x.setCout(this.transactionsSet.get(x)));
+
+        transactions.stream().forEach((x)->x.removeItems(body));
+
+
+
         Iterator<Transaction> itr = transactions.iterator();
         while (itr.hasNext()) {
 
 
             Transaction transaction=itr.next();
-            Set <Integer> transDiff=Sets.difference(ImmutableSet.copyOf(transaction.getItemsAsList()),bodyset);
+            Set <Integer> transDiff= Sets.difference(ImmutableSet.copyOf(transaction.getItemsAsList()),bodyset);
             if(transDiff.size()==0){
                 itr.remove();
             }
             else {
-                transaction.setItems(Ints.toArray(transDiff));
+
                 int transactionCount = this.transactionsSet.get(transaction);
+                transaction.setItems(Ints.toArray(transDiff));
                 transaction.setCout(transactionCount);
             }
 
+        }
+    }
+
+
+
+
+
+
+    private Set<Transaction> getTransactionsWithBody(AssocRule rule) {
+        int[] body = rule.getItemset1();
+        Set<Transaction> transactions=new HashSet<>(items2transactions.get(body[0]));
+        for (int i=1;i<body.length;i++){
+            transactions = new HashSet(Sets.intersection(transactions, items2transactions.get(body[i])));
         }
         return transactions;
     }
@@ -145,7 +183,8 @@ public class ExceptionMining {
 
     public  List<ItemsetString> mineExceptions(AssocRule rule) throws IOException {
 
-        Set<Transaction> negativeTransactions = getNegativeExamples(rule);
+        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
+        removeBodyItemsFromTransactions(rule,negativeTransactions);
 
         //String negativeTransactionsFilePath = writeToTmpFile(negativeTransactions);
 
@@ -160,6 +199,25 @@ public class ExceptionMining {
 
 
     return patternsFlatItems;
+    }
+
+    public  List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
+
+        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
+        removeBodyItemsFromTransactions(rule,negativeTransactions);
+
+        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
+        removeBodyItemsFromTransactions(rule,PositiveTransactions);
+
+        Set<ItemsetString> negTransItems=getItemsWithCount(negativeTransactions);
+
+
+
+    }
+
+    private Set<ItemsetString> getItemsWithCount(Set<Transaction> negativeTransactions) {
+
+
     }
 
 

@@ -24,13 +24,17 @@ public class ItemsetString extends AbstractOrderedItemset {
     /**  the support of this itemset */
     public int support = 0;
 
+    public void setItemset(int[] itemset) {
+        this.itemset=itemset;
+        Arrays.sort(this.itemset);
+    }
+
     /**
      * Constructor
      * @param items an array of items that should be added to the new itemset
      */
     public ItemsetString(int[] items) {
-        this.itemset=items;
-        Arrays.sort(items);
+        setItemset( items);
     }
 
     /**
@@ -44,9 +48,9 @@ public class ItemsetString extends AbstractOrderedItemset {
     /**
      * Constructor
      */
-    public ItemsetString(){
-        itemset = new int[]{};
-        itemsetItem = new Item[]{};
+    public ItemsetString(int size){
+        itemset = new int[size];
+        itemsetItem = new Item[size];
     }
 
 
@@ -121,5 +125,15 @@ public class ItemsetString extends AbstractOrderedItemset {
     @Override
     public String toString() {
         return "["+Joiner.on(' ').join(itemsetItem)+"]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(itemset);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return Arrays.equals(((ItemsetString)obj).getItems(),getItems());
     }
 }
