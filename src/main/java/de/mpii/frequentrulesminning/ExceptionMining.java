@@ -3,8 +3,6 @@ package de.mpii.frequentrulesminning;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 import ca.pfv.spmf.algorithms.frequentpatterns.charm.AlgoDCharm_Bitset;
 import ca.pfv.spmf.input.transaction_database_list_integers.TransactionDatabase;
-
-
 import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemsets;
 import com.google.common.collect.HashMultimap;
@@ -141,9 +139,9 @@ public class ExceptionMining {
         // adding transactions to list after removing body items
         Set<Integer> bodyset= ImmutableSet.copyOf(Ints.asList(body));
 
-        transactions.stream().forEach((x)->x.setCout(this.transactionsSet.get(x)));
-
-        transactions.stream().forEach((x)->x.removeItems(body));
+//        transactions.stream().forEach((x)->x.setCout(this.transactionsSet.get(x)));
+//
+//        transactions.stream().forEach((x)->x.removeItems(body));
 
 
 
@@ -201,24 +199,24 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
-    public  List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
+//    public  List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
+//
+//        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
+//        removeBodyItemsFromTransactions(rule,negativeTransactions);
+//
+//        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
+//        removeBodyItemsFromTransactions(rule,PositiveTransactions);
+//
+//        Set<ItemsetString> negTransItems=getItemsWithCount(negativeTransactions);
+//
+//
+//
+//    }
 
-        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
-        removeBodyItemsFromTransactions(rule,negativeTransactions);
-
-        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
-        removeBodyItemsFromTransactions(rule,PositiveTransactions);
-
-        Set<ItemsetString> negTransItems=getItemsWithCount(negativeTransactions);
-
-
-
-    }
-
-    private Set<ItemsetString> getItemsWithCount(Set<Transaction> negativeTransactions) {
-
-
-    }
+//    private Set<ItemsetString> getItemsWithCount(Set<Transaction> negativeTransactions) {
+//
+//
+//    }
 
 
     private TransactionDatabase getTransactionDatabase(Collection<Transaction> transactions){

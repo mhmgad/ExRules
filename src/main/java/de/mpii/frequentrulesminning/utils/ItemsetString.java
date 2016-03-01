@@ -6,7 +6,6 @@ import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.Item;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -124,7 +123,7 @@ public class ItemsetString extends AbstractOrderedItemset {
 
     @Override
     public String toString() {
-        return "["+Joiner.on(' ').join(itemsetItem)+"]";
+        return "([" + Joiner.on(' ').join(itemsetItem) + "]," + this.getAbsoluteSupport() + ")";
     }
 
     @Override
