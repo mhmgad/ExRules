@@ -208,6 +208,7 @@ public class ExceptionMining {
         // Get whatever exists in negative but not head
         Set<ItemsetString> diff=Sets.difference(ImmutableSet.copyOf(negTransItems),ImmutableSet.copyOf(posTransItems));
 
+
         List<ItemsetString> diffList=new ArrayList<>(diff);
 
         return diffList;
