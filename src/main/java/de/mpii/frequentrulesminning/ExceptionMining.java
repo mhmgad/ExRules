@@ -199,24 +199,23 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
-//    public  List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
-//
-//        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
-//        removeBodyItemsFromTransactions(rule,negativeTransactions);
-//
-//        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
-//        removeBodyItemsFromTransactions(rule,PositiveTransactions);
-//
-//        Set<ItemsetString> negTransItems=getItemsWithCount(negativeTransactions);
-//
-//
-//
-//    }
+    public List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
 
-//    private Set<ItemsetString> getItemsWithCount(Set<Transaction> negativeTransactions) {
-//
-//
-//    }
+        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
+        removeBodyItemsFromTransactions(rule, negativeTransactions);
+
+        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
+        removeBodyItemsFromTransactions(rule, PositiveTransactions);
+
+        Set<ItemsetString> negTransItems = getItemsWithCount(negativeTransactions);
+
+
+    }
+
+    private Set<ItemsetString> getItemsWithCount(Set<Transaction> negativeTransactions) {
+
+
+    }
 
 
     private TransactionDatabase getTransactionDatabase(Collection<Transaction> transactions){
@@ -243,19 +242,6 @@ public class ExceptionMining {
         return patterns;
 
     }
-//
-//    private Itemsets getClosedFrequentItemSets(Collection<Transaction> negativeTransactions) throws IOException {
-//
-//        FPClose
-//        TransactionDatabase tDb=getTransactionDatabase(negativeTransactions);
-//
-//        AlgoDCharm_Bitset algo = new AlgoDCharm_Bitset();
-//        Itemsets patterns = algo.runAlgorithm((String)null, tDb, 0.5D, true, (negativeTransactions.size()+10)/10);
-//        algo.printStats();
-//
-//        return patterns;
-//
-//    }
 
 
     public static void main(String[] args) throws IOException {
