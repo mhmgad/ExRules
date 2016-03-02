@@ -145,7 +145,7 @@ public class ExceptionMining {
 
         for (Transaction transaction:transactions) {
             Set <Integer> transDiff= Sets.difference(ImmutableSet.copyOf(transaction.getItemsAsList()),bodyset);
-            if(transDiff.size()!=0){
+            if(!transDiff.isEmpty()){
                 out.add(new Transaction(Ints.toArray(transDiff),transaction.getCount()));
 
             }
@@ -175,7 +175,7 @@ public class ExceptionMining {
 
         //String negativeTransactionsFilePath = writeToTmpFile(negativeTransactions);
 
-        List<List<Itemset>> patterns =getClosedFrequentItemSets(negativeTransactions).getLevels();
+        List<List<Itemset>> patterns =getClosedFrequentItemSets(filteredNegTrans).getLevels();
         List<Itemset> patternsFlat =  patterns.stream().flatMap(List::stream).collect(Collectors.toList());
         List<ItemsetString> patternsFlatItems=new ArrayList<>(patternsFlat.size());
         for (Itemset it:patternsFlat) {
