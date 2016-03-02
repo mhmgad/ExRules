@@ -125,7 +125,7 @@ public class AssociationRuleMiningSPMF {
 
             ((AssocRuleString)rule).setExceptionCandidates(exceptionCandidates);
             System.out.println(rule);
-            System.out.println(exceptionCandidates);
+            //System.out.println(exceptionCandidates);
             System.out.println(((AssocRuleString)rule).getExceptionCandidates());
 
 
