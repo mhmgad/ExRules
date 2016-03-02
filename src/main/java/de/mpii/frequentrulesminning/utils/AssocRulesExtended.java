@@ -103,7 +103,6 @@ public class AssocRulesExtended extends AssocRules{
             List<ItemsetString> exceptionCandidate=((AssocRuleString)rule).getExceptionCandidates();
             if(exceptionCandidate!=null&&exceptionCandidate.size()>0){
                 buffer.append("Exceptions: ");
-                Collections.sort(exceptionCandidate,(x,y)-> (y.getAbsoluteSupport()-x.getAbsoluteSupport()));
                 buffer.append(exceptionCandidate);
                 buffer.append('\n');
             }

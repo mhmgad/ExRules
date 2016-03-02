@@ -23,6 +23,14 @@ public class ItemsetString extends AbstractOrderedItemset {
     /**  the support of this itemset */
     public int support = 0;
 
+    /**  the support of this itemset */
+    public int totalCount = 1;
+
+    public ItemsetString(Item [] itemsetItem,int [] items,int support, int totalCount) {
+        this(itemsetItem,items, support);
+        this.totalCount=totalCount;
+    }
+
     public void setItemset(int[] itemset) {
         this.itemset=itemset;
         Arrays.sort(this.itemset);
@@ -123,7 +131,7 @@ public class ItemsetString extends AbstractOrderedItemset {
 
     @Override
     public String toString() {
-        return "([" + Joiner.on(' ').join(itemsetItem) + "]," + this.getAbsoluteSupport() + ")";
+        return "([" + Joiner.on(' ').join(itemsetItem) + "]," + this.getRelativeSupport(this.totalCount) + ")";
     }
 
     @Override

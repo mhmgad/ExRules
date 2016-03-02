@@ -120,7 +120,7 @@ public class AssociationRuleMiningSPMF {
         int i=0;
         for (AssocRule rule: rules.getRules()) {
             i++;
-            List<ItemsetString> exceptionCandidates=em.mineExceptions(rule);
+            List<ItemsetString> exceptionCandidates=em.mineExceptions2(rule);
 
 
             ((AssocRuleString)rule).setExceptionCandidates(exceptionCandidates);

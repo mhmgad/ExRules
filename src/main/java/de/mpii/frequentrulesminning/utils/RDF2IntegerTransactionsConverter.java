@@ -22,7 +22,9 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
+
     private HashBiMap<Item,Integer> items2Ids;
+    private BiMap<Integer,Item> id2Item;
     private SetMultimap<String, Integer> subjects2ItemsIds;
     private int itemsIDs;
 
@@ -54,7 +56,7 @@ public class RDF2IntegerTransactionsConverter {
                 int id= items2Ids.get(key);
                 subjects2ItemsIds.put(value, id);
             }
-
+             id2Item= items2Ids.inverse();
             System.out.println("Items size: " + items2Ids.size());
             System.out.println("Transactions Size: "+subjects2ItemsIds.size());
 
@@ -138,10 +140,10 @@ public class RDF2IntegerTransactionsConverter {
 //    }
 
     public Item[]convertIntegers2Strings(int [] itemsList){
-        BiMap<Integer,Item> id2Item= items2Ids.inverse();
+
         Item[] itemsStrList=new Item[itemsList.length];
         for (int i=0; i<itemsList.length;i++){
-            itemsStrList[i]=id2Item.get(itemsList[i]);
+            itemsStrList[i]=convertInteger2Item(itemsList[i]);
 
         }
 
@@ -149,17 +151,29 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
-    public int[]convertItems2Integer(String [] itemsList){
+    public int[]convertItems2Integer(Item [] itemsList){
 
         int[] itemsInt=new int[itemsList.length];
         for (int i=0; i<itemsList.length;i++){
-            itemsInt[i]= items2Ids.get(itemsList[i]);
+            itemsInt[i]= convertItem2Integer(itemsList[i]);
 
         }
 
         return itemsInt;
 
     }
+
+
+    public int convertItem2Integer(Item item){
+        return items2Ids.get(item);
+    }
+
+    public Item convertInteger2Item(int i){
+        return id2Item.get(i);
+    }
+
+
+
 
 //    private void convertIntegers2Strings(String inputTransactionFilePath, String outputTransactionFilePath) {
 //        try {
@@ -206,6 +220,9 @@ public class RDF2IntegerTransactionsConverter {
             e.printStackTrace();
         }
     }
+
+
+
 
 
     public static void main(String [] args){

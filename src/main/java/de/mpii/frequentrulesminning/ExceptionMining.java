@@ -13,11 +13,13 @@ import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.utils.ItemsetString;
 import de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter;
 import de.mpii.frequentrulesminning.utils.Transaction;
+import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -188,23 +190,48 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
-//    public List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
-//
-//        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
-//        Collection filteredNegTrans=removeBodyItemsFromTransactions(rule, negativeTransactions);
-//
-//        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
-//        Collection filteredPosTrans=removeBodyItemsFromTransactions(rule, PositiveTransactions);
-//
-//        Set<ItemsetString> negTransItems = getItemsWithCount(filteredNegTrans);
-//
-//
-//    }
-//
-//    private Set<ItemsetString> getItemsWithCount(Collection<Transaction> negativeTransactions) {
-//
-//
-//    }
+    public List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
+
+        // Get negative transactions and remove the body items
+        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
+        Collection filteredNegTrans=removeBodyItemsFromTransactions(rule, negativeTransactions);
+
+        // Get positive transactions and remove the body items
+        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
+        Collection filteredPosTrans=removeBodyItemsFromTransactions(rule, PositiveTransactions);
+
+        // count items
+        List<ItemsetString> negTransItems = getItemsWithCount(filteredNegTrans);
+        List<ItemsetString> posTransItems = getItemsWithCount(filteredPosTrans);
+
+
+        // Get whatever exists in negative but not head
+        Set<ItemsetString> diff=Sets.difference(ImmutableSet.copyOf(negTransItems),ImmutableSet.copyOf(posTransItems));
+
+        List<ItemsetString> diffList=new ArrayList<>(diff);
+
+        return diffList;
+    }
+
+    private List<ItemsetString> getItemsWithCount(Collection<Transaction> transactions) {
+        TIntIntHashMap itemsCount=new TIntIntHashMap();
+        int totalCount=0;
+        for(Transaction t:transactions){
+            int count=t.getCount();
+            totalCount+=count;
+            for(int i: t.getItems()){
+                itemsCount.adjustOrPutValue(i,count,count);
+            }
+        }
+        List<ItemsetString> output=new ArrayList<>(itemsCount.size());
+
+        for (int i:itemsCount.keys()) {
+            output.add(new ItemsetString(new Item[]{converter.convertInteger2Item(i)},new int[]{i},itemsCount.get(i),totalCount));
+
+        }
+        return output;
+
+    }
 
 
     private TransactionDatabase getTransactionDatabase(Collection<Transaction> transactions){

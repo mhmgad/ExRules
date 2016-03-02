@@ -7,6 +7,7 @@ import com.google.common.base.Joiner;
 import de.mpii.frequentrulesminning.Item;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,6 +48,7 @@ public class AssocRuleString extends AssocRule {
 
     public void setExceptionCandidates(List<ItemsetString> exceptionCandidates) {
         this.exceptionCandidates = exceptionCandidates;
+        Collections.sort(this.exceptionCandidates,( x,  y)-> y.getAbsoluteSupport()-x.getAbsoluteSupport());
     }
 
     public List<ItemsetString> getExceptionCandidates() {
