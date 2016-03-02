@@ -197,7 +197,7 @@ public class ExceptionMining {
         Collection filteredNegTrans=removeBodyItemsFromTransactions(rule, negativeTransactions);
 
         // Get positive transactions and remove the body items
-        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
+        Set<Transaction> PositiveTransactions = getPositiveTransactions(rule);
         Collection filteredPosTrans=removeBodyItemsFromTransactions(rule, PositiveTransactions);
 
         // count items
