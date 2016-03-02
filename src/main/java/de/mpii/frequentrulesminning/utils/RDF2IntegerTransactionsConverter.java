@@ -215,6 +215,7 @@ public class RDF2IntegerTransactionsConverter {
                 items2Ids.put(Item.fromString(parts[1]),Integer.valueOf(parts[0]));
 
             }
+            id2Item= items2Ids.inverse();
             System.out.println("Done!");
         } catch (IOException e) {
             e.printStackTrace();
