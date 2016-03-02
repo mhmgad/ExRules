@@ -125,8 +125,8 @@ public class AssociationRuleMiningSPMF {
 
             ((AssocRuleString)rule).setExceptionCandidates(exceptionCandidates);
 
-            if(i==10)
-                break;
+//            if(i==10)
+//                break;
 
             if(i%1000==0)
                 System.out.println(i+"/"+rules.getRules().size());
