@@ -131,7 +131,7 @@ public class ItemsetString extends AbstractOrderedItemset {
 
     @Override
     public String toString() {
-        return "([" + Joiner.on(' ').join(itemsetItem) + "]," + this.getRelativeSupport(this.totalCount) + ")";
+        return "([" + Joiner.on(' ').join(itemsetItem) + "]," + String.format("%.4f",this.getRelativeSupport(this.totalCount)) + ")";
     }
 
     @Override
@@ -142,5 +142,10 @@ public class ItemsetString extends AbstractOrderedItemset {
     @Override
     public boolean equals(Object obj) {
         return Arrays.equals(((ItemsetString)obj).getItems(),getItems());
+    }
+
+
+    public double getRelativeSupport() {
+        return super.getRelativeSupport(this.totalCount);
     }
 }

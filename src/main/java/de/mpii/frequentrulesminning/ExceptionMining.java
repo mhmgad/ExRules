@@ -181,6 +181,8 @@ public class ExceptionMining {
         List<Itemset> patternsFlat =  patterns.stream().flatMap(List::stream).collect(Collectors.toList());
         List<ItemsetString> patternsFlatItems=new ArrayList<>(patternsFlat.size());
         for (Itemset it:patternsFlat) {
+
+
             patternsFlatItems.add(new ItemsetString(converter.convertIntegers2Strings(it.getItems()),it.getItems(),it.getAbsoluteSupport()));
 
         }
@@ -210,6 +212,8 @@ public class ExceptionMining {
 
 
         List<ItemsetString> diffList=new ArrayList<>(diff);
+        // filter based on support
+        diffList.removeIf((x)-> x.getRelativeSupport()>this.exceptionMinSupp);
 
         return diffList;
     }
