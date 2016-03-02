@@ -87,9 +87,13 @@ public class AssocRulesExtended extends AssocRules{
         StringBuilder buffer = new StringBuilder();
 
         int i = 0;
-
+        int prevHead=-1;
         for(Iterator var5 = this.rules.iterator(); var5.hasNext(); ++i) {
             AssocRule rule = (AssocRule)var5.next();
+            if(prevHead!=rule.getItemset2()[0]){
+                buffer.append("**************************************************************************\n");
+            }
+            prevHead=rule.getItemset2()[0];
             buffer.append("r");
             buffer.append(i);
             buffer.append(":\t");
@@ -102,10 +106,11 @@ public class AssocRulesExtended extends AssocRules{
             buffer.append("\n");
             List<ItemsetString> exceptionCandidate=((AssocRuleString)rule).getExceptionCandidates();
             if(exceptionCandidate!=null&&exceptionCandidate.size()>0){
-                buffer.append("Exceptions: ");
+                buffer.append("Except: ");
                 buffer.append(exceptionCandidate);
                 buffer.append('\n');
             }
+            buffer.append('\n');
         }
 
         return buffer.toString();
