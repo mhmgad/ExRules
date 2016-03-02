@@ -213,7 +213,7 @@ public class ExceptionMining {
 
         List<ItemsetString> diffList=new ArrayList<>(diff);
         // filter based on support
-        diffList.removeIf((x)-> x.getRelativeSupport()>this.exceptionMinSupp);
+        diffList.removeIf((x)-> x.getRelativeSupport()<this.exceptionMinSupp);
 
         return diffList;
     }
