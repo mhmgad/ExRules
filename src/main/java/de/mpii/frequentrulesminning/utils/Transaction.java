@@ -77,9 +77,4 @@ public class Transaction{
         setItems(Ints.toArray(transDiff));
     }
 
-
-//    public static Transaction fromString(String trasaction){
-//
-//
-//    }
 }

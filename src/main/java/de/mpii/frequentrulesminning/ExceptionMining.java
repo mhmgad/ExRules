@@ -81,6 +81,8 @@ public class ExceptionMining {
 
         }
 
+//        transactionsSet.forEachEntry((x,y)->  x.setCout(this.transactionsSet.get(x)));
+        transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
 
     }
 
@@ -134,34 +136,25 @@ public class ExceptionMining {
         return transactions;
     }
 
-    private void removeBodyItemsFromTransactions(AssocRule rule,Set<Transaction> transactions) {
+    private List<Transaction> removeBodyItemsFromTransactions(AssocRule rule,Set<Transaction> transactions) {
         int [] body=rule.getItemset1();
         // adding transactions to list after removing body items
         Set<Integer> bodyset= ImmutableSet.copyOf(Ints.asList(body));
 
-//        transactions.stream().forEach((x)->x.setCout(this.transactionsSet.get(x)));
-//
-//        transactions.stream().forEach((x)->x.removeItems(body));
+        List<Transaction> out=new ArrayList<>(transactions.size());
 
 
-
-        Iterator<Transaction> itr = transactions.iterator();
-        while (itr.hasNext()) {
+        for (Transaction transaction:transactions) {
 
 
-            Transaction transaction=itr.next();
             Set <Integer> transDiff= Sets.difference(ImmutableSet.copyOf(transaction.getItemsAsList()),bodyset);
-            if(transDiff.size()==0){
-                itr.remove();
-            }
-            else {
+            if(transDiff.size()!=0){
+                out.add(new Transaction(Ints.toArray(transDiff),transaction.getCount()));
 
-                int transactionCount = this.transactionsSet.get(transaction);
-                transaction.setItems(Ints.toArray(transDiff));
-                transaction.setCout(transactionCount);
             }
 
         }
+        return out;
     }
 
 
@@ -182,7 +175,7 @@ public class ExceptionMining {
     public  List<ItemsetString> mineExceptions(AssocRule rule) throws IOException {
 
         Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
-        removeBodyItemsFromTransactions(rule,negativeTransactions);
+        Collection filteredNegTrans=removeBodyItemsFromTransactions(rule,negativeTransactions);
 
         //String negativeTransactionsFilePath = writeToTmpFile(negativeTransactions);
 
@@ -199,23 +192,23 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
-    public List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
-
-        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
-        removeBodyItemsFromTransactions(rule, negativeTransactions);
-
-        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
-        removeBodyItemsFromTransactions(rule, PositiveTransactions);
-
-        Set<ItemsetString> negTransItems = getItemsWithCount(negativeTransactions);
-
-
-    }
-
-    private Set<ItemsetString> getItemsWithCount(Set<Transaction> negativeTransactions) {
-
-
-    }
+//    public List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
+//
+//        Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
+//        Collection filteredNegTrans=removeBodyItemsFromTransactions(rule, negativeTransactions);
+//
+//        Set<Transaction> PositiveTransactions = getNegativeTransactions(rule);
+//        Collection filteredPosTrans=removeBodyItemsFromTransactions(rule, PositiveTransactions);
+//
+//        Set<ItemsetString> negTransItems = getItemsWithCount(filteredNegTrans);
+//
+//
+//    }
+//
+//    private Set<ItemsetString> getItemsWithCount(Collection<Transaction> negativeTransactions) {
+//
+//
+//    }
 
 
     private TransactionDatabase getTransactionDatabase(Collection<Transaction> transactions){
