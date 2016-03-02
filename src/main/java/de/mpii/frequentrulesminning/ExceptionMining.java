@@ -81,7 +81,6 @@ public class ExceptionMining {
 
         }
 
-//        transactionsSet.forEachEntry((x,y)->  x.setCout(this.transactionsSet.get(x)));
         transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
 
     }
@@ -145,14 +144,11 @@ public class ExceptionMining {
 
 
         for (Transaction transaction:transactions) {
-
-
             Set <Integer> transDiff= Sets.difference(ImmutableSet.copyOf(transaction.getItemsAsList()),bodyset);
             if(transDiff.size()!=0){
                 out.add(new Transaction(Ints.toArray(transDiff),transaction.getCount()));
 
             }
-
         }
         return out;
     }
