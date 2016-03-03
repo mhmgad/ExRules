@@ -180,11 +180,19 @@ public class AssociationRuleMiningSPMF {
             Item head=rule.getHeadItems()[0];
 
         for (Item b :rule.getbodyItems()) {
-            if(!b.getPredicate().equals( head.getPredicate()))
-                continue;
             Set<String> parents=yagoTaxonomy.getParents(b.getObject());
-            if(parents.contains(head.getObject()))
+            // Check body vs head
+            if(b.getPredicate().equals( head.getPredicate())) {
+                if(parents.contains(head.getObject()))
+                    return true;
+            }
+
+            // check body vs other body elements
+            if(Arrays.stream(rule.getbodyItems()).anyMatch((b2)-> ((b2!=b)&&b.getPredicate().equals( b2.getPredicate())&&(parents.contains(b2.getObject())))))
                 return true;
+
+
+
         }
         return false;
     }
