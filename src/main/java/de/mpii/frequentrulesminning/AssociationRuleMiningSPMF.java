@@ -210,7 +210,7 @@ public class AssociationRuleMiningSPMF {
         if(sortType!=null)
             rules.sort(sortType);
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
-        bw.write(rules.toString(getDatabaseSize()));
+        bw.write(rules.toString(getDatabaseSize(),sortType));
         bw.close();
 
 

@@ -82,15 +82,15 @@ public class AssocRulesExtended extends AssocRules{
         }
     }
 
-    @Override
-    public String toString(int databaseSize) {
+
+    public String toString(int databaseSize,SortingType type) {
         StringBuilder buffer = new StringBuilder();
 
         int i = 0;
         int prevHead=-1;
         for(Iterator var5 = this.rules.iterator(); var5.hasNext(); ++i) {
             AssocRule rule = (AssocRule)var5.next();
-            if(prevHead!=rule.getItemset2()[0]){
+            if((type==SortingType.HEAD||type==SortingType.HEAD_CONF)&&prevHead!=rule.getItemset2()[0]){
                 buffer.append("**************************************************************************\n");
             }
             prevHead=rule.getItemset2()[0];
