@@ -105,6 +105,7 @@ public class AssociationRuleMiningSPMF {
             filterAfterDecoding(rules);
         }
 
+        System.out.println("Rules after filtering: "+rules.getRulesCount());
 
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions)
