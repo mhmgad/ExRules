@@ -55,5 +55,10 @@ public class AssocRuleString extends AssocRule {
         return exceptionCandidates;
     }
 
+    public boolean hasExceptions(){
+        return (exceptionCandidates==null||exceptionCandidates.size()==0);
+    }
+
+
 
 }

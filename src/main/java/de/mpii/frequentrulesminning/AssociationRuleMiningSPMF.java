@@ -215,11 +215,11 @@ public class AssociationRuleMiningSPMF {
 
 
 
-    public void exportRules(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType) throws IOException {
+    public void exportRules(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly) throws IOException {
         if(sortType!=null)
             rules.sort(sortType);
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
-        bw.write(rules.toString(getDatabaseSize(),sortType));
+        bw.write(rules.toString(getDatabaseSize(),sortType,showRulesWithExceptionsOnly));
         bw.close();
 
 
@@ -342,11 +342,18 @@ public class AssociationRuleMiningSPMF {
             excepminSupp=Double.valueOf(args[10]);
         }
 
+        boolean showRulesWithExceptionsOnly=false;
+
+        if(args.length>11){
+            showRulesWithExceptionsOnly=args[11].equals("1");
+
+        }
+
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
 
         AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true, withExceptions,excepminSupp);
-        miner.exportRules(rulesStrings, outputFilePath,outputSorting);
+        miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 
     }
 
