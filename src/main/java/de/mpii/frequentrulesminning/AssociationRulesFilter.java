@@ -1,10 +1,8 @@
 package de.mpii.frequentrulesminning;
 
-import com.google.common.collect.ImmutableSet;
+import de.mpii.frequentrulesminning.utils.Item;
 import de.mpii.yagotools.YagoTaxonomy;
 import de.mpii.yagotools.utils.YagoRelations;
-import mpi.tools.javatools.filehandlers.UTF8Reader;
-import mpi.tools.javatools.filehandlers.UTF8Writer;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedReader;

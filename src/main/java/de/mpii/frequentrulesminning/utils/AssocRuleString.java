@@ -1,10 +1,8 @@
 package de.mpii.frequentrulesminning.utils;
 
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
-import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
 
 import com.google.common.base.Joiner;
-import de.mpii.frequentrulesminning.Item;
 
 import java.util.Arrays;
 import java.util.Collections;

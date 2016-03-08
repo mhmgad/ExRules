@@ -1,4 +1,4 @@
-package de.mpii.frequentrulesminning;
+package de.mpii.frequentrulesminning.utils;
 
 /**
  * Created by gadelrab on 2/18/16.

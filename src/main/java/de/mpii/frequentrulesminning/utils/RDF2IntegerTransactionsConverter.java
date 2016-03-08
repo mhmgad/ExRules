@@ -2,7 +2,6 @@ package de.mpii.frequentrulesminning.utils;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.*;
-import de.mpii.frequentrulesminning.Item;
 import mpi.tools.basics3.Fact;
 import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.filehandlers.UTF8Reader;

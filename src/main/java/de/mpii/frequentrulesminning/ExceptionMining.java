@@ -5,21 +5,20 @@ import ca.pfv.spmf.algorithms.frequentpatterns.charm.AlgoDCharm_Bitset;
 import ca.pfv.spmf.input.transaction_database_list_integers.TransactionDatabase;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemsets;
-import com.google.common.collect.HashMultimap;
+
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
-import de.mpii.frequentrulesminning.utils.ItemsetString;
-import de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter;
-import de.mpii.frequentrulesminning.utils.Transaction;
+import de.mpii.frequentrulesminning.utils.*;
 import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
 
 import java.io.*;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -29,15 +28,17 @@ public class ExceptionMining {
 
     private  double exceptionMinSupp;
     private  RDF2IntegerTransactionsConverter converter;
-    TObjectIntHashMap<Transaction> transactionsSet;
+//    TObjectIntHashMap<Transaction> transactionsSet;
+//
+//    SetMultimap<Integer,Transaction> items2transactions;
 
-    SetMultimap<Integer,Transaction> items2transactions;
-
+    TransactionsDatabase transactionDB;
 
     public ExceptionMining(InputStream transactions,double exceptionMinSupp) throws IOException {
-        this.items2transactions = HashMultimap.create();
-        this.transactionsSet = new TObjectIntHashMap<>();
-        loadTransactions( transactions);
+//        this.items2transactions = HashMultimap.create();
+//        this.transactionsSet = new TObjectIntHashMap<>();
+        this.transactionDB=new TransactionsDatabase(transactions);
+//        loadTransactions( transactions);
         this.exceptionMinSupp=exceptionMinSupp;
     }
 
@@ -67,25 +68,25 @@ public class ExceptionMining {
     }
 
 
-    private void loadTransactions(InputStream transactionsStream) throws IOException {
-
-        BufferedReader br=FileUtils.getBufferedUTF8Reader(transactionsStream);
-        // read transactions file
-        for (String line=br.readLine();line!=null&&!line.isEmpty();line=br.readLine()){
-            Transaction t=new Transaction(line);
-
-            if (transactionsSet.adjustOrPutValue(t, 1, 1) == 1) {
-                // add it to the map
-                for (int i:t.getItems()){
-                    items2transactions.put(i,t);
-                }
-            }
-
-        }
-
-        transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
-
-    }
+//    private void loadTransactions(InputStream transactionsStream) throws IOException {
+//
+//        BufferedReader br=FileUtils.getBufferedUTF8Reader(transactionsStream);
+//        // read transactions file
+//        for (String line=br.readLine();line!=null&&!line.isEmpty();line=br.readLine()){
+//            Transaction t=new Transaction(line);
+//
+//            if (transactionsSet.adjustOrPutValue(t, 1, 1) == 1) {
+//                // add it to the map
+//                for (int i:t.getItems()){
+//                    items2transactions.put(i,t);
+//                }
+//            }
+//
+//        }
+//
+//        transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
+//
+//    }
 
     public static String writeToTmpFile(Collection<Transaction> transactions) throws IOException {
         File temporaryTransactions = File.createTempFile("rule_mining", "negativeTransactions.txt");
@@ -108,14 +109,15 @@ public class ExceptionMining {
     private Set<Transaction> getNegativeTransactions(AssocRule rule) {
         // transactions contain body
         int [] body=rule.getItemset1();
-        Set<Transaction> transactions = getTransactionsWithBody(rule);
-
-        // exclude transactions contain head
         int [] head=rule.getItemset2();
-        for (int i=0;i<head.length;i++){
-            transactions = new HashSet(Sets.difference(transactions, items2transactions.get(head[i])));
-        }
-
+//        Set<Transaction> transactions = getTransactionsWithBody(rule);
+//
+//        // exclude transactions contain head
+//        for (int i=0;i<head.length;i++){
+////            transactions = new HashSet(Sets.difference(transactions, items2transactions.get(head[i])));
+//            transactions = new HashSet(Sets.difference(transactions, transactionDB.getTransactionsWithItem(head[i])));
+//        }
+        Set<Transaction> transactions =transactionDB.getTransactions(body,head);
 
         return transactions;
     }
@@ -125,13 +127,15 @@ public class ExceptionMining {
 
         // transactions contain body
         int [] body=rule.getItemset1();
-        Set<Transaction> transactions = getTransactionsWithBody(rule);
-
-        // exclude transactions contain head
         int [] head=rule.getItemset2();
-        for (int i=0;i<head.length;i++){
-            transactions = new HashSet(Sets.intersection(transactions, items2transactions.get(head[i])));
-        }
+        Set<Transaction> transactions = transactionDB.getTransactions(ArrayUtils.addAll(body,head),null);
+//        Set<Transaction> transactions = getTransactionsWithBody(rule);
+//
+//        // exclude transactions contain head
+//        for (int i=0;i<head.length;i++){
+////            transactions = new HashSet(Sets.intersection(transactions, items2transactions.get(head[i])));
+//            transactions = new HashSet(Sets.intersection(transactions,transactionDB.getTransactionsWithItem(head[i])));
+//        }
 
 
         return transactions;
@@ -160,14 +164,21 @@ public class ExceptionMining {
 
 
 
-    private Set<Transaction> getTransactionsWithBody(AssocRule rule) {
-        int[] body = rule.getItemset1();
-        Set<Transaction> transactions=new HashSet<>(items2transactions.get(body[0]));
-        for (int i=1;i<body.length;i++){
-            transactions = new HashSet(Sets.intersection(transactions, items2transactions.get(body[i])));
-        }
-        return transactions;
-    }
+//    private Set<Transaction> getTransactionsWithBody(AssocRule rule) {
+//        int[] body = rule.getItemset1();
+////        Set<Transaction> transactions=new HashSet<>(items2transactions.get(body[0]));
+////        Set<Transaction> transactions=new HashSet<>(transactionDB.getTransactionsWithItem(body[0]));
+////        for (int i=1;i<body.length;i++){
+//////            transactions = new HashSet(Sets.intersection(transactions, items2transactions.get(body[i])));
+////            transactions = new HashSet(Sets.intersection(transactions, transactionDB.getTransactionsWithItem(body[i])));
+////        }
+////        return transactions;
+//
+//        Set<Transaction> transactions=transactionDB.getTransactions(body,null);
+//        return transactions;
+//
+//
+//    }
 
 
     public  List<ItemsetString> mineExceptions(AssocRule rule) throws IOException {
@@ -181,10 +192,7 @@ public class ExceptionMining {
         List<Itemset> patternsFlat =  patterns.stream().flatMap(List::stream).collect(Collectors.toList());
         List<ItemsetString> patternsFlatItems=new ArrayList<>(patternsFlat.size());
         for (Itemset it:patternsFlat) {
-
-
             patternsFlatItems.add(new ItemsetString(converter.convertIntegers2Strings(it.getItems()),it.getItems(),it.getAbsoluteSupport()));
-
         }
         
 

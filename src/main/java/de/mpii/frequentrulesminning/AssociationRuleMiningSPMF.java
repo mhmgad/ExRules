@@ -12,13 +12,9 @@ import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 import com.google.common.collect.*;
 
 import com.google.common.primitives.Ints;
-import de.mpii.frequentrulesminning.utils.AssocRuleString;
-import de.mpii.frequentrulesminning.utils.AssocRulesExtended;
-import de.mpii.frequentrulesminning.utils.ItemsetString;
-import de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter;
+import de.mpii.frequentrulesminning.utils.*;
 
 import de.mpii.yagotools.YagoTaxonomy;
-import de.mpii.yagotools.utils.YagoRelations;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedWriter;

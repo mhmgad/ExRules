@@ -1,9 +1,9 @@
 package de.mpii.frequentrulesminning;
 
 import com.google.common.base.Joiner;
+import de.mpii.frequentrulesminning.utils.Item;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

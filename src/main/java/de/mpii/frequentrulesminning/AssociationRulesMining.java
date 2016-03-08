@@ -2,6 +2,7 @@ package de.mpii.frequentrulesminning;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
+import de.mpii.frequentrulesminning.utils.Item;
 import mpi.tools.javatools.filehandlers.UTF8Writer;
 import mpi.tools.javatools.filehandlers.UTF8Reader;
 

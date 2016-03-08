@@ -3,7 +3,6 @@ package de.mpii.frequentrulesminning.utils;
 import ca.pfv.spmf.patterns.AbstractOrderedItemset;
 import com.google.common.base.Joiner;
 import com.google.common.primitives.Ints;
-import de.mpii.frequentrulesminning.Item;
 
 import java.util.Arrays;
 import java.util.List;
