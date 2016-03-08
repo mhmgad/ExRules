@@ -115,7 +115,7 @@ public class YagoFactsReducer {
         List<Fact>  reducedFacts=new ArrayList<>();
 
         String entity=orgFact.getObject();
-        Collection<String> parents=yTax.getParents(entity);
+        Collection<String> parents=yTax.getParents(yTypes.getType(entity));
 
         parents.forEach((p)-> reducedFacts.add(new Fact(orgFact.getSubject(),orgFact.getRelation(),p)));
 

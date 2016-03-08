@@ -1,10 +1,12 @@
 package de.mpii.yagotools;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 import de.mpii.yagotools.utils.YagoDataReader;
 import de.mpii.yagotools.utils.YagoRelations;
 
-
+import java.util.Collection;
+import java.util.HashSet;
 
 
 /**
@@ -35,7 +37,10 @@ public class YagoTypes {
     }
 
 
-
+    public Collection<String> getType(String entity){
+        Collection<String> parents=entityTypes.get(entity);
+        return (entityTypes==null)? new HashSet<String>():parents;
+    }
 
 
     public static void main (String [] args){
