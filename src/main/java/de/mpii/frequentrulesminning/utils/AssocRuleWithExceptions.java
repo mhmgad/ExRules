@@ -11,20 +11,33 @@ import java.util.List;
 /**
  * Created by gadelrab on 2/22/16.
  */
-public class AssocRuleString extends AssocRule {
+public class AssocRuleWithExceptions extends AssocRule {
 
+
+    public void setHeadItems(Item[] headItems) {
+        this.headItems = headItems;
+    }
+
+    public void setBodyItems(Item[] bodyItems) {
+        this.bodyItems = bodyItems;
+    }
 
     private  Item[] headItems;
     private  Item[] bodyItems;
     private List<ItemsetString> exceptionCandidates;
 
-    public AssocRuleString(Item[] bodyItems, Item [] headItems, int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
-        super(itemset1, itemset2, supportAntecedent, transactionCount, confidence, lift);
-        Arrays.sort(this.getItemset1());
-        Arrays.sort(this.getItemset2());
+    public AssocRuleWithExceptions(Item[] bodyItems, Item [] headItems, int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
+        this(itemset1, itemset2, supportAntecedent, transactionCount, confidence, lift);
         this.bodyItems = bodyItems;
         this.headItems = headItems;
     }
+
+    public AssocRuleWithExceptions( int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
+        super(itemset1, itemset2, supportAntecedent, transactionCount, confidence, lift);
+        Arrays.sort(this.getItemset1());
+        Arrays.sort(this.getItemset2());
+    }
+
 
     @Override
     public String toString() {

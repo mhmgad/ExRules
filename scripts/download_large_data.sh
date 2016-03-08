@@ -31,6 +31,7 @@ wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/y
 wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoGeonamesOnlyData.tsv.7z
 wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoFacts.tsv.7z
 wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoGeonamesClasses.tsv.7z
+wget -P $DATA_DIR http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoTypes.tsv.7z
 
 
 

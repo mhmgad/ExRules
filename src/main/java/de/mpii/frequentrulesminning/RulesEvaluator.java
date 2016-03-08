@@ -1,5 +1,7 @@
 package de.mpii.frequentrulesminning;
 
+import de.mpii.frequentrulesminning.utils.AssocRuleWithExceptions;
+import de.mpii.frequentrulesminning.utils.AssocRulesExtended;
 import de.mpii.frequentrulesminning.utils.TransactionsDatabase;
 
 import java.io.IOException;
@@ -26,6 +28,10 @@ public class RulesEvaluator {
 
 
 
-    public double
+//    public double confidence(AssocRuleWithExceptions rule){
+//
+//
+//
+//    }
 
 }

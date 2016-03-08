@@ -2,13 +2,16 @@ package de.mpii.predicatelifting;
 
 import com.google.common.collect.ImmutableSet;
 import de.mpii.yagotools.YagoLocation;
-import de.mpii.yagotools.YagoSimpleTypes;
+import de.mpii.yagotools.YagoTypes;
+import de.mpii.yagotools.YagoTaxonomy;
 import mpi.tools.basics3.Fact;
 import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.*;
-import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by gadelrab on 2/11/16.
@@ -16,23 +19,28 @@ import java.net.URL;
 public class YagoFactsReducer {
 
 
-    public enum FactType{LOCATION,DATE,PERSON,ORGANIZATION,ARTIFACT}
+    private YagoTaxonomy yTax;
+
+    public enum FactType{LOCATION,DATE,PERSON,ORGANIZATION,ARTIFACT,HAS_TYPE}
 
     public static final String LOCATION_RELATIONS_FILE="resources/yago_location_relations.tsv";
     ImmutableSet<String> locationRelations;
-    YagoSimpleTypes yst;
+    YagoTypes yTypes;
     YagoLocation yLoc;
 
 
 
     public YagoFactsReducer(){
-        //yst=YagoSimpleTypes.getInstance();
+        //yst=YagoTypes.getInstance();
         yLoc=YagoLocation.getInstance();
+        yTax=YagoTaxonomy.getInstance();
+        yTypes=YagoTypes.getInstance();
 
 
         try {
 
             locationRelations = ImmutableSet.copyOf(FileUtils.getFileContentasList(LOCATION_RELATIONS_FILE));
+
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,13 +71,15 @@ public class YagoFactsReducer {
 
         for( Fact f:factSource) {
             if (relationsSet==null||relationsSet.contains(f.getRelation())) {
-                Fact reducedfact = reduceFact(f, fType);
-                try {
-                    outputWriter.write(reducedfact.toTsvLine());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                List<Fact> reducedFacts = reduceFact(f, fType);
 
+                    reducedFacts.forEach((reducedFact) -> {
+                        try {
+                            outputWriter.write(reducedFact.toTsvLine());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
             }
 
         }
@@ -78,7 +88,8 @@ public class YagoFactsReducer {
 
 
 
-    public Fact reduceFact(Fact orgFact,FactType factType) {
+    public List<Fact> reduceFact(Fact orgFact,FactType factType) {
+        List<Fact>  reducedFacts=new ArrayList<>();
         if (factType==null){
             if(locationRelations.contains(orgFact)){
                 return reduceLocationFact(orgFact);
@@ -90,27 +101,45 @@ public class YagoFactsReducer {
                     return reduceLocationFact(orgFact);
                 case DATE:
                     return reduceDateFact(orgFact);
+                case HAS_TYPE:
+                    return reduceBasedOnType(orgFact);
 
             }
         }
-
-        return orgFact;
+        reducedFacts.add(orgFact);
+        return reducedFacts;
 
     }
 
-    private Fact reduceDateFact(Fact orgFact) {
+    private List<Fact> reduceBasedOnType(Fact orgFact) {
+        List<Fact>  reducedFacts=new ArrayList<>();
+
+        String entity=orgFact.getObject();
+        Collection<String> parents=yTax.getParents(entity);
+
+        parents.forEach((p)-> reducedFacts.add(new Fact(orgFact.getSubject(),orgFact.getRelation(),p)));
+
+        return reducedFacts;
+    }
+
+    private List<Fact> reduceDateFact(Fact orgFact) {
+        List<Fact>  reducedFacts=new ArrayList<>();
         String date=orgFact.getObjectAsJavaString();
         //System.out.println(date);
+        //String[] dateParts=date.split("-");
         String reduced=date.substring(0,3);
-        return new Fact(orgFact.getSubject(),orgFact.getRelation(),reduced);
+        reducedFacts.add(new Fact(orgFact.getSubject(),orgFact.getRelation(),reduced));
+        return reducedFacts;
     }
 
 
-    private Fact reduceLocationFact(Fact orgFact) {
+    private List<Fact> reduceLocationFact(Fact orgFact) {
+        List<Fact>  reducedFacts=new ArrayList<>();
         String entity=orgFact.getObject();
-        String reduced=yLoc.getParentCountry(entity);
-
-        return new Fact(orgFact.getSubject(),orgFact.getRelation(),reduced);
+        Collection<String> reduced=yLoc.getParents(entity);
+        reduced.forEach((rf)-> reducedFacts.add(new Fact(orgFact.getSubject(),orgFact.getRelation(),rf)));
+        reducedFacts.add(orgFact);
+        return reducedFacts;
 
     }
 
@@ -119,7 +148,7 @@ public class YagoFactsReducer {
 
 
         if(args.length<2){
-            System.out.println("Incorrect params: fact_reducer <InputFile> <outputFile> [Type<LOCATION|DATE>]");
+            System.out.println("Incorrect params: fact_reducer <InputFile> <outputFile> [Type<LOCATION|DATE|HAS_TYPE>]");
             System.exit(1);
         }
 

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by gadelrab on 2/29/16.
  */
-public class ItemsetString extends AbstractOrderedItemset {
+public class ItemsetString {//extends AbstractOrderedItemset {
 
 
     /** the array of items **/
@@ -133,6 +133,10 @@ public class ItemsetString extends AbstractOrderedItemset {
         return "([" + Joiner.on(' ').join(itemsetItem) + "]," + String.format("%.4f",this.getRelativeSupport(this.totalCount)) + ")";
     }
 
+    public double getRelativeSupport(int nbObject) {
+        return (double)this.getAbsoluteSupport() / (double)nbObject;
+    }
+
     @Override
     public int hashCode() {
         return Arrays.hashCode(itemset);
@@ -145,6 +149,6 @@ public class ItemsetString extends AbstractOrderedItemset {
 
 
     public double getRelativeSupport() {
-        return super.getRelativeSupport(this.totalCount);
+        return this.getRelativeSupport(this.totalCount);
     }
 }

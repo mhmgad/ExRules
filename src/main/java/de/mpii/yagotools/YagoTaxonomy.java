@@ -71,6 +71,16 @@ public class YagoTaxonomy {
         return parents;
     }
 
+    public Set<String> getParents(Collection<String> keys){
+
+        Set<String> parents=new HashSet<>();
+
+        keys.forEach((k)-> parents.addAll(getParents(k)));
+
+        return parents;
+
+    }
+
 
     public static void main (String [] args){
         YagoTaxonomy yt= YagoTaxonomy.getInstance();

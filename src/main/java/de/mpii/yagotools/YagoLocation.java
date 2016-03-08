@@ -13,6 +13,8 @@ import java.io.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.net.URL;
 
@@ -77,12 +79,20 @@ public class YagoLocation {
             return (String) countryParents.toArray()[0];
     }
 
+    public Collection<String> getParents(String entity){
+        Collection<String> parents=typesParents.get(entity);
+        if (parents==null)
+            return new HashSet<String>();
+        else
+            return parents;
+    }
+
 
     public static void main (String [] args) {
         YagoLocation yt= YagoLocation.getInstance();
-        System.out.println(yt.getParentCountry("<Sohag>"));
-        System.out.println(yt.getParentCountry("<Berlin>"));
-        System.out.println(yt.getParentCountry("<Qatar>"));
+        System.out.println(yt.getParents("<Sohag>"));
+        System.out.println(yt.getParents("<Berlin>"));
+        System.out.println(yt.getParents("<Qatar>"));
     }
 
 

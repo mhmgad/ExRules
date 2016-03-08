@@ -66,7 +66,7 @@ public class AssociationRulesFilter {
             if(!b.getPredicate().equals( YagoRelations.TYPE))
                 continue;
             Set<String> parents=yt.getParents(b.getObject());
-            if(parents.contains(head.object))
+            if(parents.contains(head.getObject()))
                 return false;
 
         }

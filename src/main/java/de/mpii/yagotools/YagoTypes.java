@@ -10,24 +10,24 @@ import de.mpii.yagotools.utils.YagoRelations;
 /**
  * Created by gadelrab on 2/8/16.
  */
-public class YagoSimpleTypes {
+public class YagoTypes {
 
-    String TAXONOMY_FILE_PATH="data/yagoSimpleTypes.tsv";
+    String TAXONOMY_FILE_PATH="data/yagoTypes.tsv";
 
-    private static YagoSimpleTypes instance;
+    private static YagoTypes instance;
 
     private Multimap<String,String> entityTypes;
 
 
-    private YagoSimpleTypes(){
+    private YagoTypes(){
         entityTypes= YagoDataReader.loadDataInMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.TYPE}, YagoDataReader.MapType.SUBJ_2_OBJ);
     }
 
 
 
-    public static YagoSimpleTypes getInstance(){
+    public static YagoTypes getInstance(){
         if (instance==null){
-            instance=new YagoSimpleTypes();
+            instance=new YagoTypes();
         }
 
         return instance;
@@ -35,8 +35,11 @@ public class YagoSimpleTypes {
     }
 
 
+
+
+
     public static void main (String [] args){
-        YagoSimpleTypes yt= YagoSimpleTypes.getInstance();
+        YagoTypes yt= YagoTypes.getInstance();
     }
 
 

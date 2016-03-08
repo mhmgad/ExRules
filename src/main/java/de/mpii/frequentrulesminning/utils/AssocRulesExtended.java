@@ -3,53 +3,75 @@ package de.mpii.frequentrulesminning.utils;
 
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRules;
-import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
+import com.google.common.collect.Multimap;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by gadelrab on 2/25/16.
  */
-public class AssocRulesExtended extends AssocRules{
+public class AssocRulesExtended {
+    //extends AssocRules{
 
-    public AssocRulesExtended(AssocRules assocRules) {
-        super("Frequent Rules");
-        this.getRules().addAll(assocRules.getRules());
+//    public AssocRulesExtended(AssocRules assocRules) {
+//        super("Frequent Rules");
+//        this.getRules().addAll(assocRules.getRules());
+//
+//   }
 
-   }
+    public ArrayList<AssocRuleWithExceptions> getRules() {
+        return rules;
+    }
+
+    ArrayList<AssocRuleWithExceptions> rules;
+    Multimap<Integer,AssocRuleWithExceptions> head2Rules;
+
+    double confidence;
+
+    public double getConfidence() {
+        return confidence;
+    }
+
+    public void addRule(AssocRuleWithExceptions rule) {
+        rules.add(rule);
+
+    }
+
+    public int getRulesCount() {
+        return getRules().size();
+    }
 
     public enum SortingType{CONF,HEAD,BODY,HEAD_CONF}
 
 
 
-    public AssocRulesExtended(String name) {
-        super(name);
-    }
-
+//    public AssocRulesExtended(String name) {
+//        super(name);
+//    }
 
 
     public void sortByConfidence(){
-        super.sortByConfidence();
+        Collections.sort(getRules(),(AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> ((int)((c2.getConfidence() - c1.getConfidence()) * 2.147483647E9D)));
+
     }
 
 
+
+
     public void sortByHead(){
-        Collections.sort(getRules(),(c1, c2) -> ((AssocRule)c2).getItemset1()[0] - ((AssocRule)c1).getItemset1()[0]);
+        Collections.sort(getRules(),(AssocRuleWithExceptions c1,AssocRuleWithExceptions c2) -> (c2).getItemset1()[0] - (c1).getItemset1()[0]);
     }
 
 
     public void sortByBodyLength(){
-        Collections.sort(getRules(),(c1, c2) -> ((AssocRule)c2).getItemset1().length - ((AssocRule)c1).getItemset1().length);
+        Collections.sort(getRules(),(AssocRuleWithExceptions c1,AssocRuleWithExceptions c2) -> (c2).getItemset1().length - (c1).getItemset1().length);
     }
 
 
     public void sortByHeadAndConfidence(){
-        Collections.sort(getRules(), new Comparator<AssocRule>() {
+        Collections.sort(getRules(), new Comparator<AssocRuleWithExceptions>() {
             @Override
-            public int compare(AssocRule o1, AssocRule o2) {
+            public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {
                 int headDiff=o2.getItemset2()[0] - o1.getItemset2()[0];
 
                 if(headDiff!=0)
@@ -92,7 +114,7 @@ public class AssocRulesExtended extends AssocRules{
             AssocRule rule = (AssocRule)var5.next();
 
             // skip if i do not has exceptions
-            if(hasExceptionOnly&&!((AssocRuleString)rule).hasExceptions())
+            if(hasExceptionOnly&&!((AssocRuleWithExceptions)rule).hasExceptions())
                 continue;
 
             if((type==SortingType.HEAD||type==SortingType.HEAD_CONF)&&prevHead!=rule.getItemset2()[0]){
@@ -109,7 +131,7 @@ public class AssocRulesExtended extends AssocRules{
             buffer.append("\tsupp: ");
             buffer.append(rule.getAbsoluteSupport());
             buffer.append("\n");
-            List<ItemsetString> exceptionCandidate=((AssocRuleString)rule).getExceptionCandidates();
+            List<ItemsetString> exceptionCandidate=((AssocRuleWithExceptions)rule).getExceptionCandidates();
             if(exceptionCandidate!=null&&exceptionCandidate.size()>0){
                 buffer.append("Except: ");
                 buffer.append(exceptionCandidate);

@@ -7,6 +7,11 @@ public class Item implements  Comparable<Item>{
 
     private final  int hashCode;
     String predicate;
+
+    public int getHashCode() {
+        return hashCode;
+    }
+
     String object;
     int id;
 

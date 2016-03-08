@@ -74,7 +74,9 @@ public class AssociationRuleMiningSPMF {
 
     public AssocRulesExtended getFrequentAssociationRules(Itemsets frequentItemsets) throws IOException {
         System.out.println("Start Rule Mining ...");
-        AssocRulesExtended rules=new AssocRulesExtended(algoAgrawal.runAlgorithm(frequentItemsets, null,getDatabaseSize(), minconf));
+        List<AssocRule> rulesGenerated = algoAgrawal.runAlgorithm(frequentItemsets, null, getDatabaseSize(), minconf).getRules();
+        AssocRulesExtended rules=new AssocRulesExtended();
+        rulesGenerated.forEach((r)-> rules.addRule(new AssocRuleWithExceptions(r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift())));
         algoAgrawal.printStats();
         System.out.println("Done Rule Mining ...");
         return rules;
@@ -120,10 +122,10 @@ public class AssociationRuleMiningSPMF {
             List<ItemsetString> exceptionCandidates=em.mineExceptions2(rule);
 
 
-            ((AssocRuleString)rule).setExceptionCandidates(exceptionCandidates);
+            ((AssocRuleWithExceptions)rule).setExceptionCandidates(exceptionCandidates);
 //            System.out.println(rule);
             //System.out.println(exceptionCandidates);
-            //System.out.println(((AssocRuleString)rule).getExceptionCandidates());
+            //System.out.println(((AssocRuleWithExceptions)rule).getExceptionCandidates());
 
 
 //            if(i==10)
@@ -140,7 +142,7 @@ public class AssociationRuleMiningSPMF {
     private void filterAfterDecoding(AssocRulesExtended rules) {
         System.out.println("Start Filtering 2...");
         this.yagoTaxonomy=YagoTaxonomy.getInstance();
-        rules.getRules().removeIf(rule -> isMimickingHierarchy((AssocRuleString) rule));
+        rules.getRules().removeIf(rule -> isMimickingHierarchy((AssocRuleWithExceptions) rule));
         System.out.println("Done Filtering 2!");
     }
 
@@ -173,7 +175,7 @@ public class AssociationRuleMiningSPMF {
      * @param rule
      * @return
      */
-    private boolean isMimickingHierarchy(AssocRuleString rule) {
+    private boolean isMimickingHierarchy(AssocRuleWithExceptions rule) {
             Item head=rule.getHeadItems()[0];
 
         for (Item b :rule.getbodyItems()) {
@@ -232,10 +234,13 @@ public class AssociationRuleMiningSPMF {
             rdf2TransactionsConverter.loadMappingFromFile(mappingFilePath);
 
         System.out.println("Start Decoding ...");
-        AssocRulesExtended rulesStrings=new AssocRulesExtended("Frequent Rules");
-        for(AssocRule r:rules.getRules()) {
-            AssocRuleString rstr=new AssocRuleString(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()),rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()),r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift());
-            rulesStrings.addRule(rstr);
+        AssocRulesExtended rulesStrings=new AssocRulesExtended();
+        for(AssocRuleWithExceptions r:rules.getRules()) {
+            //AssocRuleWithExceptions rstr=new AssocRuleWithExceptions(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()),rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()),r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift());
+            //rulesStrings.addRule(rstr);
+            r.setBodyItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()));
+            r.setHeadItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()));
+
         }
         System.out.println("Done Decoding!");
         return rulesStrings;
