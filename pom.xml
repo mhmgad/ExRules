@@ -53,7 +53,8 @@
                 </executions>
                 <configuration>
                     <!-- Extra JVM arguments that will be included in the bin scripts -->
-                    <extraJvmArguments>-Xms40G</extraJvmArguments>
+                    <extraJvmArguments>-Xms4G</extraJvmArguments>
+                    <extraJvmArguments>-Xmx40G</extraJvmArguments>
                     <!-- set alternative assemble directory -->
                     <assembleDirectory>assemble</assembleDirectory>
                     <!--<generateRepository>false</generateRepository>-->
@@ -80,6 +81,10 @@
                         <program>
                             <mainClass>de.mpii.frequentrulesminning.utils.RDF2IntegerTransactionsConverter</mainClass>
                             <id>rdf2int</id>
+                        </program>
+                        <program>
+                            <mainClass>de.mpii.predicatelifting.YagoFactsFilter</mainClass>
+                            <id>filter_facts</id>
                         </program>
                     </programs>
                 </configuration>
