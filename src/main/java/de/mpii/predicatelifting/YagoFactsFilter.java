@@ -69,7 +69,7 @@ public class YagoFactsFilter {
         }
         System.out.println(Arrays.toString(args));
 
-        int threshold=Integer.getInteger(args[2]);
+        int threshold=Integer.parseInt(args[2]);
         YagoFactsFilter yf=new YagoFactsFilter(args[0]);
         yf.predicateObjectsCount(args[1],threshold);
     }
