@@ -32,11 +32,12 @@ public class YagoFactsFilter {
         try {
             BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFile);
 
-            for(Map.Entry<String, Collection<String>> entry:predicateObject2Subjects.asMap().entrySet()){
-                int size=entry.getValue().size();
+            for(String key : predicateObject2Subjects.keys()){
+                Collection<String> values=predicateObject2Subjects.get(key);
+                int size=values.size();
                 if(size>=threshold) {
-                    String[]items=entry.getKey().split("\t");
-                    entry.getValue().forEach((v) -> {
+                    String[]items=key.split("\t");
+                    values.forEach((v) -> {
                         try {
                             bw.write(new Fact(v, items[0], items[1]).toTsvLine());
                             bw.newLine();
@@ -67,7 +68,7 @@ public class YagoFactsFilter {
             System.out.println("Usage: filter_facts.sh <inFilePath> <outFilePath> <minimum support (integer)>");
             System.exit(0);
         }
-        System.out.println(Arrays.toString(args));
+//        System.out.println(Arrays.toString(args));
 
         int threshold=Integer.parseInt(args[2]);
         YagoFactsFilter yf=new YagoFactsFilter(args[0]);
