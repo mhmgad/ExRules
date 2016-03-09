@@ -2,6 +2,7 @@ package de.mpii.predicatelifting;
 
 import com.google.common.collect.Multimap;
 import de.mpii.yagotools.utils.YagoDataReader;
+import mpi.tools.basics3.Fact;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedWriter;
@@ -33,8 +34,18 @@ public class YagoFactsFilter {
             for(Map.Entry<String, Collection<String>> entry:predicateObject2Subjects.asMap().entrySet()){
                 int size=entry.getValue().size();
                 if(size>=threshold) {
-                    bw.write(size+"\t" + entry.getKey());
-                    bw.newLine();
+                    String[]items=entry.getKey().split("\t");
+                    entry.getValue().forEach((v) -> {
+                        try {
+                            bw.write(new Fact(v, items[0], items[1]).toTsvLine());
+                            bw.newLine();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                    ;
+                    //bw.write(size+"\t" + entry.getKey());
+
                 }
             }
             bw.close();
@@ -47,11 +58,17 @@ public class YagoFactsFilter {
 
 
     public static void main(String[]args){
-        args=new String[3];
-        args[0]="data/facts_to_mine.tsv";
-        args[1]="data/combined_predicates_filtered_count_100.tsv";
+//        args=new String[3];
+//        args[0]="data/facts_to_mine.tsv";
+//        args[1]="data/combined_predicates_filtered_count_100.tsv";
+        if(args.length<3)
+        {
+            System.out.println("Usage: filter_facts.sh <inFilePath> <outFilePath> <minimum support (integer)>");
+        }
+
+        int threshold=Integer.getInteger(args[2]);
         YagoFactsFilter yf=new YagoFactsFilter(args[0]);
-        yf.predicateObjectsCount(args[1],100);
+        yf.predicateObjectsCount(args[1],threshold);
     }
 
 

@@ -50,7 +50,7 @@ public class YagoDataReader {
                             value=f.getObject();
                             break;
                         case PRED_OBJ_2_SUBJ:
-                            key=f.getRelation()+f.getObject();
+                            key=f.getRelation()+"\t"+f.getObject();
                             value=f.getSubject();
                     }
                     subjectObjectMap.put(key,value);}
