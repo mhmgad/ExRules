@@ -64,6 +64,7 @@ public class YagoFactsFilter {
         if(args.length<3)
         {
             System.out.println("Usage: filter_facts.sh <inFilePath> <outFilePath> <minimum support (integer)>");
+            System.exit(0);
         }
 
         int threshold=Integer.getInteger(args[2]);
