@@ -8,6 +8,7 @@ import mpi.tools.javatools.util.FileUtils;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -66,6 +67,7 @@ public class YagoFactsFilter {
             System.out.println("Usage: filter_facts.sh <inFilePath> <outFilePath> <minimum support (integer)>");
             System.exit(0);
         }
+        System.out.println(Arrays.toString(args));
 
         int threshold=Integer.getInteger(args[2]);
         YagoFactsFilter yf=new YagoFactsFilter(args[0]);
