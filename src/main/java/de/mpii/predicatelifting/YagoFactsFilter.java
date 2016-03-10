@@ -40,7 +40,7 @@ public class YagoFactsFilter {
                     values.forEach((v) -> {
                         try {
                             bw.write(new Fact(v, items[0], items[1]).toTsvLine());
-                            bw.newLine();
+
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
