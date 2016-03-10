@@ -32,7 +32,7 @@ public class YagoFactsFilter {
         try {
             BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFile);
 
-            for(String key : predicateObject2Subjects.keys()){
+            for(String key : predicateObject2Subjects.keySet()){
                 Collection<String> values=predicateObject2Subjects.get(key);
                 int size=values.size();
                 if(size>=threshold) {
@@ -49,6 +49,8 @@ public class YagoFactsFilter {
                     //bw.write(size+"\t" + entry.getKey());
 
                 }
+                else
+                    System.out.println(key+": "+values.size());
             }
             bw.close();
         } catch (IOException e) {
