@@ -3,6 +3,7 @@ package de.mpii.frequentrulesminning.utils;
 
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRules;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 import java.util.*;
@@ -19,6 +20,12 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 //        this.getRules().addAll(assocRules.getRules());
 //
 //   }
+
+
+    public AssocRulesExtended() {
+        rules=new ArrayList<>();
+        head2Rules= HashMultimap.create();
+    }
 
     public ArrayList<AssocRuleWithExceptions> getRules() {
         return rules;
