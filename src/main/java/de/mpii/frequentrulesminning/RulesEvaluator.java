@@ -32,8 +32,8 @@ public class RulesEvaluator {
 
     public double confidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
 
-        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem.getItems());
-        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem.getItems());
+        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
+        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
 
         return ((float)ruleSupport)/((float)bodySupport);
 

@@ -138,12 +138,12 @@ public class AssociationRuleMiningSPMF {
         ExceptionMining em=new ExceptionMining(transactionsDB,rdf2TransactionsConverter,exceptionMinSupp);
 
         int i=0;
-        for (AssocRule rule: rules.getRules()) {
+        for (AssocRuleWithExceptions rule: rules.getRules()) {
             i++;
             List<ExceptionItem> exceptionCandidates=em.mineExceptions2(rule);
 
 
-            ((AssocRuleWithExceptions)rule).setExceptionCandidates(exceptionCandidates);
+            rule.setExceptionCandidates(exceptionCandidates);
 //            System.out.println(rule);
             //System.out.println(exceptionCandidates);
             //System.out.println(((AssocRuleWithExceptions)rule).getExceptionCandidates());
