@@ -100,7 +100,7 @@ public class AssociationRuleMiningSPMF {
         }
 
         // decode
-        rules=decodeRules( rules, mappingFilePath,decode,!encode);
+        decodeRules( rules, mappingFilePath,decode,!encode);
 
         if(decode&&filter){
             filterAfterDecoding(rules);
@@ -241,18 +241,18 @@ public class AssociationRuleMiningSPMF {
 
     }
 
-    private AssocRulesExtended decodeRules(AssocRulesExtended rules, String mappingFilePath, boolean decode, boolean loadMapping) {
+    private void decodeRules(AssocRulesExtended rules, String mappingFilePath, boolean decode, boolean loadMapping) {
 
         if(!decode) {
             System.out.println("Skip Decoding ...");
-            return rules;
+
         }
 
         if(loadMapping)
             rdf2TransactionsConverter.loadMappingFromFile(mappingFilePath);
 
         System.out.println("Start Decoding ...");
-        AssocRulesExtended rulesStrings=new AssocRulesExtended();
+        //AssocRulesExtended rulesStrings=new AssocRulesExtended();
         for(AssocRuleWithExceptions r:rules.getRules()) {
             //AssocRuleWithExceptions rstr=new AssocRuleWithExceptions(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()),rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()),r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift());
             //rulesStrings.addRule(rstr);
@@ -261,7 +261,7 @@ public class AssociationRuleMiningSPMF {
 
         }
         System.out.println("Done Decoding!");
-        return rulesStrings;
+
 
     }
 
