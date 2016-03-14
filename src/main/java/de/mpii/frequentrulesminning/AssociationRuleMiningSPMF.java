@@ -94,17 +94,19 @@ public class AssociationRuleMiningSPMF {
         // generate Association rules
         AssocRulesExtended rules=getFrequentAssociationRules(frequentPatterns);
 
-        if(filter)
+        if(filter) {
             filterRules(rules);
+            System.out.println("Rules after filtering1: "+rules.getRulesCount());
+        }
 
         // decode
         rules=decodeRules( rules, mappingFilePath,decode,!encode);
 
         if(decode&&filter){
             filterAfterDecoding(rules);
+            System.out.println("Rules after filtering2: "+rules.getRulesCount());
         }
 
-        System.out.println("Rules after filtering: "+rules.getRulesCount());
 
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions)
