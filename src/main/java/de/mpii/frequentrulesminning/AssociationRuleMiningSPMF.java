@@ -152,25 +152,28 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Start Mining Exception Candidates ...");
         ExceptionMining em=new ExceptionMining(transactionsDB,rdf2TransactionsConverter,exceptionMinSupp);
 
-        int i=0;
-        for (AssocRuleWithExceptions rule: rules.getRules()) {
-            i++;
-            List<ExceptionItem> exceptionCandidates=em.mineExceptions2(rule);
+        rules.getRules().stream().parallel().forEach((rule)-> {
+            List<ExceptionItem> exceptionCandidates= null;
+            try {
+                exceptionCandidates = em.mineExceptions2(rule);
+                rule.setExceptionCandidates(exceptionCandidates);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-
-            rule.setExceptionCandidates(exceptionCandidates);
-//            System.out.println(rule);
-            //System.out.println(exceptionCandidates);
-            //System.out.println(((AssocRuleWithExceptions)rule).getExceptionCandidates());
-
-
-//            if(i==10)
-//                break;
-
-            if(i%1000==0)
-                System.out.println(i+"/"+rules.getRules().size());
-
-        }
+            });
+//        int i=0;
+//        for (AssocRuleWithExceptions rule: rules.getRules()) {
+//            i++;
+//            List<ExceptionItem> exceptionCandidates=em.mineExceptions2(rule);
+//
+//
+//            rule.setExceptionCandidates(exceptionCandidates);
+//
+//            if(i%1000==0)
+//                System.out.println(i+"/"+rules.getRules().size());
+//
+//        }
         System.out.println("Done Mining Exception Candidates!");
     }
 
