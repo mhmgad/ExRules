@@ -49,6 +49,14 @@ public class ExceptionItem extends ItemsetString{
 
     @Override
     public String toString() {
-        return super.toString()+"\tcov: "+coverage+"\tconf: "+confidence;
+        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence());
+    }
+
+    public double getCoverage() {
+        return coverage;
+    }
+
+    public double getConfidence() {
+        return confidence;
     }
 }

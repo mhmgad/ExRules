@@ -165,8 +165,10 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             buffer.append(":\t");
             buffer.append(rule.toString());
 
+            buffer.append("\tcov: ");
+            buffer.append(String.format("%.5f",rule.getCoverage()));
             buffer.append("\tconf: ");
-            buffer.append(String.format("%.6f",rule.getConfidence()));
+            buffer.append(String.format("%.5f",rule.getConfidence()));
             buffer.append("\tsupp: ");
             buffer.append(rule.getAbsoluteSupport());
             buffer.append("\n");
