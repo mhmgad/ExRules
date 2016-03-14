@@ -44,7 +44,8 @@ public class AssociationRuleMiningSPMF {
     private String temperorayTransactiosFile;
     private String temporaryMappingFile;
     private YagoTaxonomy yagoTaxonomy;
-    private RulesEvaluator evaluator;
+
+    private TransactionsDatabase transactionsDB;
 
 
     public AssociationRuleMiningSPMF(double minsupp,double minconf,double maxconf) {
@@ -54,6 +55,7 @@ public class AssociationRuleMiningSPMF {
         this.maxconf=maxconf;
         this.algoAgrawal = new AlgoAgrawalFaster94();
         this.rdf2TransactionsConverter=new RDF2IntegerTransactionsConverter();
+
 
 
     }
@@ -109,17 +111,18 @@ public class AssociationRuleMiningSPMF {
 
 
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
-        if(withExceptions)
-            mineExceptions(transactionsFilePath,rules,exceptionMinSupp);
-
-        evaluateRules(rules);
+        if(withExceptions){
+            transactionsDB=new TransactionsDatabase(transactionsFilePath);
+            mineExceptions(rules,exceptionMinSupp);
+            evaluateRules(rules);
+        }
 
         return rules;
     }
 
     private void evaluateRules(AssocRulesExtended rules) {
         System.out.println("Re-evaluate rules with Exceptions.. ");
-
+        RulesEvaluator  evaluator=new RulesEvaluator(this.transactionsDB);
         for (AssocRuleWithExceptions r:rules.getRules()) {
             r.setCoverage(evaluator.coverage(r));
             r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
@@ -130,9 +133,9 @@ public class AssociationRuleMiningSPMF {
 
     }
 
-    private void mineExceptions(String transactionsFilePath, AssocRulesExtended rules, double exceptionMinSupp) throws IOException {
+    private void mineExceptions( AssocRulesExtended rules, double exceptionMinSupp) throws IOException {
         System.out.println("Start Mining Exception Candidates ...");
-        ExceptionMining em=new ExceptionMining(transactionsFilePath,rdf2TransactionsConverter,exceptionMinSupp);
+        ExceptionMining em=new ExceptionMining(transactionsDB,rdf2TransactionsConverter,exceptionMinSupp);
 
         int i=0;
         for (AssocRule rule: rules.getRules()) {
@@ -155,6 +158,8 @@ public class AssociationRuleMiningSPMF {
         }
         System.out.println("Done Mining Exception Candidates!");
     }
+
+
 
 
     private void filterAfterDecoding(AssocRulesExtended rules) {
@@ -295,7 +300,7 @@ public class AssociationRuleMiningSPMF {
 
 
             String date=new SimpleDateFormat("yyyyMMddhhmm").format(new Date());
-            this.temperorayTransactiosFile=tmpDataFolder+"transactions_"+date+".txt";
+            temperorayTransactiosFile=tmpDataFolder+"transactions_"+date+".txt";
             this.temporaryMappingFile=tmpDataFolder+"mapping_"+date+".tsv";
 
             transactionsFilePath=temperorayTransactiosFile;

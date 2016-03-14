@@ -34,31 +34,34 @@ public class ExceptionMining {
 
     TransactionsDatabase transactionDB;
 
-    public ExceptionMining(InputStream transactions,double exceptionMinSupp) throws IOException {
+    public ExceptionMining(InputStream transactions, RDF2IntegerTransactionsConverter rdf2TransactionsConverter,double exceptionMinSupp) throws IOException {
+        this(new TransactionsDatabase(transactions),rdf2TransactionsConverter,exceptionMinSupp);
 //        this.items2transactions = HashMultimap.create();
 //        this.transactionsSet = new TObjectIntHashMap<>();
-        this.transactionDB=new TransactionsDatabase(transactions);
+//        this.transactionDB=new TransactionsDatabase(transactions);
 //        loadTransactions( transactions);
-        this.exceptionMinSupp=exceptionMinSupp;
+        //this.exceptionMinSupp=exceptionMinSupp;
     }
+
+
 
 
     public ExceptionMining(String transactionsFile,double exceptionMinSupp) throws IOException {
 
-        this(new FileInputStream(transactionsFile),exceptionMinSupp);
+        this(new FileInputStream(transactionsFile),null,exceptionMinSupp);
 
 
     }
 
     public ExceptionMining(String transactionsFilePath, RDF2IntegerTransactionsConverter rdf2TransactionsConverter,double exceptionMinSupp) throws IOException {
-        this(transactionsFilePath,exceptionMinSupp);
+        this( new FileInputStream(transactionsFilePath),rdf2TransactionsConverter,exceptionMinSupp);
 
-        this.converter=rdf2TransactionsConverter;
+
 
     }
 
     public ExceptionMining(String transactionsFilePath, String rdf2IdMappingFilePath, double exceptionMinSupp) throws IOException {
-        this(transactionsFilePath,new RDF2IntegerTransactionsConverter());
+        this(transactionsFilePath,new RDF2IntegerTransactionsConverter(),exceptionMinSupp);
         this.converter.loadMappingFromFile(rdf2IdMappingFilePath);
 
     }
@@ -66,6 +69,14 @@ public class ExceptionMining {
     public ExceptionMining(String transactionsFilePath, RDF2IntegerTransactionsConverter rdf2TransactionsConverter) throws IOException {
         this(transactionsFilePath,rdf2TransactionsConverter,0.5D);
     }
+
+    public ExceptionMining(TransactionsDatabase transactionsDatabase,RDF2IntegerTransactionsConverter rdf2TransactionsConverter, double exceptionMinSupp) {
+        this.transactionDB=transactionsDatabase;
+        this.exceptionMinSupp=exceptionMinSupp;
+        this.converter=rdf2TransactionsConverter;
+    }
+
+
 
 
 //    private void loadTransactions(InputStream transactionsStream) throws IOException {
