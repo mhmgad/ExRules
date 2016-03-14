@@ -124,15 +124,9 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Re-evaluate rules with Exceptions.. ");
         RulesEvaluator  evaluator=new RulesEvaluator(this.transactionsDB);
 
-//        int i=0;
-
         rules.getRules().stream().parallel().forEach((r)->{
-//            i++;
         r.setCoverage(evaluator.coverage(r));
         r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
-
-//        if(i%1000==0)
-//            System.out.println(i+"/"+rules.getRules().size());
 
         });
 //        for (AssocRuleWithExceptions r:rules.getRules()) {

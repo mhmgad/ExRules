@@ -5,6 +5,7 @@ import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.Assoc
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRules;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -26,7 +27,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public AssocRulesExtended() {
         rules=new ArrayList<>();
-        head2Rules=HashMultimap.create();
+        head2Rules= Multimaps.synchronizedMultimap( HashMultimap.create());
 
     }
 
@@ -71,11 +72,12 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public void filterRules(Predicate<AssocRuleWithExceptions> predicate) {
 
-        getRules().removeIf(predicate.and(assocRule -> {
+        getRules().parallelStream().filter(
+                predicate.and(assocRule -> {
             // remove from the head2Rules map.
              head2Rules.remove(assocRule.getItemset2(),assocRule);
             return true;
-        }));
+        }).negate());
 
     }
 
