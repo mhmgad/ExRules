@@ -10,6 +10,7 @@ import com.google.common.collect.Multimaps;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Created by gadelrab on 2/25/16.
@@ -35,7 +36,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return rules;
     }
 
-    ArrayList<AssocRuleWithExceptions> rules;
+    List<AssocRuleWithExceptions> rules;
     Multimap<int[],AssocRuleWithExceptions> head2Rules;
 
     double confidence;
@@ -72,12 +73,12 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public void filterRules(Predicate<AssocRuleWithExceptions> predicate) {
 
-        getRules().removeIf(
+        rules=getRules().parallelStream().filter(
                 (predicate.and(assocRule -> {
             // remove from the head2Rules map.
              head2Rules.remove(assocRule.getItemset2(),assocRule);
             return true;
-        })));
+        })).negate()).collect(Collectors.toList());
 
     }
 
