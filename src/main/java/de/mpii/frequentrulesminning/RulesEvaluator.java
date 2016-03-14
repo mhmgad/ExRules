@@ -45,7 +45,7 @@ public class RulesEvaluator {
     }
 
     public double coverage(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
-        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem.getItems());
+        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
         int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
         return ((float)ruleSupport)/((float)headSupport);
 
