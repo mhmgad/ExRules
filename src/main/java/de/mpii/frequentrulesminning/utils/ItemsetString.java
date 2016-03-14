@@ -130,7 +130,7 @@ public class ItemsetString {//extends AbstractOrderedItemset {
 
     @Override
     public String toString() {
-        return "([" + Joiner.on(' ').join(itemsetItem) + "]," + String.format("%.4f",this.getRelativeSupport(this.totalCount)) + ")";
+        return "[" + Joiner.on(' ').join(itemsetItem) + "]\tsupp: " + String.format("%.4f",this.getRelativeSupport(this.totalCount)) + "";
     }
 
     public double getRelativeSupport(int nbObject) {

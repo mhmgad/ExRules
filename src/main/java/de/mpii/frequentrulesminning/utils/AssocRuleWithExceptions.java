@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class AssocRuleWithExceptions extends AssocRule {
 
+    double coverage;
+
 
     public void setHeadItems(Item[] headItems) {
         this.headItems = headItems;
@@ -24,7 +26,7 @@ public class AssocRuleWithExceptions extends AssocRule {
 
     private  Item[] headItems;
     private  Item[] bodyItems;
-    private List<ItemsetString> exceptionCandidates;
+    private Exceptions exceptionCandidates;
 
     public AssocRuleWithExceptions(Item[] bodyItems, Item [] headItems, int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
         this(itemset1, itemset2, supportAntecedent, transactionCount, confidence, lift);
@@ -57,17 +59,22 @@ public class AssocRuleWithExceptions extends AssocRule {
         return bodyItems;
     }
 
-    public void setExceptionCandidates(List<ItemsetString> exceptionCandidates) {
-        this.exceptionCandidates = exceptionCandidates;
-        Collections.sort(this.exceptionCandidates,( x,  y)-> y.getAbsoluteSupport()-x.getAbsoluteSupport());
+    public void setExceptionCandidates(List<ExceptionItem> exceptionCandidates) {
+        this.exceptionCandidates = new Exceptions(exceptionCandidates);
+
     }
 
-    public List<ItemsetString> getExceptionCandidates() {
+    public Exceptions getExceptionCandidates() {
         return exceptionCandidates;
     }
 
     public boolean hasExceptions(){
         return (exceptionCandidates==null||exceptionCandidates.size()==0);
+    }
+
+
+    public void setCoverage(double coverage){
+        this.coverage=coverage;
     }
 
 

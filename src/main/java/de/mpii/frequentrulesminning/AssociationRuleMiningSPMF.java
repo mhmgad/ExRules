@@ -44,6 +44,7 @@ public class AssociationRuleMiningSPMF {
     private String temperorayTransactiosFile;
     private String temporaryMappingFile;
     private YagoTaxonomy yagoTaxonomy;
+    private RulesEvaluator evaluator;
 
 
     public AssociationRuleMiningSPMF(double minsupp,double minconf,double maxconf) {
@@ -109,7 +110,22 @@ public class AssociationRuleMiningSPMF {
         if(withExceptions)
             mineExceptions(transactionsFilePath,rules,exceptionMinSupp);
 
+        evaluateRules(rules);
+
         return rules;
+    }
+
+    private void evaluateRules(AssocRulesExtended rules) {
+        System.out.println("Re-evaluate rules with Exceptions.. ");
+
+        for (AssocRuleWithExceptions r:rules.getRules()) {
+            r.setCoverage(evaluator.coverage(r));
+            r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
+
+        }
+
+        System.out.println("Done Re-evaluating rules!");
+
     }
 
     private void mineExceptions(String transactionsFilePath, AssocRulesExtended rules, double exceptionMinSupp) throws IOException {
@@ -119,7 +135,7 @@ public class AssociationRuleMiningSPMF {
         int i=0;
         for (AssocRule rule: rules.getRules()) {
             i++;
-            List<ItemsetString> exceptionCandidates=em.mineExceptions2(rule);
+            List<ExceptionItem> exceptionCandidates=em.mineExceptions2(rule);
 
 
             ((AssocRuleWithExceptions)rule).setExceptionCandidates(exceptionCandidates);

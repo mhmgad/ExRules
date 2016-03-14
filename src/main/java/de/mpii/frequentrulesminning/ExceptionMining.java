@@ -200,7 +200,7 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
-    public List<ItemsetString> mineExceptions2(AssocRule rule) throws IOException {
+    public List<ExceptionItem> mineExceptions2(AssocRule rule) throws IOException {
 
         // Get negative transactions and remove the body items
         Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
@@ -211,22 +211,22 @@ public class ExceptionMining {
         Collection filteredPosTrans=removeBodyItemsFromTransactions(rule, PositiveTransactions);
 
         // count items
-        List<ItemsetString> negTransItems = getItemsWithCount(filteredNegTrans);
-        List<ItemsetString> posTransItems = getItemsWithCount(filteredPosTrans);
+        List<ExceptionItem> negTransItems = getItemsWithCount(filteredNegTrans);
+        List<ExceptionItem> posTransItems = getItemsWithCount(filteredPosTrans);
 
 
         // Get whatever exists in negative but not head
-        Set<ItemsetString> diff=Sets.difference(ImmutableSet.copyOf(negTransItems),ImmutableSet.copyOf(posTransItems));
+        Set<ExceptionItem> diff=Sets.difference(ImmutableSet.copyOf(negTransItems),ImmutableSet.copyOf(posTransItems));
 
 
-        List<ItemsetString> diffList=new ArrayList<>(diff);
+        List<ExceptionItem> diffList=new ArrayList<>(diff);
         // filter based on support
         diffList.removeIf((x)-> x.getRelativeSupport()<this.exceptionMinSupp);
 
         return diffList;
     }
 
-    private List<ItemsetString> getItemsWithCount(Collection<Transaction> transactions) {
+    private List<ExceptionItem> getItemsWithCount(Collection<Transaction> transactions) {
         TIntIntHashMap itemsCount=new TIntIntHashMap();
         int totalCount=0;
         for(Transaction t:transactions){
@@ -236,10 +236,10 @@ public class ExceptionMining {
                 itemsCount.adjustOrPutValue(i,count,count);
             }
         }
-        List<ItemsetString> output=new ArrayList<>(itemsCount.size());
+        List<ExceptionItem> output=new ArrayList<>(itemsCount.size());
 
         for (int i:itemsCount.keys()) {
-            output.add(new ItemsetString(new Item[]{converter.convertInteger2Item(i)},new int[]{i},itemsCount.get(i),totalCount));
+            output.add(new ExceptionItem(new Item[]{converter.convertInteger2Item(i)},new int[]{i},itemsCount.get(i),totalCount));
 
         }
         return output;

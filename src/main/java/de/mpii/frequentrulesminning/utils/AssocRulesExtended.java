@@ -6,11 +6,12 @@ import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.Assoc
 import com.google.common.collect.Multimap;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 /**
  * Created by gadelrab on 2/25/16.
  */
-public class AssocRulesExtended {
+public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     //extends AssocRules{
 
 //    public AssocRulesExtended(AssocRules assocRules) {
@@ -39,6 +40,21 @@ public class AssocRulesExtended {
 
     public int getRulesCount() {
         return getRules().size();
+    }
+
+    @Override
+    public Iterator<AssocRuleWithExceptions> iterator() {
+        return rules.iterator();
+    }
+
+    @Override
+    public void forEach(Consumer<? super AssocRuleWithExceptions> action) {
+        rules.forEach(action);
+    }
+
+    @Override
+    public Spliterator<AssocRuleWithExceptions> spliterator() {
+        return rules.spliterator();
     }
 
     public enum SortingType{CONF,HEAD,BODY,HEAD_CONF}
@@ -131,9 +147,9 @@ public class AssocRulesExtended {
             buffer.append("\tsupp: ");
             buffer.append(rule.getAbsoluteSupport());
             buffer.append("\n");
-            List<ItemsetString> exceptionCandidate=((AssocRuleWithExceptions)rule).getExceptionCandidates();
+            Exceptions exceptionCandidate=((AssocRuleWithExceptions)rule).getExceptionCandidates();
             if(exceptionCandidate!=null&&exceptionCandidate.size()>0){
-                buffer.append("Except: ");
+                buffer.append("Except:\n");
                 buffer.append(exceptionCandidate);
                 buffer.append('\n');
             }
