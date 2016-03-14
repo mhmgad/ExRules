@@ -73,11 +73,11 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     public void filterRules(Predicate<AssocRuleWithExceptions> predicate) {
 
         getRules().parallelStream().filter(
-                predicate.and(assocRule -> {
+                (predicate.and(assocRule -> {
             // remove from the head2Rules map.
              head2Rules.remove(assocRule.getItemset2(),assocRule);
             return true;
-        }).negate());
+        })).negate());
 
     }
 
