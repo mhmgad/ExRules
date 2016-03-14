@@ -117,7 +117,7 @@ public class ExceptionMining {
 
     }
 
-    private Set<Transaction> getNegativeTransactions(AssocRule rule) {
+    private Set<Transaction> getNegativeTransactions(AssocRuleWithExceptions rule) {
         // transactions contain body
         int [] body=rule.getItemset1();
         int [] head=rule.getItemset2();
@@ -134,7 +134,7 @@ public class ExceptionMining {
     }
 
 
-    private Set<Transaction> getPositiveTransactions(AssocRule rule) {
+    private Set<Transaction> getPositiveTransactions(AssocRuleWithExceptions rule) {
 
         // transactions contain body
         int [] body=rule.getItemset1();
@@ -152,7 +152,7 @@ public class ExceptionMining {
         return transactions;
     }
 
-    private List<Transaction> removeBodyItemsFromTransactions(AssocRule rule,Set<Transaction> transactions) {
+    private List<Transaction> removeBodyItemsFromTransactions(AssocRuleWithExceptions rule,Set<Transaction> transactions) {
         int [] body=rule.getItemset1();
         // adding transactions to list after removing body items
         Set<Integer> bodyset= ImmutableSet.copyOf(Ints.asList(body));
@@ -192,7 +192,7 @@ public class ExceptionMining {
 //    }
 
 
-    public  List<ItemsetString> mineExceptions(AssocRule rule) throws IOException {
+    public  List<ItemsetString> mineExceptions(AssocRuleWithExceptions rule) throws IOException {
 
         Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
         Collection filteredNegTrans=removeBodyItemsFromTransactions(rule,negativeTransactions);
@@ -211,7 +211,7 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
-    public List<ExceptionItem> mineExceptions2(AssocRule rule) throws IOException {
+    public List<ExceptionItem> mineExceptions2(AssocRuleWithExceptions rule) throws IOException {
 
         // Get negative transactions and remove the body items
         Set<Transaction> negativeTransactions = getNegativeTransactions(rule);

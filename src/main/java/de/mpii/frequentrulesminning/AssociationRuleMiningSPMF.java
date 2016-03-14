@@ -123,11 +123,26 @@ public class AssociationRuleMiningSPMF {
     private void evaluateRules(AssocRulesExtended rules) {
         System.out.println("Re-evaluate rules with Exceptions.. ");
         RulesEvaluator  evaluator=new RulesEvaluator(this.transactionsDB);
-        for (AssocRuleWithExceptions r:rules.getRules()) {
-            r.setCoverage(evaluator.coverage(r));
-            r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
 
-        }
+//        int i=0;
+
+        rules.getRules().stream().parallel().forEach((r)->{
+//            i++;
+        r.setCoverage(evaluator.coverage(r));
+        r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
+
+//        if(i%1000==0)
+//            System.out.println(i+"/"+rules.getRules().size());
+
+        });
+//        for (AssocRuleWithExceptions r:rules.getRules()) {
+//            i++;
+//            r.setCoverage(evaluator.coverage(r));
+//            r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
+//
+//            if(i%1000==0)
+//                System.out.println(i+"/"+rules.getRules().size());
+//        }
 
         System.out.println("Done Re-evaluating rules!");
 
@@ -165,7 +180,8 @@ public class AssociationRuleMiningSPMF {
     private void filterAfterDecoding(AssocRulesExtended rules) {
         System.out.println("Start Filtering 2...");
         this.yagoTaxonomy=YagoTaxonomy.getInstance();
-        rules.getRules().removeIf(rule -> isMimickingHierarchy((AssocRuleWithExceptions) rule));
+        //rules.getRules().removeIf(rule -> isMimickingHierarchy((AssocRuleWithExceptions) rule));
+        rules.filterRules((AssocRuleWithExceptions rule) -> isMimickingHierarchy(rule));
         System.out.println("Done Filtering 2!");
     }
 
@@ -173,8 +189,8 @@ public class AssociationRuleMiningSPMF {
 
         System.out.println("Start Filtering...");
 
-        rules.getRules().removeIf(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
-
+//        rules.getRules().removeIf(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
+        rules.filterRules(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
         removeContainingRules(rules);
 
         System.out.println("Done Filtering!");
@@ -187,7 +203,8 @@ public class AssociationRuleMiningSPMF {
 
         for(int i=0;i<rules.getRules().size();i++){
             final int  c=i;
-            rules.getRules().removeIf(assocRule -> isSubsetBody(rules.getRules().get(c),assocRule));
+//            rules.getRules().removeIf(assocRule -> isSubsetBody(rules.getRules().get(c),assocRule));
+            rules.filterRules(assocRule -> isSubsetBody(rules.getRules().get(c),assocRule));
         }
 
     }
@@ -220,7 +237,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    private boolean isSubsetBody(AssocRule assocRule, AssocRule assocRule1) {
+    private boolean isSubsetBody(AssocRuleWithExceptions assocRule, AssocRuleWithExceptions assocRule1) {
         if(assocRule==assocRule1)
             return false;
 

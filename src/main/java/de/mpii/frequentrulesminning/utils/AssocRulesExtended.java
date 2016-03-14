@@ -8,6 +8,7 @@ import com.google.common.collect.Multimap;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Created by gadelrab on 2/25/16.
@@ -22,17 +23,19 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 //   }
 
 
+
     public AssocRulesExtended() {
         rules=new ArrayList<>();
-        head2Rules= HashMultimap.create();
+        head2Rules=HashMultimap.create();
+
     }
 
-    public ArrayList<AssocRuleWithExceptions> getRules() {
+    public List<AssocRuleWithExceptions> getRules() {
         return rules;
     }
 
     ArrayList<AssocRuleWithExceptions> rules;
-    Multimap<Integer,AssocRuleWithExceptions> head2Rules;
+    Multimap<int[],AssocRuleWithExceptions> head2Rules;
 
     double confidence;
 
@@ -41,7 +44,9 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
     public void addRule(AssocRuleWithExceptions rule) {
-        rules.add(rule);
+        getRules().add(rule);
+        head2Rules.put(rule.getItemset2(),rule);
+
 
     }
 
@@ -51,17 +56,27 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     @Override
     public Iterator<AssocRuleWithExceptions> iterator() {
-        return rules.iterator();
+        return getRules().iterator();
     }
 
     @Override
     public void forEach(Consumer<? super AssocRuleWithExceptions> action) {
-        rules.forEach(action);
+        getRules().forEach(action);
     }
 
     @Override
     public Spliterator<AssocRuleWithExceptions> spliterator() {
-        return rules.spliterator();
+        return getRules().spliterator();
+    }
+
+    public void filterRules(Predicate<AssocRuleWithExceptions> predicate) {
+
+        getRules().removeIf(predicate.and(assocRule -> {
+            // remove from the head2Rules map.
+             head2Rules.remove(assocRule.getItemset2(),assocRule);
+            return true;
+        }));
+
     }
 
     public enum SortingType{CONF,HEAD,BODY,HEAD_CONF}
@@ -133,11 +148,11 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
         int i = 0;
         int prevHead=-1;
-        for(Iterator var5 = this.rules.iterator(); var5.hasNext(); ++i) {
-            AssocRule rule = (AssocRule)var5.next();
+        for(Iterator var5 = this.getRules().iterator(); var5.hasNext(); ++i) {
+            AssocRuleWithExceptions rule = (AssocRuleWithExceptions)var5.next();
 
             // skip if i do not has exceptions
-            if(hasExceptionOnly&&!((AssocRuleWithExceptions)rule).hasExceptions())
+            if(hasExceptionOnly&&!rule.hasExceptions())
                 continue;
 
             if((type==SortingType.HEAD||type==SortingType.HEAD_CONF)&&prevHead!=rule.getItemset2()[0]){
