@@ -149,18 +149,6 @@ public class AssociationRuleMiningSPMF {
             }
 
             });
-//        int i=0;
-//        for (AssocRuleWithExceptions rule: rules.getRules()) {
-//            i++;
-//            List<ExceptionItem> exceptionCandidates=em.mineExceptions2(rule);
-//
-//
-//            rule.setExceptionCandidates(exceptionCandidates);
-//
-//            if(i%1000==0)
-//                System.out.println(i+"/"+rules.getRules().size());
-//
-//        }
         System.out.println("Done Mining Exception Candidates!");
     }
 

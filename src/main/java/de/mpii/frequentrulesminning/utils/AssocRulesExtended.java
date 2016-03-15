@@ -214,7 +214,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             Collection<AssocRuleWithExceptions> groupRules = head2Rules.get(g);
             buffer.append("*********************************"+ g + "*****************************************\n");
 
-            for (AssocRuleWithExceptions rule : rules) {
+            for (AssocRuleWithExceptions rule : groupRules) {
                 if (hasExceptionOnly && !rule.hasExceptions())
                     continue;
 
