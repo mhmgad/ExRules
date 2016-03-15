@@ -1,14 +1,13 @@
 package de.mpii.frequentrulesminning.utils;
 
-import ca.pfv.spmf.input.transaction_database_list_integers.TransactionDatabase;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import gnu.trove.map.hash.TByteByteHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -68,22 +67,46 @@ public class TransactionsDatabase {
     public Set<Transaction> getTransactions(int[] withItems,int [] withoutItems){
 
         Set<Transaction> transactions=new HashSet<>(getTransactionsWithItem(withItems[0]));
-        for (int i=1;i<withItems.length;i++){
+        transactions = filterTransactionsWith(transactions, withItems, 1);
+
+        transactions = filterOutTransactionsWith(transactions,withoutItems,0 );
+
+        return transactions;
+    }
+
+    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems){
+        return filterTransactionsWith(transactions,withItems,0);
+    }
+
+    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems, int startIndex) {
+        for (int i=startIndex;i<withItems.length;i++){
             transactions = Sets.intersection(transactions, getTransactionsWithItem(withItems[i]));
         }
+        return transactions;
+    }
 
-        if(withoutItems!=null){
-            for (int i=0;i<withoutItems.length;i++){
-                transactions = Sets.difference(transactions, getTransactionsWithItem(withoutItems[i]));
+    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems){
+        return filterOutTransactionsWith(transactions,excludedItems,0);
+    }
+
+    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex) {
+
+        if(excludedItems!=null){
+            for (int i=startIndex;i<excludedItems.length;i++){
+                transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i]));
             }
         }
-
-        return new HashSet<Transaction>(transactions);
+        return transactions;
     }
 
 
     public int getTransactionsCount(int[] withItems,int [] withoutItems) {
-        return getTransactions(withItems,withoutItems).stream().mapToInt(Transaction::getCount).sum();
+        return TransactionsDatabase.getTransactionsCount(getTransactions(withItems,withoutItems));//.stream().mapToInt(Transaction::getCount).sum();
 
     }
+
+    public static int getTransactionsCount(Collection<Transaction> transactions){
+        return  transactions.stream().mapToInt(Transaction::getCount).sum();
+    }
+
 }
