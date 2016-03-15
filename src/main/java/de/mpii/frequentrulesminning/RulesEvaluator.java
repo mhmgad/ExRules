@@ -8,6 +8,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * Created by gadelrab on 3/8/16.
@@ -49,6 +50,17 @@ public class RulesEvaluator {
         int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
         return ((float)ruleSupport)/((float)headSupport);
 
+    }
+
+
+
+    public double coverage(Collection<AssocRuleWithExceptions> rules){
+//        int totalCoverage
+//
+//        for (AssocRuleWithExceptions rule:rules ) {
+//
+//        }
+        return 0;
     }
 
 

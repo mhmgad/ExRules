@@ -83,7 +83,7 @@ public class TransactionsDatabase {
 
 
     public int getTransactionsCount(int[] withItems,int [] withoutItems) {
-        return getTransactions(withItems,withoutItems).size();
+        return getTransactions(withItems,withoutItems).stream().mapToInt(Transaction::getCount).sum();
 
     }
 }
