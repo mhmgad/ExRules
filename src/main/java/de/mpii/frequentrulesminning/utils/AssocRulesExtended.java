@@ -69,7 +69,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         getRules().removeIf(
                 predicate.and(assocRule -> {
                     // remove from the head2Rules map.
-                    head2Rules.remove(assocRule.getItemset2(), assocRule);
+                    head2Rules.remove(new HeadGroup(assocRule.getItemset2()), assocRule);
                     return true;
                 }));
 
@@ -230,7 +230,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
                 buffer.append("\tsupp: ");
                 buffer.append(rule.getAbsoluteSupport());
                 buffer.append("\n");
-                Exceptions exceptionCandidate = ((AssocRuleWithExceptions) rule).getExceptionCandidates();
+                Exceptions exceptionCandidate = rule.getExceptionCandidates();
                 if (exceptionCandidate != null && exceptionCandidate.size() > 0) {
                     buffer.append("Except:\n");
                     buffer.append(exceptionCandidate);
