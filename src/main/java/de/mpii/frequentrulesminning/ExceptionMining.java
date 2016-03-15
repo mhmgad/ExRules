@@ -249,8 +249,8 @@ public class ExceptionMining {
         }
         List<ExceptionItem> output=new ArrayList<>(itemsCount.size());
 
-        for (int i:itemsCount.keys()) {
-            output.add(new ExceptionItem(new Item[]{converter.convertInteger2Item(i)},new int[]{i},itemsCount.get(i),totalCount));
+        for (int itemId:itemsCount.keys()) {
+            output.add(new ExceptionItem(new Item[]{converter.convertInteger2Item(itemId)},new int[]{itemId},itemsCount.get(itemId),totalCount));
 
         }
         return output;

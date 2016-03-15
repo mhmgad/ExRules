@@ -55,11 +55,11 @@ public class RulesEvaluator {
 
 
     public double coverage(Collection<AssocRuleWithExceptions> rules){
-//        int totalCoverage
-//
-//        for (AssocRuleWithExceptions rule:rules ) {
-//
-//        }
+        int totalCoverage=0;
+
+        for (AssocRuleWithExceptions rule:rules ) {
+
+        }
         return 0;
     }
 

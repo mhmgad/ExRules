@@ -16,7 +16,11 @@ public class Exceptions implements Iterable<ExceptionItem>{
 
     public Exceptions(List<ExceptionItem> exceptions) {
         this();
-        this.exceptions = exceptions;
+        this.setExceptions(exceptions);
+        
+    }public void setExceptions(List<ExceptionItem> exception) {
+        this.exceptions = exception;
+        sortOnSupport();
     }
 
     @Override
@@ -52,4 +56,6 @@ public class Exceptions implements Iterable<ExceptionItem>{
         exceptions.forEach((ex)-> sb.append(ex+"\n"));
         return sb.toString();
     }
+
+    
 }
