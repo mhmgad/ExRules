@@ -124,19 +124,12 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Re-evaluate rules with Exceptions.. ");
         RulesEvaluator  evaluator=new RulesEvaluator(this.transactionsDB);
 
-        rules.getRules().stream().parallel().forEach((r)->{
-        r.setCoverage(evaluator.coverage(r));
-        r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
 
-        });
-//        for (AssocRuleWithExceptions r:rules.getRules()) {
-//            i++;
-//            r.setCoverage(evaluator.coverage(r));
-//            r.getExceptionCandidates().forEach((ex)-> {ex.setCoverage(evaluator.coverage(r,ex));ex.setConfidence(evaluator.confidence(r,ex));});
-//
-//            if(i%1000==0)
-//                System.out.println(i+"/"+rules.getRules().size());
-//        }
+        // Evaluate individual Rules
+        rules.evaluateIndividuals(evaluator);
+
+        // Groups Evaluation
+        rules.evaluateHeadGroups(evaluator);
 
         System.out.println("Done Re-evaluating rules!");
 
@@ -251,10 +244,10 @@ public class AssociationRuleMiningSPMF {
 
 
     public void exportRules(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly) throws IOException {
-        if(sortType!=null)
-            rules.sort(sortType);
+//        if(sortType!=null)
+//            rules.sort(sortType);
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
-        bw.write(rules.toString(getDatabaseSize(),sortType,showRulesWithExceptionsOnly));
+        bw.write(rules.toString(sortType,showRulesWithExceptionsOnly));
         bw.close();
 
 
