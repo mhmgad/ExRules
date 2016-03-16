@@ -90,6 +90,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public void evaluateHeadGroups(RulesEvaluator evaluator) {
 
+        System.out.println("headGroups: "+head2Rules.keySet().size());;
         head2Rules.keySet().parallelStream().forEach((key) -> evaluateHeadGroup(evaluator, key));
 
 

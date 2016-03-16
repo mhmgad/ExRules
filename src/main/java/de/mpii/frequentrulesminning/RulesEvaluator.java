@@ -67,7 +67,10 @@ public class RulesEvaluator {
             Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
             int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(bodyTransactions);
 //            rulesTransactionsCount.add(bodyTransactionsCount);
+            if(bodyTransactionsCount==0)
+                System.out.println(rule+" "+bodyTransactions.size());
             coverageMultiplication*=bodyTransactionsCount;
+
             // combine to all bodies transactions
             containsBody.addAll(bodyTransactions);
 
