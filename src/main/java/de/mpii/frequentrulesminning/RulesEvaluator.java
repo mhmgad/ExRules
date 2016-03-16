@@ -61,13 +61,13 @@ public class RulesEvaluator {
 
         Set<Transaction> containsBody= new HashSet<>();
         //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
-        int coverageMultiplication=1;
+        long coverageMultiplication=1;
         for (AssocRuleWithExceptions rule:rules ) {
 
             Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
             int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(bodyTransactions);
 //            rulesTransactionsCount.add(bodyTransactionsCount);
-            if(bodyTransactionsCount==0)
+            if(bodyTransactionsCount==0||coverageMultiplication==0)
                 System.out.println(rule+" "+bodyTransactions.size());
             coverageMultiplication*=bodyTransactionsCount;
 
