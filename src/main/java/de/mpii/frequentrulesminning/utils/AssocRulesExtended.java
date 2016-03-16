@@ -104,8 +104,8 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
-    public void sortByConfidence() {
-        Collections.sort(getRules(), (AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> ((int) ((c2.getConfidence() - c1.getConfidence()) * 2.147483647E9D)));
+    public void sortByConfidence(List<AssocRuleWithExceptions> rulesToSort) {
+        Collections.sort(rulesToSort, (AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> ((int) ((c2.getConfidence() - c1.getConfidence()) * 2.147483647E9D)));
 
     }
 
@@ -114,16 +114,20 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 //        super(name);
 //    }
 
-    public void sortByHead() {
-        Collections.sort(getRules(), (AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> (c2).getItemset1()[0] - (c1).getItemset1()[0]);
+    public void sortByHead(List<AssocRuleWithExceptions> rulesToSort) {
+        Collections.sort(rulesToSort, (AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> (c2).getItemset1()[0] - (c1).getItemset1()[0]);
     }
 
-    public void sortByBodyLength() {
-        Collections.sort(getRules(), (AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> (c2).getItemset1().length - (c1).getItemset1().length);
+    public void sortByBodyLength(){
+        sortByBodyLength(getRules());
     }
 
-    public void sortByHeadAndConfidence() {
-        Collections.sort(getRules(), new Comparator<AssocRuleWithExceptions>() {
+    public void sortByBodyLength(List<AssocRuleWithExceptions> rulesToSort) {
+        Collections.sort(rulesToSort, (AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> (c2).getItemset1().length - (c1).getItemset1().length);
+    }
+
+    public void sortByHeadAndConfidence(List<AssocRuleWithExceptions> rulesToSort) {
+        Collections.sort(rulesToSort, new Comparator<AssocRuleWithExceptions>() {
             @Override
             public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {
                 int headDiff = o2.getItemset2()[0] - o1.getItemset2()[0];
@@ -141,19 +145,19 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         });
     }
 
-    public void sort(SortingType type) {
+    public void sort(List<AssocRuleWithExceptions>rules,SortingType type) {
         switch (type) {
             case CONF:
-                sortByConfidence();
+                sortByConfidence(rules);
                 break;
             case HEAD:
-                sortByHead();
+                sortByHead(rules);
                 break;
             case HEAD_CONF:
-                sortByHeadAndConfidence();
+                sortByHeadAndConfidence(rules);
                 break;
             case BODY:
-                sortByBodyLength();
+                sortByBodyLength(rules);
                 break;
         }
     }
@@ -165,7 +169,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         StringBuilder buffer = new StringBuilder();
 
         // Sort based on type
-        sort(sortType);
+        sort(this.getRules(),sortType);
         int i = 0;
         int prevHead = -1;
         for (Iterator var5 = this.getRules().iterator(); var5.hasNext(); ++i) {
@@ -213,9 +217,9 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         for (HeadGroup g : groups) {
 
 
-            Collection<AssocRuleWithExceptions> groupRules = head2Rules.get(g);
+            List<AssocRuleWithExceptions> groupRules = new ArrayList<>(head2Rules.get(g));
             buffer.append("*********************************"+ g + "*****************************************\n");
-
+            sort(groupRules,type);
             for (AssocRuleWithExceptions rule : groupRules) {
                 if (hasExceptionOnly && !rule.hasExceptions())
                     continue;
