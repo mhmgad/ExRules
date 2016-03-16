@@ -29,7 +29,7 @@ public class HeadGroup {
 
     @Override
     public boolean equals(Object obj) {
-        return headItems.equals(((HeadGroup)obj).headItems);
+        return Arrays.equals(headItems,((HeadGroup)obj).headItems);
     }
 
     public double getCoverage() {
