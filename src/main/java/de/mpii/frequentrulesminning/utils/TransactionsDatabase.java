@@ -71,7 +71,7 @@ public class TransactionsDatabase {
 
         transactions = filterOutTransactionsWith(transactions,withoutItems,0 );
 
-        return transactions;
+        return new HashSet<>(transactions);
     }
 
     public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems){

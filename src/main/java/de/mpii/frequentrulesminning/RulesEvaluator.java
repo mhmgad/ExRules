@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -58,7 +59,7 @@ public class RulesEvaluator {
 
         // Exception Handling is not yet implemented
 
-        Set<Transaction> containsBody= Sets.newHashSet();
+        Set<Transaction> containsBody= new HashSet<>();
         //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
         int coverageMultiplication=1;
         for (AssocRuleWithExceptions rule:rules ) {
@@ -68,7 +69,7 @@ public class RulesEvaluator {
 //            rulesTransactionsCount.add(bodyTransactionsCount);
             coverageMultiplication*=bodyTransactionsCount;
             // combine to all bodies transactions
-            containsBody=Sets.union(containsBody,bodyTransactions);
+            containsBody.addAll(bodyTransactions);
 
 
         }
