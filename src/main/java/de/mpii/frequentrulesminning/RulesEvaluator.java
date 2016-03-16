@@ -68,7 +68,7 @@ public class RulesEvaluator {
             int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(bodyTransactions);
 //            rulesTransactionsCount.add(bodyTransactionsCount);
             if(bodyTransactionsCount==0||coverageMultiplication==0)
-                System.out.println(rule+" "+bodyTransactions.size());
+                System.out.println(rule+" "+bodyTransactions.size()+" "+bodyTransactionsCount+" "+coverageMultiplication);
             coverageMultiplication*=bodyTransactionsCount;
 
             // combine to all bodies transactions
