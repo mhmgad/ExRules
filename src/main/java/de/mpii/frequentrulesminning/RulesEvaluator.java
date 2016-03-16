@@ -56,26 +56,29 @@ public class RulesEvaluator {
 
     public double coverage(Collection<AssocRuleWithExceptions> rules, boolean withExceptions){
 
+        // Exception Handling is not yet implemented
 
         Set<Transaction> containsBody= Sets.newHashSet();
-        ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
+        //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
+        int coverageMultiplication=1;
         for (AssocRuleWithExceptions rule:rules ) {
 
             Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
-
-            rulesTransactionsCount.add(TransactionsDatabase.getTransactionsCount(bodyTransactions));
-
+            int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(bodyTransactions);
+//            rulesTransactionsCount.add(bodyTransactionsCount);
+            coverageMultiplication*=bodyTransactionsCount;
             // combine to all bodies transactions
-            containsBody.addAll(bodyTransactions);
+            containsBody=Sets.union(containsBody,bodyTransactions);
 
 
         }
-        int coverageMultiplication=rulesTransactionsCount.stream().reduce((i,j)-> i*j).get();
+        //int coverageMultiplication=rulesTransactionsCount.stream().reduce((i,j)-> i*j).get();
         int allTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBody);
         int rSize=rules.size();
 
-        double groupCoverage= Math.pow(((float)coverageMultiplication),(1.0/rSize))/((float)allTransactionsCount);
-
+        double groupCoverage= Math.pow(((float)coverageMultiplication),(1.0/(float)rSize))/((float)allTransactionsCount);
+        if(groupCoverage==0)
+            System.out.println("groupCoverage = " + groupCoverage+" coverageMultiplication = " + coverageMultiplication);
         return groupCoverage;
     }
 

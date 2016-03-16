@@ -217,7 +217,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             for (AssocRuleWithExceptions rule : groupRules) {
                 if (hasExceptionOnly && !rule.hasExceptions())
                     continue;
-
+                i++;
                 buffer.append("r");
                 buffer.append(i);
                 buffer.append(":\t");
