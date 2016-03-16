@@ -79,7 +79,7 @@ public class RulesEvaluator {
 
         double groupCoverage= Math.pow(((float)coverageMultiplication),(1.0/(float)rSize))/((float)allTransactionsCount);
         if(groupCoverage==0)
-            System.out.println("groupCoverage = " + groupCoverage+" coverageMultiplication = " + coverageMultiplication);
+            System.out.print("groupCoverage = " + groupCoverage+" coverageMultiplication = " + coverageMultiplication);
         return groupCoverage;
     }
 
