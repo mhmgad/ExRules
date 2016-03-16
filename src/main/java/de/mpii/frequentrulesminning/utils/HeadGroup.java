@@ -42,6 +42,6 @@ public class HeadGroup {
 
     @Override
     public String toString() {
-        return Arrays.toString(headItems)+" Cov: " + getCoverage() + "Conf: " + getConfidence();
+        return Arrays.toString(headItems)+" Cov: " + String.format("%.5f", getCoverage()) + " Conf: " + String.format("%.5f",getConfidence());
     }
 }

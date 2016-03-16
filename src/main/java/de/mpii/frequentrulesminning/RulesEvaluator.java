@@ -77,9 +77,9 @@ public class RulesEvaluator {
         int allTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBody);
         int rSize=rules.size();
 
-        double groupCoverage= Math.pow(((float)coverageMultiplication),(1.0/(float)rSize))/((float)allTransactionsCount);
-        if(groupCoverage==0)
-            System.out.print("groupCoverage = " + groupCoverage+" coverageMultiplication = " + coverageMultiplication);
+        double groupCoverage= Math.pow(((double) coverageMultiplication),(1.0D/(double)rSize))/((double)allTransactionsCount);
+        if(groupCoverage==0||allTransactionsCount==0)
+            System.out.print("groupCoverage = " + groupCoverage+" coverageMultiplication = " + coverageMultiplication+" rSize: = "+rSize +" all Transactions Count = "+ allTransactionsCount);
         return groupCoverage;
     }
 
