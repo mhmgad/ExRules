@@ -11,6 +11,7 @@ public class HeadGroup {
     int [] headItems;
     private double coverage;
     private double confidence;
+    private int allTransactionsCount;
 
     public HeadGroup(int[] itemset2) {
         this.headItems=itemset2;
@@ -42,6 +43,18 @@ public class HeadGroup {
 
     @Override
     public String toString() {
-        return Arrays.toString(headItems)+" Cov: " + String.format("%.5f", getCoverage()) + " Conf: " + String.format("%.5f",getConfidence());
+        return Arrays.toString(headItems)+" Cov: " + String.format("%.5f", getCoverage()) + " AllTrans: " + getAllTransactionsCount() + " Conf: " + String.format("%.5f",getConfidence());
+    }
+
+    public int[] getHeadItems() {
+        return headItems;
+    }
+
+    public void setAllTransactionsCount(int allTransactionsCount) {
+        this.allTransactionsCount = allTransactionsCount;
+    }
+
+    public int getAllTransactionsCount() {
+        return allTransactionsCount;
     }
 }

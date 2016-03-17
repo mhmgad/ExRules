@@ -97,10 +97,10 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
     private void evaluateHeadGroup(RulesEvaluator evaluator, HeadGroup key) {
-        double coverage = evaluator.coverage(head2Rules.get(key));
-        if(coverage==0)
-            System.out.println("\t"+key);
-        key.setCoverage(coverage);
+        evaluator.coverage(key,head2Rules.get(key));
+//        if(coverage==0)
+//            System.out.println("\t"+key);
+//        key.setCoverage(coverage);
 
 
     }

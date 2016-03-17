@@ -58,11 +58,13 @@ public class RulesEvaluator {
 
 
 
-    public double coverage(Collection<AssocRuleWithExceptions> rules, boolean withExceptions){
+    public void coverage(HeadGroup head,Collection<AssocRuleWithExceptions> rules, boolean withExceptions){
 
         // Exception Handling is not yet implemented
 
-        Set<Transaction> containsBody= new HashSet<>();
+        Set<Transaction> containsBodyOrHead= transactionsDB.getTransactions(head.getHeadItems(),null);
+
+
         //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
         BigDecimal coverageMultiplication=BigDecimal.ONE;
         for (AssocRuleWithExceptions rule:rules ) {
@@ -76,24 +78,27 @@ public class RulesEvaluator {
             //coverageMultiplication*=bodyTransactionsCount;
 
             // combine to all bodies transactions
-            containsBody.addAll(bodyTransactions);
+            containsBodyOrHead.addAll(bodyTransactions);
 
 
         }
+
+
         //int coverageMultiplication=rulesTransactionsCount.stream().reduce((i,j)-> i*j).get();
-        int allTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBody);
+        int allTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBodyOrHead);
         int rSize=rules.size();
 
-        double groupCoverage= Math.pow(((double) coverageMultiplication.doubleValue()),(1.0D/(double)rSize))/((double)allTransactionsCount);
+        double groupCoverage= Math.pow((coverageMultiplication.doubleValue()),(1.0D/(double)rSize))/((double)allTransactionsCount);
 //        double groupCoverage= coverageMultiplication.pow((1.0D/(double)rSize))/((double)allTransactionsCount);
         if(groupCoverage==0||allTransactionsCount==0)
             System.out.print("groupCoverage = " + groupCoverage+" coverageMultiplication = " + coverageMultiplication+" rSize: = "+rSize +" all Transactions Count = "+ allTransactionsCount);
-        return groupCoverage;
+         head.setCoverage(groupCoverage);
+         head.setAllTransactionsCount(allTransactionsCount);
     }
 
 
-    public double coverage(Collection<AssocRuleWithExceptions> assocRuleWithExceptionses) {
-        return coverage(assocRuleWithExceptionses,false);
+    public void coverage(HeadGroup head, Collection<AssocRuleWithExceptions> assocRuleWithExceptionses) {
+        coverage(head,assocRuleWithExceptionses,false);
 
     }
 }
