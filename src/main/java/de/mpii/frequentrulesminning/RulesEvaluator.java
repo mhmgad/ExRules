@@ -1,11 +1,14 @@
 package de.mpii.frequentrulesminning;
 
 import com.google.common.collect.Sets;
+import com.google.common.math.BigIntegerMath;
 import de.mpii.frequentrulesminning.utils.*;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -61,15 +64,16 @@ public class RulesEvaluator {
 
         Set<Transaction> containsBody= new HashSet<>();
         //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
-        long coverageMultiplication=1;
+        BigDecimal coverageMultiplication=BigDecimal.ONE;
         for (AssocRuleWithExceptions rule:rules ) {
 
             Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
             int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(bodyTransactions);
 //            rulesTransactionsCount.add(bodyTransactionsCount);
-            if(bodyTransactionsCount==0||coverageMultiplication==0)
+            if(bodyTransactionsCount==0||coverageMultiplication.equals(BigDecimal.ZERO))
                 System.out.println(rule+" "+bodyTransactions.size()+" "+bodyTransactionsCount+" "+coverageMultiplication);
-            coverageMultiplication*=bodyTransactionsCount;
+            coverageMultiplication.multiply(BigDecimal.valueOf(bodyTransactionsCount));
+            //coverageMultiplication*=bodyTransactionsCount;
 
             // combine to all bodies transactions
             containsBody.addAll(bodyTransactions);
@@ -80,7 +84,8 @@ public class RulesEvaluator {
         int allTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBody);
         int rSize=rules.size();
 
-        double groupCoverage= Math.pow(((double) coverageMultiplication),(1.0D/(double)rSize))/((double)allTransactionsCount);
+        double groupCoverage= Math.pow(((double) coverageMultiplication.doubleValue()),(1.0D/(double)rSize))/((double)allTransactionsCount);
+//        double groupCoverage= coverageMultiplication.pow((1.0D/(double)rSize))/((double)allTransactionsCount);
         if(groupCoverage==0||allTransactionsCount==0)
             System.out.print("groupCoverage = " + groupCoverage+" coverageMultiplication = " + coverageMultiplication+" rSize: = "+rSize +" all Transactions Count = "+ allTransactionsCount);
         return groupCoverage;
