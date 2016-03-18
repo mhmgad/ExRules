@@ -9,10 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by gadelrab on 3/8/16.
@@ -140,10 +137,29 @@ public class RulesEvaluator {
 
     public void exceptionsConflictScore (AssocRuleWithExceptions targetRule,AssocRulesExtended rulesSource){
 
-//        rulesSource.getRules(targetRule.getItemset2())
-//        for(AssocRuleWithExceptions rule:groupRules){
-//            if()
-//        }
+        Collection<AssocRuleWithExceptions> groupRules=rulesSource.getRules(targetRule.getHead(),null);
+
+
+        int[] targetRuleExceptions=targetRule.getExceptionsCandidatesInts();
+
+
+        // get predictable transactions for each rule
+        List<Set<Transaction>> predictableTransactions=new ArrayList<>(groupRules.size());
+        for(AssocRuleWithExceptions rule:groupRules){
+            if(targetRule.equals(rule))
+                continue;
+            // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
+            Set<Transaction> rulePredictableTransactions=transactionsDB.getTransactions(rule.getBody(),ArrayUtils.addAll( rule.getExceptionsCandidatesInts(),rule.getHead()));
+            predictableTransactions.add(rulePredictableTransactions);
+
+        }
+
+        // compute intersection score for each exception
+        for (ExceptionItem e:targetRule.getExceptionCandidates() ){
+            // TODO compute score for each exception
+
+        }
+
 
     }
 

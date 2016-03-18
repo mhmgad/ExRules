@@ -59,4 +59,8 @@ public class ExceptionItem extends ItemsetString{
     public double getConfidence() {
         return confidence;
     }
+
+    public int getFirstItems() {
+        return getItems()[0];
+    }
 }

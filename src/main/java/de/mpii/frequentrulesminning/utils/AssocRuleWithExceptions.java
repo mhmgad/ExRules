@@ -102,6 +102,10 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return exceptionCandidates;
     }
 
+    public int[] getExceptionsCandidatesInts(){
+        return exceptionCandidates.getExceptionsInts();
+    }
+
     public void setExceptionCandidates(List<ExceptionItem> exceptionCandidates) {
         this.exceptionCandidates = new Exceptions(exceptionCandidates);
 
@@ -127,5 +131,15 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return getBody();
     }
 
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(itemset1)^Arrays.hashCode(itemset2);
 
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        AssocRuleWithExceptions casted= (AssocRuleWithExceptions)obj;
+        return Arrays.equals(itemset2,casted.itemset2)&&Arrays.equals(itemset1,casted.itemset1);
+    }
 }

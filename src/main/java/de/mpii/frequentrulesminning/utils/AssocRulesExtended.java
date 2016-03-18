@@ -5,6 +5,8 @@ import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.Assoc
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRules;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.SetMultimap;
+import com.google.common.collect.Sets;
 import de.mpii.frequentrulesminning.RulesEvaluator;
 
 import java.util.*;
@@ -18,13 +20,15 @@ import java.util.stream.Stream;
 public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
 
+    private  SetMultimap<BodyGroup, AssocRuleWithExceptions> body2Rules;
     List<AssocRuleWithExceptions> rules;
-    Multimap<HeadGroup, AssocRuleWithExceptions> head2Rules;
+    SetMultimap<HeadGroup, AssocRuleWithExceptions> head2Rules;
     double confidence;
 
     public AssocRulesExtended() {
         rules = new ArrayList<>();
         head2Rules = HashMultimap.create();
+        body2Rules= HashMultimap.create();
 
     }
 
@@ -39,7 +43,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     public void addRule(AssocRuleWithExceptions rule) {
         getRules().add(rule);
         head2Rules.put(new HeadGroup(rule.getItemset2()), rule);
-
+        body2Rules.put(new BodyGroup(rule.getItemset1()),rule);
 
     }
 
@@ -70,6 +74,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
                 predicate.and(assocRule -> {
                     // remove from the head2Rules map.
                     head2Rules.remove(new HeadGroup(assocRule.getItemset2()), assocRule);
+                    body2Rules.remove(new HeadGroup(assocRule.getItemset1()), assocRule);
                     return true;
                 }));
 
@@ -258,6 +263,23 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
         return buffer.toString();
 
+    }
+
+    public Set<AssocRuleWithExceptions> getRules(int[] head, int[] body) {
+
+        Set<AssocRuleWithExceptions> rulesToReturn=new HashSet<>();
+        if(head!=null){
+            rulesToReturn.addAll(head2Rules.get(new HeadGroup(head)));
+        }
+        if(body!=null){
+            Set<AssocRuleWithExceptions> bodyRules=body2Rules.get(new BodyGroup(body));
+            if(head==null)
+                return bodyRules;
+            else
+                return new HashSet<>(Sets.intersection(bodyRules,rulesToReturn));
+        }
+
+        return rulesToReturn;
     }
 
 

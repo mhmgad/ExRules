@@ -47,7 +47,7 @@ public class Exceptions implements Iterable<ExceptionItem>{
     }
 
     public void sortOnSupport(){
-        Collections.sort(this.exceptions,(x, y)-> y.getAbsoluteSupport()-x.getAbsoluteSupport());
+        Collections.sort(this.exceptions,(ExceptionItem x,ExceptionItem  y)-> y.getAbsoluteSupport()-x.getAbsoluteSupport());
     }
 
     @Override
@@ -55,6 +55,11 @@ public class Exceptions implements Iterable<ExceptionItem>{
         StringBuilder sb=new StringBuilder();
         exceptions.forEach((ex)-> sb.append(ex+"\n"));
         return sb.toString();
+    }
+
+
+    public int[] getExceptionsInts(){
+        return exceptions.stream().mapToInt((x) -> x.getFirstItems()).toArray();
     }
 
     
