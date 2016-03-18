@@ -57,4 +57,8 @@ public class HeadGroup {
     public int getAllTransactionsCount() {
         return allTransactionsCount;
     }
+
+    public void setConfidence(double confidence) {
+        this.confidence = confidence;
+    }
 }

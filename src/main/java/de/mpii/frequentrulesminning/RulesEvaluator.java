@@ -101,4 +101,29 @@ public class RulesEvaluator {
         coverage(head,assocRuleWithExceptionses,false);
 
     }
+
+    public void confidence(HeadGroup head, Collection<AssocRuleWithExceptions> assocRuleWithExceptionses){
+        confidence(head,assocRuleWithExceptionses,false);
+    }
+
+    private void confidence(HeadGroup head, Collection<AssocRuleWithExceptions> rules, boolean b) {
+
+        Set<Transaction> containsBody= new HashSet<>();
+
+
+
+        for (AssocRuleWithExceptions rule:rules ) {
+            Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
+            containsBody.addAll(bodyTransactions);
+        }
+
+        int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBody);
+
+        int rulesBodyandHeadCount=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(containsBody,head.getHeadItems()));
+
+        head.setConfidence((double)bodyTransactionsCount/rulesBodyandHeadCount);
+
+    }
+
+
 }
