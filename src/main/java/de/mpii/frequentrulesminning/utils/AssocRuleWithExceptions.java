@@ -119,5 +119,13 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return this.itemset2;
     }
 
+    public int[] getHead(){
+        return getItemset2();
+    }
+
+    public int[] getBody(){
+        return getBody();
+    }
+
 
 }

@@ -57,7 +57,12 @@ public class RulesEvaluator {
     }
 
 
-
+    /**
+     * Coverage of set of rules R with same head using coverage = (1/E) * ((supp(r1)* supp(r2)..sup(rn))^(1/|R|) )
+     * @param head
+     * @param rules
+     * @param withExceptions
+     */
     public void coverage(HeadGroup head,Collection<AssocRuleWithExceptions> rules, boolean withExceptions){
 
         // Exception Handling is not yet implemented
@@ -106,7 +111,14 @@ public class RulesEvaluator {
         confidence(head,assocRuleWithExceptionses,false);
     }
 
-    private void confidence(HeadGroup head, Collection<AssocRuleWithExceptions> rules, boolean b) {
+
+    /**
+     * Measures a set of rule confidence by computing  the support of all rules union over the union of the bodies supp(all rules)/supp(bodies)
+     * @param head
+     * @param rules
+     * @param withExceptions
+     */
+    public void confidence(HeadGroup head, Collection<AssocRuleWithExceptions> rules, boolean withExceptions) {
 
         Set<Transaction> containsBody= new HashSet<>();
 
@@ -121,9 +133,20 @@ public class RulesEvaluator {
 
         int rulesBodyandHeadCount=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(containsBody,head.getHeadItems()));
 
-        head.setConfidence((double)bodyTransactionsCount/rulesBodyandHeadCount);
+        head.setConfidence((double)rulesBodyandHeadCount/bodyTransactionsCount);
 
     }
+
+
+    public void exceptionsConflictScore (AssocRuleWithExceptions targetRule,AssocRulesExtended rulesSource){
+
+//        rulesSource.getRules(targetRule.getItemset2())
+//        for(AssocRuleWithExceptions rule:groupRules){
+//            if()
+//        }
+
+    }
+
 
 
 }
