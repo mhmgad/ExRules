@@ -27,7 +27,7 @@ public class BodyGroup {
 
     @Override
     public boolean equals(Object obj) {
-        return Arrays.equals(bodyItems,((HeadGroup)obj).headItems);
+        return Arrays.equals(bodyItems,((BodyGroup)obj).bodyItems);
     }
 
 
