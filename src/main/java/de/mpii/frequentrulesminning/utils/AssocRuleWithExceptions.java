@@ -3,10 +3,12 @@ package de.mpii.frequentrulesminning.utils;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 
 import com.google.common.base.Joiner;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by gadelrab on 2/22/16.
@@ -141,5 +143,15 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public boolean equals(Object obj) {
         AssocRuleWithExceptions casted= (AssocRuleWithExceptions)obj;
         return Arrays.equals(itemset2,casted.itemset2)&&Arrays.equals(itemset1,casted.itemset1);
+    }
+
+    public Set<Transaction> getPredicatableTransactions(TransactionsDatabase transactionsDB, boolean excludeExceptions) {
+
+
+        Set<Transaction> rulePredictableTransactions=transactionsDB.getTransactions(getBody(),ArrayUtils.addAll(excludeExceptions? getExceptionsCandidatesInts():null,getHead()));
+
+
+        return rulePredictableTransactions;
+
     }
 }

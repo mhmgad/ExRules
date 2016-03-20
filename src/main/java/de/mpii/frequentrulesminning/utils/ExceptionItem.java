@@ -13,6 +13,12 @@ public class ExceptionItem extends ItemsetString{
     private double coverage;
     private double confidence;
 
+    public double getConflictScore() {
+        return conflictScore;
+    }
+
+    private double conflictScore;
+
 
     public ExceptionItem(Item[] itemsetItem, int[] items, int support, int totalCount) {
         super(itemsetItem, items, support, totalCount);
@@ -49,7 +55,7 @@ public class ExceptionItem extends ItemsetString{
 
     @Override
     public String toString() {
-        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence());
+        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+	"gConflict: "+String.format("%.5f",getConflictScore());
     }
 
     public double getCoverage() {
@@ -62,5 +68,9 @@ public class ExceptionItem extends ItemsetString{
 
     public int getFirstItems() {
         return getItems()[0];
+    }
+
+    public void setConflictScore(double conflictScore) {
+        this.conflictScore = conflictScore;
     }
 }
