@@ -130,7 +130,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
     public int[] getBody(){
-        return getBody();
+        return getItemset1();
     }
 
     @Override
