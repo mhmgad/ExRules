@@ -149,7 +149,9 @@ public class RulesEvaluator {
                         continue;
                     }
 
-                int singleConflictTransactionsCount=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(predictableTransactions.get(rule), e.getItems()));
+                // filter transactions that contains the body and the excpetion
+                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(predictableTransactions.get(rule), ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
+                int singleConflictTransactionsCount=TransactionsDatabase.getTransactionsCount(transactionsWithBodyandException);
                 conflictScore+=(singleConflictTransactionsCount*rule.getConfidence());
                 conflictTransactionsCount+=singleConflictTransactionsCount;
 
