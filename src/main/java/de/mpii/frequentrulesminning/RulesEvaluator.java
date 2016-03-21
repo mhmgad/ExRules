@@ -191,4 +191,38 @@ public class RulesEvaluator {
         }
 
     }
+
+
+    /**
+     * Computes the conflict score between the Exception Candidate generated from rules and positive examples.
+     * @param targetRule
+     * @param exceptionCandidate
+     * @param exceptionRules
+     * @return
+     */
+    public double invertedConflictScore(AssocRuleWithExceptions targetRule, ExceptionItem exceptionCandidate, Set<AssocRuleWithExceptions> exceptionRules) {
+
+        Set<Transaction> ruleTransactionsWithoutException=transactionsDB.getTransactions(ArrayUtils.addAll(targetRule.getBody(),targetRule.getHead()),exceptionCandidate.getItems());
+
+//        HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(exceptionRules.size());
+        double conflictScore=0;
+        int conflictTransactionsCount=0;
+        for(AssocRuleWithExceptions rule:exceptionRules){
+            if(!targetRule.isSubsetOf(rule))
+                    continue;
+
+            // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
+            Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
+//            predictableTransactions.put (rule, rulePredictableTransactions);
+
+            int predicatableExceptionCount=TransactionsDatabase.getTransactionsCount(Sets.intersection(rulePredictableTransactions,ruleTransactionsWithoutException));
+            conflictScore+=(predicatableExceptionCount*rule.getConfidence());
+            conflictTransactionsCount+=predicatableExceptionCount;
+
+        }
+
+        return  conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount);
+
+
+    }
 }

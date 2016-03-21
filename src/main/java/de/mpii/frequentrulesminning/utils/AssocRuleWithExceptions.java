@@ -3,6 +3,9 @@ package de.mpii.frequentrulesminning.utils;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
+import com.google.common.primitives.Ints;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
@@ -153,5 +156,24 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
         return rulePredictableTransactions;
 
+    }
+
+    /**
+     * checks is the rule is subset of another rule. Subset = the body is subset from the other rule body
+     * @param superset
+     * @return
+     */
+    public boolean isSubsetOf(AssocRuleWithExceptions superset){
+        if(!Arrays.equals(this.getHead(),superset.getHead()))
+            return false;
+        Set<Integer> intersec= Sets.intersection(ImmutableSet.copyOf(Ints.asList(getItemset1())),(ImmutableSet.copyOf(Ints.asList(superset.getItemset1()))));
+        if (intersec.size()== getBodyLength())
+            return true;
+        else
+            return false;
+    }
+
+    private int getBodyLength() {
+        return getItemset1().length;
     }
 }

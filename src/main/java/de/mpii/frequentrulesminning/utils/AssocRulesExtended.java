@@ -87,6 +87,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             r.getExceptionCandidates().forEach((ex) -> {
                 ex.setCoverage(evaluator.coverage(r, ex));
                 ex.setConfidence(evaluator.confidence(r, ex));
+                ex.setInvertedConflictScore(evaluator.invertedConflictScore(r,ex,this.getRules(ex.getItems(),null)));
             });
 
         });

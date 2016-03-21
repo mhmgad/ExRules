@@ -13,6 +13,12 @@ public class ExceptionItem extends ItemsetString{
     private double coverage;
     private double confidence;
 
+    public double getInvertedConflictScore() {
+        return invertedConflictScore;
+    }
+
+    private double invertedConflictScore;
+
     public double getConflictScore() {
         return conflictScore;
     }
@@ -55,7 +61,7 @@ public class ExceptionItem extends ItemsetString{
 
     @Override
     public String toString() {
-        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+	"\tgConflict: "+String.format("%.5f",getConflictScore());
+        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+	"\tgConflict: "+String.format("%.5f",getConflictScore())+	"\tinvConflict: "+String.format("%.5f",getInvertedConflictScore());
     }
 
     public double getCoverage() {
@@ -72,5 +78,9 @@ public class ExceptionItem extends ItemsetString{
 
     public void setConflictScore(double conflictScore) {
         this.conflictScore = conflictScore;
+    }
+
+    public void setInvertedConflictScore(double invertedConflictScore) {
+        this.invertedConflictScore=invertedConflictScore;
     }
 }

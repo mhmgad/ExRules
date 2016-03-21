@@ -214,7 +214,12 @@ public class AssociationRuleMiningSPMF {
         return false;
     }
 
-
+    /**
+     * Checks if the second is subset from the first (should be flipped)
+     * @param assocRule
+     * @param assocRule1
+     * @return
+     */
     private boolean isSubsetBody(AssocRuleWithExceptions assocRule, AssocRuleWithExceptions assocRule1) {
         if(assocRule==assocRule1)
             return false;
