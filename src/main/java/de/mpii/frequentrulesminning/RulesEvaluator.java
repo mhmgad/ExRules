@@ -136,9 +136,6 @@ public class RulesEvaluator {
 
 
     public void exceptionsConflictScore (AssocRuleWithExceptions targetRule,HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions ){
-
-
-
         // compute intersection score for each exception
         for (ExceptionItem e:targetRule.getExceptionCandidates() ){
             // TODO compute score for each exception
@@ -160,29 +157,15 @@ public class RulesEvaluator {
             e.setConflictScore(conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount));
 
         }
-
-
     }
-
-
 
 
     public void conflict(HeadGroup key, Set<AssocRuleWithExceptions> groupRules) {
 
-
-//        Collection<AssocRuleWithExceptions> groupRules=rulesSource.getRules(targetRule.getHead(),null);
-
-
-//        int[] targetRuleExceptions=targetRule.getExceptionsCandidatesInts();
-
-
         // get predictable transactions for each rule
         HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(groupRules.size());
         for(AssocRuleWithExceptions rule:groupRules){
-//            if(targetRule.equals(rule))
-//                continue;
             // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
-//            Set<Transaction> rulePredictableTransactions=transactionsDB.getTransactions(rule.getBody(),ArrayUtils.addAll( rule.getExceptionsCandidatesInts(),rule.getHead()));
             Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
             predictableTransactions.put (rule, rulePredictableTransactions);
         }
@@ -204,19 +187,22 @@ public class RulesEvaluator {
      */
     public double invertedConflictScore(AssocRuleWithExceptions targetRule, ExceptionItem exceptionCandidate, Set<AssocRuleWithExceptions> exceptionRules) {
 
-        Set<Transaction> ruleTransactionsWithoutException=transactionsDB.getTransactions(ArrayUtils.addAll(targetRule.getBody(),targetRule.getHead()),exceptionCandidate.getItems());
+
+        // positive examples of the rule that fo not contain the target exception
+        Set<Transaction> ruleTransactionsWithoutException=transactionsDB.filterOutTransactionsWith(targetRule.getKnownPositiveTransactions(transactionsDB,false),exceptionCandidate.getItems());
 
 //        HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(exceptionRules.size());
         double conflictScore=0;
         int conflictTransactionsCount=0;
         for(AssocRuleWithExceptions rule:exceptionRules){
-            if(!targetRule.isSubsetOf(rule))
+            if(!targetRule.isBodySubsetOf(rule))
                     continue;
 
             // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
             Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
 //            predictableTransactions.put (rule, rulePredictableTransactions);
 
+            // Count the intersection between the exception predection and the target rule positive examples
             int predicatableExceptionCount=TransactionsDatabase.getTransactionsCount(Sets.intersection(rulePredictableTransactions,ruleTransactionsWithoutException));
             conflictScore+=(predicatableExceptionCount*rule.getConfidence());
             conflictTransactionsCount+=predicatableExceptionCount;

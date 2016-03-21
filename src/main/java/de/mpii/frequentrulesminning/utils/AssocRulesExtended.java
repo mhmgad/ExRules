@@ -68,7 +68,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return getRules().spliterator();
     }
 
-    public void filterRules(Predicate<AssocRuleWithExceptions> predicate) {
+    public void removeRulesIf(Predicate<AssocRuleWithExceptions> predicate) {
 
         getRules().removeIf(
                 predicate.and(assocRule -> {

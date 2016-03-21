@@ -164,16 +164,25 @@ public class AssocRuleWithExceptions {// extends AssocRule {
      * @return
      */
     public boolean isSubsetOf(AssocRuleWithExceptions superset){
+        // if they have different head then they cannot be subset of each other
         if(!Arrays.equals(this.getHead(),superset.getHead()))
             return false;
-        Set<Integer> intersec= Sets.intersection(ImmutableSet.copyOf(Ints.asList(getItemset1())),(ImmutableSet.copyOf(Ints.asList(superset.getItemset1()))));
-        if (intersec.size()== getBodyLength())
+       return isBodySubsetOf(superset);
+    }
+
+    private int getBodyLength() {
+        return getItemset1().length;
+    }
+
+    public boolean isBodySubsetOf(AssocRuleWithExceptions superset) {
+        Set<Integer> intersection= Sets.intersection(ImmutableSet.copyOf(Ints.asList(getItemset1())),(ImmutableSet.copyOf(Ints.asList(superset.getItemset1()))));
+        if (intersection.size()== getBodyLength())
             return true;
         else
             return false;
     }
 
-    private int getBodyLength() {
-        return getItemset1().length;
+    public Set<Transaction> getKnownPositiveTransactions(TransactionsDatabase transactionsDB, boolean exclupdeExceptions) {
+       return transactionsDB.getTransactions(ArrayUtils.addAll(getBody(),getHead()),exclupdeExceptions? getExceptionsCandidatesInts():null);
     }
 }

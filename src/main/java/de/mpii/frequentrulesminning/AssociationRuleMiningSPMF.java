@@ -9,9 +9,6 @@ import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPGrowth;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 
 
-import com.google.common.collect.*;
-
-import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.utils.*;
 
 import de.mpii.yagotools.YagoTaxonomy;
@@ -159,7 +156,7 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Start Filtering 2...");
         this.yagoTaxonomy=YagoTaxonomy.getInstance();
         //rules.getRules().removeIf(rule -> isMimickingHierarchy((AssocRuleWithExceptions) rule));
-        rules.filterRules((AssocRuleWithExceptions rule) -> isMimickingHierarchy(rule));
+        rules.removeRulesIf((AssocRuleWithExceptions rule) -> isMimickingHierarchy(rule));
         System.out.println("Done Filtering 2!");
     }
 
@@ -168,7 +165,7 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Start Filtering...");
 
 //        rules.getRules().removeIf(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
-        rules.filterRules(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
+        rules.removeRulesIf(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
         removeContainingRules(rules);
 
         System.out.println("Done Filtering!");
@@ -182,7 +179,7 @@ public class AssociationRuleMiningSPMF {
         for(int i=0;i<rules.getRules().size();i++){
             final int  c=i;
 //            rules.getRules().removeIf(assocRule -> isSubsetBody(rules.getRules().get(c),assocRule));
-            rules.filterRules(assocRule -> isSubsetBody(rules.getRules().get(c),assocRule));
+            rules.removeRulesIf(assocRule -> isSubsetBody(assocRule,rules.getRules().get(c)));
         }
 
     }
@@ -217,21 +214,22 @@ public class AssociationRuleMiningSPMF {
     /**
      * Checks if the second is subset from the first (should be flipped)
      * @param assocRule
-     * @param assocRule1
+     * @param superRule
      * @return
      */
-    private boolean isSubsetBody(AssocRuleWithExceptions assocRule, AssocRuleWithExceptions assocRule1) {
-        if(assocRule==assocRule1)
+    private boolean isSubsetBody(AssocRuleWithExceptions assocRule, AssocRuleWithExceptions superRule) {
+        if(assocRule==superRule)
             return false;
 
-        if(assocRule.getConfidence()!=assocRule1.getConfidence())
+        if(assocRule.getConfidence()!=superRule.getConfidence())
             return false;
 
-        Set<Integer> intersec=Sets.intersection(ImmutableSet.copyOf(Ints.asList(assocRule.getItemset1())),(ImmutableSet.copyOf(Ints.asList(assocRule1.getItemset1()))));
-        if (intersec.size()==assocRule1.getItemset1().length)
-            return true;
+        return assocRule.isSubsetOf(superRule);
+//        Set<Integer> intersec=Sets.intersection(ImmutableSet.copyOf(Ints.asList(assocRule.getItemset1())),(ImmutableSet.copyOf(Ints.asList(assocRule1.getItemset1()))));
+//        if (intersec.size()==assocRule1.getItemset1().length)
+//            return true;
 
-        return false;
+        //return false;
     }
 
 

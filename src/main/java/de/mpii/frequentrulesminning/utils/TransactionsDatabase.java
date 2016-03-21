@@ -79,7 +79,7 @@ public class TransactionsDatabase {
     }
 
     public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems, int startIndex) {
-        for (int i=startIndex;i<withItems.length;i++){
+        for (int i=startIndex;i<withItems.length&&transactions.size()>0;i++){
             transactions = Sets.intersection(transactions, getTransactionsWithItem(withItems[i]));
         }
         return transactions;
@@ -92,8 +92,9 @@ public class TransactionsDatabase {
     public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex) {
 
         if(excludedItems!=null){
-            for (int i=startIndex;i<excludedItems.length;i++){
+            for (int i=startIndex;i<excludedItems.length&&transactions.size()>0;i++){
                 transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i]));
+
             }
         }
         return transactions;
