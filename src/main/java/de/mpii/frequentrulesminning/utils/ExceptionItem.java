@@ -55,7 +55,7 @@ public class ExceptionItem extends ItemsetString{
 
     @Override
     public String toString() {
-        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+	"gConflict: "+String.format("%.5f",getConflictScore());
+        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+	"\tgConflict: "+String.format("%.5f",getConflictScore());
     }
 
     public double getCoverage() {

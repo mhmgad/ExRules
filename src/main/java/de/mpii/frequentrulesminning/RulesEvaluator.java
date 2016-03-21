@@ -155,12 +155,14 @@ public class RulesEvaluator {
 
 
             }
-            e.setConflictScore(conflictScore/conflictTransactionsCount);
+            e.setConflictScore(conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount));
 
         }
 
 
     }
+
+
 
 
     public void conflict(HeadGroup key, Set<AssocRuleWithExceptions> groupRules) {
