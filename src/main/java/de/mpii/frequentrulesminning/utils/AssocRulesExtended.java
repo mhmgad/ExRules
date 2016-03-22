@@ -87,7 +87,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             r.getExceptionCandidates().forEach((ex) -> {
                 ex.setCoverage(evaluator.coverage(r, ex));
                 ex.setConfidence(evaluator.confidence(r, ex));
-                ex.setInvertedConflictScore(evaluator.invertedConflictScore(r,ex,this.getRules(ex.getItems(),null)));
+//                ex.setInvertedConflictScore(evaluator.invertedConflictScore(r,ex,this.getRules(ex.getItems(),null)));
             });
 
         });
@@ -105,7 +105,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     private void evaluateHeadGroup(RulesEvaluator evaluator, HeadGroup key) {
         evaluator.coverage(key,head2Rules.get(key));
         evaluator.confidence(key,head2Rules.get(key));
-        evaluator.conflict(key,head2Rules.get(key));
+        evaluator.conflict(key,head2Rules.get(key),this);
 
 
 
@@ -139,6 +139,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
     public void sortByHeadAndConfidence(List<AssocRuleWithExceptions> rulesToSort) {
+
         Collections.sort(rulesToSort, new Comparator<AssocRuleWithExceptions>() {
             @Override
             public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {

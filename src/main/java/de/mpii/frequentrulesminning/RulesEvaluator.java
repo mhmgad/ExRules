@@ -135,7 +135,7 @@ public class RulesEvaluator {
     }
 
 
-    public void exceptionsConflictScore (AssocRuleWithExceptions targetRule,HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions ){
+    public void exceptionsConflictScore(AssocRuleWithExceptions targetRule, HashMap<AssocRuleWithExceptions, Set<Transaction>> predictableTransactions, AssocRulesExtended rulesSource){
         // compute intersection score for each exception
         for (ExceptionItem e:targetRule.getExceptionCandidates() ){
             // TODO compute score for each exception
@@ -155,12 +155,35 @@ public class RulesEvaluator {
 
             }
             e.setConflictScore(conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount));
+            e.setConflictCount(conflictTransactionsCount);
+
+            // ComputeInverted conflict
+            if(rulesSource!=null)
+                invertedConflictScore(targetRule,e,rulesSource.getRules(e.getItems(),null));
 
         }
     }
 
 
-    public void conflict(HeadGroup key, Set<AssocRuleWithExceptions> groupRules) {
+//    public void conflict(HeadGroup key, Set<AssocRuleWithExceptions> groupRules) {
+//
+////        // get predictable transactions for each rule
+////        HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(groupRules.size());
+////        for(AssocRuleWithExceptions rule:groupRules){
+////            // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
+////            Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
+////            predictableTransactions.put (rule, rulePredictableTransactions);
+////        }
+////
+////
+////        for(AssocRuleWithExceptions rule:groupRules){
+////            exceptionsConflictScore(rule,predictableTransactions);
+////        }
+//        conflict( key,groupRules,null);
+//
+//    }
+
+    public void conflict(HeadGroup key, Set<AssocRuleWithExceptions> groupRules,AssocRulesExtended rulesSource) {
 
         // get predictable transactions for each rule
         HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(groupRules.size());
@@ -172,7 +195,7 @@ public class RulesEvaluator {
 
 
         for(AssocRuleWithExceptions rule:groupRules){
-            exceptionsConflictScore(rule,predictableTransactions);
+            exceptionsConflictScore(rule,predictableTransactions,rulesSource);
         }
 
     }
@@ -185,7 +208,7 @@ public class RulesEvaluator {
      * @param exceptionRules
      * @return
      */
-    public double invertedConflictScore(AssocRuleWithExceptions targetRule, ExceptionItem exceptionCandidate, Set<AssocRuleWithExceptions> exceptionRules) {
+    public void invertedConflictScore(AssocRuleWithExceptions targetRule, ExceptionItem exceptionCandidate, Set<AssocRuleWithExceptions> exceptionRules) {
 
 
         // positive examples of the rule that fo not contain the target exception
@@ -209,8 +232,9 @@ public class RulesEvaluator {
 
         }
 
-        return  conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount);
-
+//        return  conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount);
+        exceptionCandidate.setInvertedConflictScore(conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount));
+        exceptionCandidate.setInvertedConflictCount(conflictTransactionsCount);
 
     }
 }
