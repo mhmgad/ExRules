@@ -95,6 +95,6 @@ public class ExceptionItem extends ItemsetString{
     }
 
     public double getCombinedConflict(){
-        return ((invertedConflictScore*invertedConflictCount)+(conflictScore*conflictCount))/(conflictCount+invertedConflictCount);
+        return conflictCount+invertedConflictCount==0? 0:((invertedConflictScore*invertedConflictCount)+(conflictScore*conflictCount))/(conflictCount+invertedConflictCount);
     }
 }
