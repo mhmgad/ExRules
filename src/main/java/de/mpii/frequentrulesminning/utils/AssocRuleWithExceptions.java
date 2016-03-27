@@ -185,4 +185,10 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public Set<Transaction> getKnownPositiveTransactions(TransactionsDatabase transactionsDB, boolean exclupdeExceptions) {
        return transactionsDB.getTransactions(ArrayUtils.addAll(getBody(),getHead()),exclupdeExceptions? getExceptionsCandidatesInts():null);
     }
+
+    public void setLift(double lift) {
+        this.lift = lift;
+    }
+
+
 }

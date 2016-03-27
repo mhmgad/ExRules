@@ -84,6 +84,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         // Individual Rules Evaluation
         getRules().stream().parallel().forEach((r) -> {
             r.setCoverage(evaluator.coverage(r));
+            r.setLift(evaluator.lift(r));
             r.getExceptionCandidates().forEach((ex) -> {
                 ex.setCoverage(evaluator.coverage(r, ex));
                 ex.setConfidence(evaluator.confidence(r, ex));

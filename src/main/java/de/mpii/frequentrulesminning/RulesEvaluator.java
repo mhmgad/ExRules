@@ -54,6 +54,20 @@ public class RulesEvaluator {
     }
 
 
+    public double lift(AssocRuleWithExceptions rule){
+        return  coverage( rule,null);
+    }
+
+    public double lift(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
+        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
+        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
+        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
+        return ((double)ruleSupport)/(headSupport*bodySupport);
+
+    }
+
+
+
     /**
      * Coverage of set of rules R with same head using coverage = (1/E) * ((supp(r1)* supp(r2)..sup(rn))^(1/|R|) )
      * @param head
@@ -237,4 +251,7 @@ public class RulesEvaluator {
         exceptionCandidate.setInvertedConflictCount(conflictTransactionsCount);
 
     }
+
+
+
 }
