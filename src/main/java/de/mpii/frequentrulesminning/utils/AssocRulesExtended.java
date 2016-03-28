@@ -83,11 +83,12 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     public void evaluateIndividuals(RulesEvaluator evaluator) {
         // Individual Rules Evaluation
         getRules().stream().parallel().forEach((r) -> {
-            r.setCoverage(evaluator.coverage(r));
-            r.setLift(evaluator.lift(r));
+            r.setCoverage(evaluator);
+            r.setLift(evaluator);
             r.getExceptionCandidates().forEach((ex) -> {
                 ex.setCoverage(evaluator.coverage(r, ex));
                 ex.setConfidence(evaluator.confidence(r, ex));
+                ex.setLift(evaluator.lift(r,ex));
 //                ex.setInvertedConflictScore(evaluator.invertedConflictScore(r,ex,this.getRules(ex.getItems(),null)));
             });
 
@@ -106,6 +107,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     private void evaluateHeadGroup(RulesEvaluator evaluator, HeadGroup key) {
         evaluator.coverage(key,head2Rules.get(key));
         evaluator.confidence(key,head2Rules.get(key));
+//        evaluator.lift(key,head2Rules.get(key));
         evaluator.conflict(key,head2Rules.get(key),this);
 
 
@@ -149,7 +151,27 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
                 if (headDiff != 0)
                     return headDiff;
 
-                int confidenceDiff = (int) ((o2.getConfidence() - o1.getConfidence()) * 2.147483647E9D);
+                int confidenceDiff = Double.compare(o2.getConfidence() , o1.getConfidence());
+                if (confidenceDiff != 0)
+                    return confidenceDiff;
+
+                return o1.getItemset1().length - o2.getItemset1().length;
+
+            }
+        });
+    }
+
+    public void sortByHeadAndLift(List<AssocRuleWithExceptions> rulesToSort) {
+
+        Collections.sort(rulesToSort,  new Comparator<AssocRuleWithExceptions>() {
+            @Override
+            public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {
+                int headDiff = o2.getItemset2()[0] - o1.getItemset2()[0];
+
+                if (headDiff != 0)
+                    return headDiff;
+
+                int confidenceDiff = Double.compare(o2.getLift() , o1.getLift());
                 if (confidenceDiff != 0)
                     return confidenceDiff;
 
@@ -170,6 +192,9 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             case HEAD_CONF:
                 sortByHeadAndConfidence(rules);
                 break;
+            case HEAD_LIFT:
+                sortByHeadAndLift(rules);
+                break;
             case BODY:
                 sortByBodyLength(rules);
                 break;
@@ -177,7 +202,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
     public String toString(SortingType sortType, boolean hasExceptionOnly) {
-        if (sortType == SortingType.HEAD || sortType == SortingType.HEAD_CONF)
+        if (sortType == SortingType.HEAD || sortType == SortingType.HEAD_CONF|| sortType==sortType.HEAD_LIFT)
             return toStringGroups(sortType, hasExceptionOnly);
 
         StringBuilder buffer = new StringBuilder();
@@ -287,5 +312,5 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public enum SortingType {CONF, HEAD, BODY, HEAD_CONF}
+    public enum SortingType {CONF, HEAD, BODY, HEAD_CONF,HEAD_LIFT}
 }

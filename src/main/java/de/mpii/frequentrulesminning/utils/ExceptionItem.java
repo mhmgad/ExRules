@@ -14,6 +14,7 @@ public class ExceptionItem extends ItemsetString{
     private double confidence;
     private int invertedConflictCount;
     private int conflictCount;
+    private double lift;
 
     public double getInvertedConflictScore() {
         return invertedConflictScore;
@@ -63,7 +64,7 @@ public class ExceptionItem extends ItemsetString{
 
     @Override
     public String toString() {
-        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+	"\tgConflict: "+String.format("%.5f",getConflictScore())+	"\tinvConflict: "+String.format("%.5f",getInvertedConflictScore()) +	"\ttotalConflict: "+String.format("%.5f",getCombinedConflict());
+        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+"\tlift: "+String.format("%.5f",getLift())+	"\tgConflict: "+String.format("%.5f",getConflictScore())+	"\tinvConflict: "+String.format("%.5f",getInvertedConflictScore()) +	"\ttotalConflict: "+String.format("%.5f",getCombinedConflict());
     }
 
     public double getCoverage() {
@@ -96,5 +97,13 @@ public class ExceptionItem extends ItemsetString{
 
     public double getCombinedConflict(){
         return conflictCount+invertedConflictCount==0? 0:((invertedConflictScore*invertedConflictCount)+(conflictScore*conflictCount))/(conflictCount+invertedConflictCount);
+    }
+
+    public void setLift(double lift) {
+        this.lift = lift;
+    }
+
+    public double getLift() {
+        return lift;
     }
 }

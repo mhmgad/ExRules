@@ -20,7 +20,8 @@ public class Exceptions implements Iterable<ExceptionItem>{
         
     }public void setExceptions(List<ExceptionItem> exception) {
         this.exceptions = exception;
-        sortOnSupport();
+        //sortOnSupport();
+        sortOnLiftThenInvConflict();
     }
 
     @Override
@@ -48,6 +49,14 @@ public class Exceptions implements Iterable<ExceptionItem>{
 
     public void sortOnSupport(){
         Collections.sort(this.exceptions,(ExceptionItem x,ExceptionItem  y)-> y.getAbsoluteSupport()-x.getAbsoluteSupport());
+    }
+
+    public void sortOnLift(){
+        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getLift).reversed());
+    }
+
+    public void sortOnLiftThenInvConflict(){
+        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getLift).reversed().thenComparing(ExceptionItem::getInvertedConflictScore));
     }
 
     @Override

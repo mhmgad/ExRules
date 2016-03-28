@@ -6,6 +6,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
+import de.mpii.frequentrulesminning.RulesEvaluator;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
@@ -30,6 +31,14 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     private Item[] headItems;
     private Item[] bodyItems;
     private Exceptions exceptionCandidates;
+
+    Set<Transaction> bodyTransactions;
+    Set<Transaction> headTransactions;
+    Set<Transaction> hornRuleTransactions;
+    Set<Transaction> safePredictableTransactions;
+    private Set<Transaction> predictableTransactions;
+
+
 
     public AssocRuleWithExceptions(int[] itemset1, int[] itemset2, int coverage, int transactionCount, double confidence) {
         this.itemset1 = itemset1;
@@ -148,6 +157,9 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return Arrays.equals(itemset2,casted.itemset2)&&Arrays.equals(itemset1,casted.itemset1);
     }
 
+    public Set<Transaction> getPredicatableTransactions(){
+        return predictableTransactions;
+    }
     public Set<Transaction> getPredicatableTransactions(TransactionsDatabase transactionsDB, boolean excludeExceptions) {
 
 
@@ -191,4 +203,47 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
 
+    public void setBodyTransactions(Set<Transaction> bodyTransactions) {
+        this.bodyTransactions = bodyTransactions;
+    }
+
+    public void setHeadTransactions(Set<Transaction> headTransactions) {
+        this.headTransactions = headTransactions;
+    }
+
+    public Set<Transaction> getBodyTransactions() {
+        return bodyTransactions;
+    }
+
+    public void setHornRuleTransactions(Set<Transaction> hornRuleTransactions) {
+        this.hornRuleTransactions = hornRuleTransactions;
+    }
+
+    public Set<Transaction> getHornRuleTransactions() {
+        return hornRuleTransactions;
+    }
+
+    public void setSafePredictableTransactions(Set<Transaction> safePredictableTransactions) {
+        this.safePredictableTransactions = safePredictableTransactions;
+    }
+
+    public Set<Transaction> getHeadTransactions() {
+        return headTransactions;
+    }
+
+    public void setCoverage(RulesEvaluator evaluator) {
+        setCoverage(evaluator.coverage(this));
+    }
+
+    public void setLift(RulesEvaluator evaluator) {
+        setLift(evaluator.lift(this));
+    }
+
+    public void setPredictableTransactions(Set<Transaction> predictableTransactions) {
+        this.predictableTransactions = predictableTransactions;
+    }
+
+    public Set<Transaction> getSafePredictableTransactions() {
+        return safePredictableTransactions;
+    }
 }

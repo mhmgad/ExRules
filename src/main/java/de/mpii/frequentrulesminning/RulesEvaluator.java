@@ -34,10 +34,13 @@ public class RulesEvaluator {
 
     public double confidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
 
-        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
-        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
+//        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
+//        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
 
-        return ((float)ruleSupport)/((float)bodySupport);
+        int bodySupport=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems()));
+        int ruleSupport=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems()));
+
+        return ((double) ruleSupport)/bodySupport;
 
 
     }
@@ -47,9 +50,12 @@ public class RulesEvaluator {
     }
 
     public double coverage(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
-        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
-        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
-        return ((float)ruleSupport)/((float)headSupport);
+//        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
+//        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
+
+        int ruleSupport=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems()));
+        int headSupport=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(rule.getHeadTransactions(),exceptionItem==null? null:exceptionItem.getItems()));
+        return ((double) ruleSupport)/headSupport;
 
     }
 
@@ -59,9 +65,12 @@ public class RulesEvaluator {
     }
 
     public double lift(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
-        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
-        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
-        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
+//        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
+//        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
+//        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
+        int bodySupport=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems()));
+        int ruleSupport=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems()));
+        int headSupport=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(rule.getHeadTransactions(),null));
         return ((double)ruleSupport)/(headSupport*bodySupport);
 
     }
@@ -79,6 +88,7 @@ public class RulesEvaluator {
         // Exception Handling is not yet implemented
 
         Set<Transaction> containsBodyOrHead= transactionsDB.getTransactions(head.getHeadItems(),null);
+//        Set<Transaction> containsBodyOrHead= Sets.union()
 
 
         //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
@@ -136,7 +146,8 @@ public class RulesEvaluator {
 
 
         for (AssocRuleWithExceptions rule:rules ) {
-            Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
+//            Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
+            Set<Transaction> bodyTransactions = rule.getBodyTransactions();
             containsBody.addAll(bodyTransactions);
         }
 
@@ -149,19 +160,50 @@ public class RulesEvaluator {
     }
 
 
-    public void exceptionsConflictScore(AssocRuleWithExceptions targetRule, HashMap<AssocRuleWithExceptions, Set<Transaction>> predictableTransactions, AssocRulesExtended rulesSource){
+//    public void exceptionsConflictScore(AssocRuleWithExceptions targetRule, HashMap<AssocRuleWithExceptions, Set<Transaction>> predictableTransactions, AssocRulesExtended rulesSource){
+//        // compute intersection score for each exception
+//        for (ExceptionItem e:targetRule.getExceptionCandidates() ){
+//            // TODO compute score for each exception
+//            double conflictScore=0;
+//            int conflictTransactionsCount=0;
+//            for (AssocRuleWithExceptions rule:predictableTransactions.keySet()) {
+//                    if(targetRule.equals(rule)){
+//                        continue;
+//                    }
+//
+//                // filter transactions that contains the body and the excpetion
+////                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(predictableTransactions.get(rule), ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
+//                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(r.getSa, ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
+//                int singleConflictTransactionsCount=TransactionsDatabase.getTransactionsCount(transactionsWithBodyandException);
+//                conflictScore+=(singleConflictTransactionsCount*rule.getConfidence());
+//                conflictTransactionsCount+=singleConflictTransactionsCount;
+//
+//
+//            }
+//            e.setConflictScore(conflictTransactionsCount==0? 0:(conflictScore/conflictTransactionsCount));
+//            e.setConflictCount(conflictTransactionsCount);
+//
+//            // ComputeInverted conflict
+//            if(rulesSource!=null)
+//                invertedConflictScore(targetRule,e,rulesSource.getRules(e.getItems(),null));
+//
+//        }
+//    }
+
+    public void exceptionsConflictScore(AssocRuleWithExceptions targetRule, Set<AssocRuleWithExceptions> groupRules, AssocRulesExtended rulesSource){
         // compute intersection score for each exception
         for (ExceptionItem e:targetRule.getExceptionCandidates() ){
             // TODO compute score for each exception
             double conflictScore=0;
             int conflictTransactionsCount=0;
-            for (AssocRuleWithExceptions rule:predictableTransactions.keySet()) {
-                    if(targetRule.equals(rule)){
-                        continue;
-                    }
+            for (AssocRuleWithExceptions rule:groupRules) {
+                if(targetRule.equals(rule)){
+                    continue;
+                }
 
                 // filter transactions that contains the body and the excpetion
-                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(predictableTransactions.get(rule), ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
+//                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(predictableTransactions.get(rule), ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
+                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(rule.getSafePredictableTransactions(), ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
                 int singleConflictTransactionsCount=TransactionsDatabase.getTransactionsCount(transactionsWithBodyandException);
                 conflictScore+=(singleConflictTransactionsCount*rule.getConfidence());
                 conflictTransactionsCount+=singleConflictTransactionsCount;
@@ -200,16 +242,17 @@ public class RulesEvaluator {
     public void conflict(HeadGroup key, Set<AssocRuleWithExceptions> groupRules,AssocRulesExtended rulesSource) {
 
         // get predictable transactions for each rule
-        HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(groupRules.size());
-        for(AssocRuleWithExceptions rule:groupRules){
-            // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
-            Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
-            predictableTransactions.put (rule, rulePredictableTransactions);
-        }
+//        HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(groupRules.size());
+//        for(AssocRuleWithExceptions rule:groupRules){
+//            // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
+//            Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
+//            predictableTransactions.put (rule, rulePredictableTransactions);
+//        }
 
 
         for(AssocRuleWithExceptions rule:groupRules){
-            exceptionsConflictScore(rule,predictableTransactions,rulesSource);
+//            exceptionsConflictScore(rule,predictableTransactions,rulesSource);
+            exceptionsConflictScore(rule,groupRules,rulesSource);
         }
 
     }
@@ -251,7 +294,6 @@ public class RulesEvaluator {
         exceptionCandidate.setInvertedConflictCount(conflictTransactionsCount);
 
     }
-
 
 
 }

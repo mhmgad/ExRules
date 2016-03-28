@@ -13,6 +13,7 @@ import de.mpii.frequentrulesminning.utils.*;
 
 import de.mpii.yagotools.YagoTaxonomy;
 import mpi.tools.javatools.util.FileUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -107,14 +108,47 @@ public class AssociationRuleMiningSPMF {
         }
 
 
+
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions){
-            transactionsDB=new TransactionsDatabase(transactionsFilePath);
             mineExceptions(rules,exceptionMinSupp);
+        }
+
+
+        // distribute Transactions
+        transactionsDB=new TransactionsDatabase(transactionsFilePath);
+        computeSupportingTransactions(rules);
+
+        // predictable transactions
+//        computeSafePredictableTransactions(rules);
+
+
+        if(withExceptions) {
             evaluateRules(rules);
         }
 
+
         return rules;
+    }
+
+//    private void computeSafePredictableTransactions(AssocRulesExtended rules) {
+//        rules.getRules().parallelStream().forEach(r -> {
+//
+//
+//        });
+//
+//    }
+
+    private void computeSupportingTransactions(AssocRulesExtended rules) {
+
+        rules.getRules().parallelStream().forEach(r -> {
+            r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null));
+            r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null));
+            r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead()));
+            r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead()));
+            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
+        });
+
     }
 
     private void evaluateRules(AssocRulesExtended rules) {
@@ -225,18 +259,11 @@ public class AssociationRuleMiningSPMF {
             return false;
 
         return assocRule.isSubsetOf(superRule);
-//        Set<Integer> intersec=Sets.intersection(ImmutableSet.copyOf(Ints.asList(assocRule.getItemset1())),(ImmutableSet.copyOf(Ints.asList(assocRule1.getItemset1()))));
-//        if (intersec.size()==assocRule1.getItemset1().length)
-//            return true;
-
-        //return false;
     }
 
 
 
     public void exportRules(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly) throws IOException {
-//        if(sortType!=null)
-//            rules.sort(sortType);
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
         bw.write(rules.toString(sortType,showRulesWithExceptionsOnly));
         bw.close();
@@ -255,17 +282,12 @@ public class AssociationRuleMiningSPMF {
             rdf2TransactionsConverter.loadMappingFromFile(mappingFilePath);
 
         System.out.println("Start Decoding ...");
-        //AssocRulesExtended rulesStrings=new AssocRulesExtended();
         for(AssocRuleWithExceptions r:rules.getRules()) {
-            //AssocRuleWithExceptions rstr=new AssocRuleWithExceptions(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()),rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()),r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift());
-            //rulesStrings.addRule(rstr);
             r.setBodyItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()));
             r.setHeadItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()));
 
         }
         System.out.println("Done Decoding!");
-
-
     }
 
 
@@ -315,75 +337,69 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public static  void main(String [] args) throws IOException {
-
-
-        if(args.length<4){
-            System.out.println("Usage: rules_spmf.sh <infile> <outFile>  <minsupp> <minConf> <maxConf> [<Sorting (CONF|HEAD_CONF)> <encode(1|0)> <decode(1|0)> <rdf2intMapping file>] <withExceptions(0|1)> <Exception Minsupp>");
-            System.exit(0);
-        }
-
-        String inputFile=args[0];
-        String outputFilePath=args[1];
-
-
-        double minsupp = Double.valueOf(args[2]);
-        double minconf = Double.valueOf(args[3]);//0.01D;
-        double maxconf = Double.valueOf(args[4]);//0.01D;
-
-        double excepminSupp =0.5D;
-
-
-        boolean encode=true;
-        boolean decode=true;
-        boolean withExceptions=false;
-
-        String rdf2idsMappingFile=null;
-        AssocRulesExtended.SortingType outputSorting= AssocRulesExtended.SortingType.CONF;
-
-        if(args.length>5){
-            outputSorting=AssocRulesExtended.SortingType.valueOf(args[5]);
-        }
-
-        if(args.length>6){
-            encode=args[6].equals("1");
-        }
-        if(args.length>7){
-            decode=args[7].equals("1");
-        }
-        if(args.length>8){
-            rdf2idsMappingFile=args[8];
-        }
-
-        if(args.length>9){
-            withExceptions=args[9].equals("1");
-
-        }
-
-        if(args.length>10){
-            excepminSupp=Double.valueOf(args[10]);
-        }
-
-        boolean showRulesWithExceptionsOnly=false;
-
-        if(args.length>11){
-            showRulesWithExceptionsOnly=args[11].equals("1");
-
-        }
-
-
-        AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
-
-        AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true, withExceptions,excepminSupp);
-        miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
-
-    }
-
-//    public String getTemperorayTransactiosFile() {
-//        return temperorayTransactiosFile;
+//    public static  void main(String [] args) throws IOException {
+//
+//
+//        if(args.length<4){
+//            System.out.println("Usage: rules_spmf.sh <infile> <outFile>  <minsupp> <minConf> <maxConf> [<Sorting (CONF|HEAD_CONF)> <encode(1|0)> <decode(1|0)> <rdf2intMapping file>] <withExceptions(0|1)> <Exception Minsupp>");
+//            System.exit(0);
+//        }
+//
+//        String inputFile=args[0];
+//        String outputFilePath=args[1];
+//
+//
+//        double minsupp = Double.valueOf(args[2]);
+//        double minconf = Double.valueOf(args[3]);//0.01D;
+//        double maxconf = Double.valueOf(args[4]);//0.01D;
+//
+//        double excepminSupp =0.5D;
+//
+//
+//        boolean encode=true;
+//        boolean decode=true;
+//        boolean withExceptions=false;
+//
+//        String rdf2idsMappingFile=null;
+//        AssocRulesExtended.SortingType outputSorting= AssocRulesExtended.SortingType.CONF;
+//
+//        if(args.length>5){
+//            outputSorting=AssocRulesExtended.SortingType.valueOf(args[5]);
+//        }
+//
+//        if(args.length>6){
+//            encode=args[6].equals("1");
+//        }
+//        if(args.length>7){
+//            decode=args[7].equals("1");
+//        }
+//        if(args.length>8){
+//            rdf2idsMappingFile=args[8];
+//        }
+//
+//        if(args.length>9){
+//            withExceptions=args[9].equals("1");
+//
+//        }
+//
+//        if(args.length>10){
+//            excepminSupp=Double.valueOf(args[10]);
+//        }
+//
+//        boolean showRulesWithExceptionsOnly=false;
+//
+//        if(args.length>11){
+//            showRulesWithExceptionsOnly=args[11].equals("1");
+//
+//        }
+//
+//
+//        AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
+//
+//        AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true, withExceptions,excepminSupp);
+//        miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
+//
 //    }
 
-//    public String getTemporaryMappingFile() {
-//        return temporaryMappingFile;
-//    }
+
 }
