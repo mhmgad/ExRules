@@ -83,7 +83,7 @@ public class TransactionsDatabase {
             for (int i = startIndex; i < withItems.length && transactions.size() > 0; i++) {
                 transactions = Sets.intersection(transactions, getTransactionsWithItem(withItems[i]));
             }
-        transactions=new HashSet<>(transactions);
+        //transactions=new HashSet<>(transactions);
         }
         return transactions;
     }
@@ -99,7 +99,7 @@ public class TransactionsDatabase {
                 transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i]));
 
             }
-            transactions=new HashSet<>(transactions);
+            //transactions=new HashSet<>(transactions);
         }
         return transactions;
     }
