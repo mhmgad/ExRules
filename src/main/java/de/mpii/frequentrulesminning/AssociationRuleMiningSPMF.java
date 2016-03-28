@@ -43,7 +43,7 @@ public class AssociationRuleMiningSPMF {
     private String temporaryMappingFile;
     private YagoTaxonomy yagoTaxonomy;
 
-    private TransactionsDatabase transactionsDB;
+//    private TransactionsDatabase transactionsDB;
 
 
     public AssociationRuleMiningSPMF(double minsupp,double minconf,double maxconf) {
@@ -109,22 +109,24 @@ public class AssociationRuleMiningSPMF {
 
 
 
+        TransactionsDatabase transactionsDB=new TransactionsDatabase(transactionsFilePath);
+
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions){
-            mineExceptions(rules,exceptionMinSupp);
+            mineExceptions(rules,transactionsDB,exceptionMinSupp);
         }
 
 
         // distribute Transactions
-        transactionsDB=new TransactionsDatabase(transactionsFilePath);
-        computeSupportingTransactions(rules);
+
+        computeSupportingTransactions(rules,transactionsDB);
 
         // predictable transactions
 //        computeSafePredictableTransactions(rules);
 
 
         if(withExceptions) {
-            evaluateRules(rules);
+            evaluateRules(rules,transactionsDB);
         }
 
 
@@ -139,7 +141,7 @@ public class AssociationRuleMiningSPMF {
 //
 //    }
 
-    private void computeSupportingTransactions(AssocRulesExtended rules) {
+    private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
 
         rules.getRules().parallelStream().forEach(r -> {
             r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null));
@@ -151,9 +153,9 @@ public class AssociationRuleMiningSPMF {
 
     }
 
-    private void evaluateRules(AssocRulesExtended rules) {
+    private void evaluateRules(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
         System.out.println("Re-evaluate rules with Exceptions.. ");
-        RulesEvaluator  evaluator=new RulesEvaluator(this.transactionsDB);
+        RulesEvaluator  evaluator=new RulesEvaluator(transactionsDB);
 
 
         // Evaluate individual Rules
@@ -166,7 +168,7 @@ public class AssociationRuleMiningSPMF {
 
     }
 
-    private void mineExceptions( AssocRulesExtended rules, double exceptionMinSupp) throws IOException {
+    private void mineExceptions( AssocRulesExtended rules,  TransactionsDatabase transactionsDB,double exceptionMinSupp) throws IOException {
         System.out.println("Start Mining Exception Candidates ...");
         ExceptionMining em=new ExceptionMining(transactionsDB,rdf2TransactionsConverter,exceptionMinSupp);
 
