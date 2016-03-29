@@ -53,8 +53,8 @@
                 </executions>
                 <configuration>
                     <!-- Extra JVM arguments that will be included in the bin scripts -->
-                    <extraJvmArguments>-Xms4G</extraJvmArguments>
-                    <extraJvmArguments>-Xmx40G</extraJvmArguments>
+                    <extraJvmArguments>-Xms10G</extraJvmArguments>
+                    <extraJvmArguments>-Xmx200G</extraJvmArguments>
                     <!-- set alternative assemble directory -->
                     <assembleDirectory>assemble</assembleDirectory>
                     <!--<generateRepository>false</generateRepository>-->
