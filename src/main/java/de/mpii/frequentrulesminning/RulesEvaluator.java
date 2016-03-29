@@ -87,9 +87,9 @@ public class RulesEvaluator {
 
         // Exception Handling is not yet implemented
 
-        Set<Transaction> containsBodyOrHead= new HashSet<>(transactionsDB.getTransactions(head.getHeadItems(),null));
+//        Set<Transaction> containsBodyOrHead= new HashSet<>(transactionsDB.getTransactions(head.getHeadItems(),null));
 //        Set<Transaction> containsBodyOrHead= Sets.union()
-
+        Set<Transaction> containsBodyOrHead= transactionsDB.getTransactions(head.getHeadItems(),null);
 
         //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
         BigDecimal coverageMultiplication=BigDecimal.ONE;
@@ -105,7 +105,8 @@ public class RulesEvaluator {
             //coverageMultiplication*=bodyTransactionsCount;
 
             // combine to all bodies transactions
-            containsBodyOrHead.addAll(bodyTransactions);
+//            containsBodyOrHead.addAll(bodyTransactions);
+            containsBodyOrHead=Sets.union(containsBodyOrHead,bodyTransactions);
 
 
         }
@@ -149,7 +150,8 @@ public class RulesEvaluator {
         for (AssocRuleWithExceptions rule:rules ) {
 //            Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
             Set<Transaction> bodyTransactions = rule.getBodyTransactions();
-            containsBody.addAll(bodyTransactions);
+            //containsBody.addAll(bodyTransactions);
+            containsBody=Sets.union(containsBody,bodyTransactions);
         }
 
         int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBody);
