@@ -54,7 +54,7 @@
                 <configuration>
                     <!-- Extra JVM arguments that will be included in the bin scripts -->
                     <extraJvmArguments>-Xms10G</extraJvmArguments>
-                    <extraJvmArguments>-Xmx200G</extraJvmArguments>
+                    <extraJvmArguments>-Xmx400G</extraJvmArguments>
                     <!-- set alternative assemble directory -->
                     <assembleDirectory>assemble</assembleDirectory>
                     <!--<generateRepository>false</generateRepository>-->
