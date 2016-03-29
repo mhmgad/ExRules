@@ -87,7 +87,7 @@ public class RulesEvaluator {
 
         // Exception Handling is not yet implemented
 
-        Set<Transaction> containsBodyOrHead= transactionsDB.getTransactions(head.getHeadItems(),null);
+        Set<Transaction> containsBodyOrHead= new HashSet<>(transactionsDB.getTransactions(head.getHeadItems(),null));
 //        Set<Transaction> containsBodyOrHead= Sets.union()
 
 
@@ -95,7 +95,8 @@ public class RulesEvaluator {
         BigDecimal coverageMultiplication=BigDecimal.ONE;
         for (AssocRuleWithExceptions rule:rules ) {
 
-            Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
+//            Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getItemset1(), null);
+            Set<Transaction> bodyTransactions = rule.getBodyTransactions();
             int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(bodyTransactions);
 //            rulesTransactionsCount.add(bodyTransactionsCount);
             if(bodyTransactionsCount==0||coverageMultiplication.equals(BigDecimal.ZERO))
@@ -269,7 +270,7 @@ public class RulesEvaluator {
 
 
         // positive examples of the rule that fo not contain the target exception
-        Set<Transaction> ruleTransactionsWithoutException=transactionsDB.filterOutTransactionsWith(targetRule.getKnownPositiveTransactions(transactionsDB,false),exceptionCandidate.getItems());
+        Set<Transaction> ruleTransactionsWithoutException=transactionsDB.filterOutTransactionsWith(targetRule.getHornRuleTransactions(),exceptionCandidate.getItems());
 
 //        HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(exceptionRules.size());
         double conflictScore=0;
@@ -279,7 +280,8 @@ public class RulesEvaluator {
                     continue;
 
             // transactions with the body but neither the exceptions nor the head ... they are predictable with this rule
-            Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
+//            Set<Transaction> rulePredictableTransactions=rule.getPredicatableTransactions(transactionsDB,true);
+            Set<Transaction> rulePredictableTransactions=rule.getSafePredictableTransactions();
 //            predictableTransactions.put (rule, rulePredictableTransactions);
 
             // Count the intersection between the exception predection and the target rule positive examples

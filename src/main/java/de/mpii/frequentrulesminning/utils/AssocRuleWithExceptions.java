@@ -160,15 +160,15 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public Set<Transaction> getPredicatableTransactions(){
         return predictableTransactions;
     }
-    public Set<Transaction> getPredicatableTransactions(TransactionsDatabase transactionsDB, boolean excludeExceptions) {
-
-
-        Set<Transaction> rulePredictableTransactions=transactionsDB.getTransactions(getBody(),ArrayUtils.addAll(excludeExceptions? getExceptionsCandidatesInts():null,getHead()));
-
-
-        return rulePredictableTransactions;
-
-    }
+//    public Set<Transaction> getPredicatableTransactions(TransactionsDatabase transactionsDB, boolean excludeExceptions) {
+//
+//
+//        Set<Transaction> rulePredictableTransactions=transactionsDB.getTransactions(getBody(),ArrayUtils.addAll(excludeExceptions? getExceptionsCandidatesInts():null,getHead()));
+//
+//
+//        return rulePredictableTransactions;
+//
+//    }
 
     /**
      * checks is the rule is subset of another rule. Subset = the body is subset from the other rule body
@@ -194,9 +194,9 @@ public class AssocRuleWithExceptions {// extends AssocRule {
             return false;
     }
 
-    public Set<Transaction> getKnownPositiveTransactions(TransactionsDatabase transactionsDB, boolean exclupdeExceptions) {
-       return transactionsDB.getTransactions(ArrayUtils.addAll(getBody(),getHead()),exclupdeExceptions? getExceptionsCandidatesInts():null);
-    }
+//    public Set<Transaction> getKnownPositiveTransactions(TransactionsDatabase transactionsDB, boolean exclupdeExceptions) {
+//       return transactionsDB.getTransactions(ArrayUtils.addAll(getBody(),getHead()),exclupdeExceptions? getExceptionsCandidatesInts():null);
+//    }
 
     public void setLift(double lift) {
         this.lift = lift;

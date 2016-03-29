@@ -122,7 +122,7 @@ public class AssociationRuleMiningSPMF {
         computeSupportingTransactions(rules,transactionsDB);
 
         // predictable transactions
-//        computeSafePredictableTransactions(rules);
+        computeSafePredictableTransactions(rules,transactionsDB);
 
 
         if(withExceptions) {
@@ -133,13 +133,13 @@ public class AssociationRuleMiningSPMF {
         return rules;
     }
 
-//    private void computeSafePredictableTransactions(AssocRulesExtended rules) {
-//        rules.getRules().parallelStream().forEach(r -> {
-//
-//
-//        });
-//
-//    }
+    private void computeSafePredictableTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
+        rules.getRules().parallelStream().forEach(r -> {
+            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
+
+        });
+
+    }
 
     private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
 
@@ -148,7 +148,7 @@ public class AssociationRuleMiningSPMF {
             r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null));
             r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead()));
             r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead()));
-            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
+//            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
         });
 
     }

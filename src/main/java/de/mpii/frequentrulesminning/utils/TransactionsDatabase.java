@@ -66,12 +66,13 @@ public class TransactionsDatabase {
 
     public Set<Transaction> getTransactions(int[] withItems,int [] withoutItems){
 
-        Set<Transaction> transactions=new HashSet<>(getTransactionsWithItem(withItems[0]));
+        Set<Transaction> transactions=getTransactionsWithItem(withItems[0]);
         transactions = filterTransactionsWith(transactions, withItems, 1);
 
         transactions = filterOutTransactionsWith(transactions,withoutItems,0 );
 
-        return new HashSet<>(transactions);
+//        return new HashSet<>(transactions);
+        return transactions;
     }
 
     public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems){

@@ -90,10 +90,19 @@ public class ExceptionMining {
 
     private Set<Transaction> getNegativeTransactions(AssocRuleWithExceptions rule) {
         // transactions contain body
-        int [] body=rule.getItemset1();
-        int [] head=rule.getItemset2();
+        Set<Transaction> transactions;
+        if(rule.getBodyTransactions()==null ||rule.getHeadTransactions()==null) {
 
-        Set<Transaction> transactions =transactionDB.getTransactions(body,head);
+            int[] body = rule.getItemset1();
+            int[] head = rule.getItemset2();
+
+            transactions = transactionDB.getTransactions(body, head);
+        }
+        else
+        {
+            transactions=Sets.difference(rule.getBodyTransactions(),rule.getHeadTransactions());
+        }
+
 
         return transactions;
     }
@@ -102,9 +111,15 @@ public class ExceptionMining {
     private Set<Transaction> getPositiveTransactions(AssocRuleWithExceptions rule) {
 
         // transactions contain body
+        Set<Transaction> transactions;
+        if(rule.getHornRuleTransactions()==null){
         int [] body=rule.getItemset1();
         int [] head=rule.getItemset2();
-        Set<Transaction> transactions = transactionDB.getTransactions(ArrayUtils.addAll(body,head),null);
+            transactions = transactionDB.getTransactions(ArrayUtils.addAll(body,head),null);}
+        else
+        {
+            transactions= rule.getHornRuleTransactions();
+        }
         return transactions;
     }
 
