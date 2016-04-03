@@ -111,15 +111,17 @@ public class AssociationRuleMiningSPMF {
 
         TransactionsDatabase transactionsDB=new TransactionsDatabase(transactionsFilePath);
 
+        // distribute Transactions
+
+        computeSupportingTransactions(rules,transactionsDB);
+
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions){
             mineExceptions(rules,transactionsDB,exceptionMinSupp);
         }
 
 
-        // distribute Transactions
 
-        computeSupportingTransactions(rules,transactionsDB);
 
         // predictable transactions
         computeSafePredictableTransactions(rules,transactionsDB);
@@ -149,6 +151,7 @@ public class AssociationRuleMiningSPMF {
             r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead()));
             r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead()));
 //            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
+            r.computeQualityMeasurements();
         });
 
     }
@@ -162,7 +165,7 @@ public class AssociationRuleMiningSPMF {
         rules.evaluateIndividuals(evaluator);
 
         // Groups Evaluation
-        rules.evaluateHeadGroups(evaluator);
+        //rules.evaluateHeadGroups(evaluator);
 
         System.out.println("Done Re-evaluating rules!");
 

@@ -1,6 +1,7 @@
 package de.mpii.frequentrulesminning.utils;
 
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Created by gadelrab on 3/18/16.
@@ -8,8 +9,7 @@ import java.util.Arrays;
 public class BodyGroup {
 
     int [] bodyItems;
-
-
+    private Set<AssocRuleWithExceptions> rules;
 
 
     public BodyGroup(int[] itemset2) {
@@ -41,7 +41,7 @@ public class BodyGroup {
     }
 
 
-
-
-
+    public void setRules(Set<AssocRuleWithExceptions> rules) {
+        this.rules = rules;
+    }
 }

@@ -2,6 +2,7 @@ package de.mpii.frequentrulesminning.utils;
 
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 
+import ca.pfv.spmf.algorithms.sequential_rules.cmdeogun.Rule;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -245,5 +246,12 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     public Set<Transaction> getSafePredictableTransactions() {
         return safePredictableTransactions;
+    }
+
+    public void computeQualityMeasurements() {
+
+        this.setLift(RulesEvaluator.computeLift(getHornRuleTransactions(),this.getBodyTransactions(),getHeadTransactions()));
+        this.setCoverage(RulesEvaluator.computeCoverage(this.getHornRuleTransactions(),this.getHeadTransactions()));
+
     }
 }

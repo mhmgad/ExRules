@@ -42,8 +42,16 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public void addRule(AssocRuleWithExceptions rule) {
         getRules().add(rule);
-        head2Rules.put(new HeadGroup(rule.getItemset2()), rule);
-        body2Rules.put(new BodyGroup(rule.getItemset1()),rule);
+        HeadGroup h=new HeadGroup(rule.getItemset2());
+        BodyGroup b=new BodyGroup(rule.getItemset1());
+
+        if(!head2Rules.containsKey(h))
+            h.setRules(head2Rules.get(h));
+
+        if(!body2Rules.containsKey(b))
+            b.setRules(body2Rules.get(b));
+        head2Rules.put(h, rule);
+        body2Rules.put(b,rule);
 
     }
 
@@ -83,8 +91,8 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     public void evaluateIndividuals(RulesEvaluator evaluator) {
         // Individual Rules Evaluation
         getRules().stream().parallel().forEach((r) -> {
-            r.setCoverage(evaluator);
-            r.setLift(evaluator);
+//            r.setCoverage(evaluator);
+//            r.setLift(evaluator);
             r.getExceptionCandidates().forEach((ex) -> {
                 ex.setCoverage(evaluator.coverage(r, ex));
                 ex.setConfidence(evaluator.confidence(r, ex));
@@ -195,10 +203,18 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             case HEAD_LIFT:
                 sortByHeadAndLift(rules);
                 break;
+            case LIFT:
+                sortByLift(rules);
+                break;
             case BODY:
                 sortByBodyLength(rules);
                 break;
         }
+    }
+
+    private void sortByLift(List<AssocRuleWithExceptions> rulesToSort) {
+        Collections.sort(rulesToSort, Comparator.comparing(AssocRuleWithExceptions::getLift).reversed());
+
     }
 
     public String toString(SortingType sortType, boolean hasExceptionOnly) {
@@ -312,5 +328,5 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public enum SortingType {CONF, HEAD, BODY, HEAD_CONF,HEAD_LIFT}
+    public enum SortingType {CONF, HEAD, BODY, LIFT,HEAD_CONF,HEAD_LIFT}
 }

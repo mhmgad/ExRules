@@ -1,6 +1,7 @@
 package de.mpii.frequentrulesminning.utils;
 
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Created by gadelrab on 3/15/16.
@@ -12,6 +13,7 @@ public class HeadGroup {
     private double coverage;
     private double confidence;
     private int allTransactionsCount;
+    private Set<AssocRuleWithExceptions> rules;
 
     public HeadGroup(int[] itemset2) {
         this.headItems=itemset2;
@@ -60,5 +62,9 @@ public class HeadGroup {
 
     public void setConfidence(double confidence) {
         this.confidence = confidence;
+    }
+
+    public void setRules(Set<AssocRuleWithExceptions> rules) {
+        this.rules = rules;
     }
 }

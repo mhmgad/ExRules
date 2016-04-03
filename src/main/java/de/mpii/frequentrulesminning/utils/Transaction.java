@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,6 +16,8 @@ import java.util.Set;
 public class Transaction{
     int [] items;
     int count;
+
+//    TIntObjectHashMap<ItemMetaData> predictedItems;
 
 
     public Transaction(int[] items) {
@@ -72,9 +75,9 @@ public class Transaction{
         return Joiner.on(' ').join(Ints.asList(items));
     }
 
-    public void removeItems(int[] excludingList) {
-        Set<Integer> transDiff= Sets.difference(ImmutableSet.copyOf(this.getItemsAsList()),ImmutableSet.copyOf(Ints.asList(excludingList)));
-        setItems(Ints.toArray(transDiff));
-    }
+//    public void removeItems(int[] excludingList) {
+//        Set<Integer> transDiff= Sets.difference(ImmutableSet.copyOf(this.getItemsAsList()),ImmutableSet.copyOf(Ints.asList(excludingList)));
+//        setItems(Ints.toArray(transDiff));
+//    }
 
 }
