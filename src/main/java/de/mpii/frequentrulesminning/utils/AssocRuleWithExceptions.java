@@ -232,13 +232,13 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return headTransactions;
     }
 
-    public void setCoverage(RulesEvaluator evaluator) {
-        setCoverage(evaluator.coverage(this));
-    }
-
-    public void setLift(RulesEvaluator evaluator) {
-        setLift(evaluator.lift(this));
-    }
+//    public void setCoverage(RulesEvaluator evaluator) {
+//        setCoverage(evaluator.coverage(this));
+//    }
+//
+//    public void setLift(RulesEvaluator evaluator) {
+//        setLift(evaluator.lift(this));
+//    }
 
     public void setPredictableTransactions(Set<Transaction> predictableTransactions) {
         this.predictableTransactions = predictableTransactions;

@@ -226,7 +226,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         // Sort based on type
         sort(this.getRules(),sortType);
         int i = 0;
-        int prevHead = -1;
+//        int prevHead = -1;
         for (Iterator var5 = this.getRules().iterator(); var5.hasNext(); ++i) {
             AssocRuleWithExceptions rule = (AssocRuleWithExceptions) var5.next();
 
@@ -234,29 +234,31 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             if (hasExceptionOnly && !rule.hasExceptions())
                 continue;
 
+
+            addRuleToPrintBuffer(buffer, i, rule);
 //            if ((type == SortingType.HEAD || type == SortingType.HEAD_CONF) && prevHead != rule.getItemset2()[0]) {
 //                buffer.append("**************************************************************************\n");
 //            }
-            prevHead = rule.getItemset2()[0];
-            buffer.append("r");
-            buffer.append(i);
-            buffer.append(":\t");
-            buffer.append(rule.toString());
-
-            buffer.append("\tcov: ");
-            buffer.append(String.format("%.5f", rule.getCoverage()));
-            buffer.append("\tconf: ");
-            buffer.append(String.format("%.5f", rule.getConfidence()));
-            buffer.append("\tsupp: ");
-            buffer.append(rule.getAbsoluteSupport());
-            buffer.append("\n");
-            Exceptions exceptionCandidate = ((AssocRuleWithExceptions) rule).getExceptionCandidates();
-            if (exceptionCandidate != null && exceptionCandidate.size() > 0) {
-                buffer.append("Except:\n");
-                buffer.append(exceptionCandidate);
-                buffer.append('\n');
-            }
-            buffer.append('\n');
+//            prevHead = rule.getItemset2()[0];
+//            buffer.append("r");
+//            buffer.append(i);
+//            buffer.append(":\t");
+//            buffer.append(rule.toString());
+//
+//            buffer.append("\tcov: ");
+//            buffer.append(String.format("%.5f", rule.getCoverage()));
+//            buffer.append("\tconf: ");
+//            buffer.append(String.format("%.5f", rule.getConfidence()));
+//            buffer.append("\tsupp: ");
+//            buffer.append(rule.getAbsoluteSupport());
+//            buffer.append("\n");
+//            Exceptions exceptionCandidate = ((AssocRuleWithExceptions) rule).getExceptionCandidates();
+//            if (exceptionCandidate != null && exceptionCandidate.size() > 0) {
+//                buffer.append("Except:\n");
+//                buffer.append(exceptionCandidate);
+//                buffer.append('\n');
+//            }
+//            buffer.append('\n');
         }
 
         return buffer.toString();
@@ -279,25 +281,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
                 if (hasExceptionOnly && !rule.hasExceptions())
                     continue;
                 i++;
-                buffer.append("r");
-                buffer.append(i);
-                buffer.append(":\t");
-                buffer.append(rule.toString());
-
-                buffer.append("\tcov: ");
-                buffer.append(String.format("%.5f", rule.getCoverage()));
-                buffer.append("\tconf: ");
-                buffer.append(String.format("%.5f", rule.getConfidence()));
-                buffer.append("\tsupp: ");
-                buffer.append(rule.getAbsoluteSupport());
-                buffer.append("\n");
-                Exceptions exceptionCandidate = rule.getExceptionCandidates();
-                if (exceptionCandidate != null && exceptionCandidate.size() > 0) {
-                    buffer.append("Except:\n");
-                    buffer.append(exceptionCandidate);
-                    buffer.append('\n');
-                }
-                buffer.append('\n');
+                addRuleToPrintBuffer(buffer, i, rule);
 
 
             }
@@ -308,6 +292,31 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
         return buffer.toString();
 
+    }
+
+    private void addRuleToPrintBuffer(StringBuilder buffer, int id, AssocRuleWithExceptions rule) {
+        buffer.append("r");
+        buffer.append(id);
+        buffer.append(":\t");
+        buffer.append(rule.toString());
+
+        buffer.append("\tcov: ");
+        buffer.append(String.format("%.5f", rule.getCoverage()));
+        buffer.append("\tconf: ");
+        buffer.append(String.format("%.5f", rule.getConfidence()));
+        buffer.append("\tlift: ");
+        buffer.append(String.format("%.5f", rule.getLift()));
+
+        buffer.append("\tsupp: ");
+        buffer.append(rule.getAbsoluteSupport());
+        buffer.append("\n");
+        Exceptions exceptionCandidate = rule.getExceptionCandidates();
+        if (exceptionCandidate != null && exceptionCandidate.size() > 0) {
+            buffer.append("Except:\n");
+            buffer.append(exceptionCandidate);
+            buffer.append('\n');
+        }
+        buffer.append('\n');
     }
 
     public Set<AssocRuleWithExceptions> getRules(int[] head, int[] body) {

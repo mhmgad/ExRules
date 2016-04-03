@@ -36,8 +36,8 @@ public class RulesEvaluator {
 
 //        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
 //        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> ruleTransactions=transactionsDB.filterTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> bodyTransactions=transactionsDB.filterTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems());
+        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
+        Set<Transaction> bodyTransactions=transactionsDB.filterOutTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems());
 
         return computeConfidence(ruleTransactions, bodyTransactions);
 
@@ -62,8 +62,8 @@ public class RulesEvaluator {
     public double coverage(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
 //        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
 //        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
-        Set<Transaction> ruleTransactions=transactionsDB.filterTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> headTransactions=transactionsDB.filterTransactionsWith(rule.getHeadTransactions(),null);
+        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
+        Set<Transaction> headTransactions=transactionsDB.filterOutTransactionsWith(rule.getHeadTransactions(),null);
 
         return computeCoverage(ruleTransactions, headTransactions);
 
@@ -88,9 +88,9 @@ public class RulesEvaluator {
 //        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
 //        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
 //        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
-        Set<Transaction> bodyTransactions=transactionsDB.filterTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> ruleTransactions=transactionsDB.filterTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> headTransactions=transactionsDB.filterTransactionsWith(rule.getHeadTransactions(),null);
+        Set<Transaction> bodyTransactions=transactionsDB.filterOutTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems());
+        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
+        Set<Transaction> headTransactions=transactionsDB.filterOutTransactionsWith(rule.getHeadTransactions(),null);
         return computeLift(ruleTransactions,bodyTransactions,  headTransactions);
 
     }
