@@ -1,8 +1,6 @@
 package de.mpii.frequentrulesminning;
 
 import com.google.common.base.Joiner;
-
-
 import de.mpii.frequentrulesminning.utils.AssocRulesExtended;
 import org.apache.commons.cli.*;
 

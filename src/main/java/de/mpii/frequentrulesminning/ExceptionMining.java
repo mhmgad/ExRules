@@ -1,24 +1,22 @@
 package de.mpii.frequentrulesminning;
 
-import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
 import ca.pfv.spmf.algorithms.frequentpatterns.charm.AlgoDCharm_Bitset;
 import ca.pfv.spmf.input.transaction_database_list_integers.TransactionDatabase;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemset;
 import ca.pfv.spmf.patterns.itemset_array_integers_with_tids_bitset.Itemsets;
-
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.utils.*;
 import gnu.trove.map.hash.TIntIntHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
-
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

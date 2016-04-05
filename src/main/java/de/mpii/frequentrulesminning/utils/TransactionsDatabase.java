@@ -6,9 +6,11 @@ import com.google.common.collect.Sets;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 
 /**

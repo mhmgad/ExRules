@@ -2,26 +2,20 @@ package de.mpii.frequentrulesminning;
 
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AlgoAgrawalFaster94;
 import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
-
-
 import ca.pfv.spmf.algorithms.frequentpatterns.fpgrowth.AlgoFPGrowth;
-
 import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
-
-
 import de.mpii.frequentrulesminning.utils.*;
-
 import de.mpii.yagotools.YagoTaxonomy;
 import mpi.tools.javatools.util.FileUtils;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
-
 import java.io.IOException;
-
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 
 /**

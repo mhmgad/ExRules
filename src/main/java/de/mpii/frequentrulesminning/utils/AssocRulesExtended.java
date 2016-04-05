@@ -1,10 +1,7 @@
 package de.mpii.frequentrulesminning.utils;
 
 
-import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
-import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRules;
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import de.mpii.frequentrulesminning.RulesEvaluator;
@@ -12,7 +9,6 @@ import de.mpii.frequentrulesminning.RulesEvaluator;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 /**
  * Created by gadelrab on 2/25/16.

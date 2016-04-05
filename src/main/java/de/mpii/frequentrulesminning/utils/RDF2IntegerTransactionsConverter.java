@@ -1,7 +1,10 @@
 package de.mpii.frequentrulesminning.utils;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.*;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
 import mpi.tools.basics3.Fact;
 import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.filehandlers.UTF8Reader;
@@ -11,7 +14,9 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by gadelrab on 2/22/16.

@@ -1,17 +1,12 @@
 package de.mpii.frequentrulesminning.utils;
 
-import ca.pfv.spmf.algorithms.associationrules.agrawal94_association_rules.AssocRule;
-
-import ca.pfv.spmf.algorithms.sequential_rules.cmdeogun.Rule;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.RulesEvaluator;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
