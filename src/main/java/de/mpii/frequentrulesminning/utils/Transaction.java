@@ -2,6 +2,7 @@ package de.mpii.frequentrulesminning.utils;
 
 import com.google.common.base.Joiner;
 import com.google.common.primitives.Ints;
+import gnu.trove.map.hash.TIntDoubleHashMap;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 public class Transaction{
     int [] items;
+
     int count;
     private int id;
 
@@ -25,6 +27,7 @@ public class Transaction{
     public Transaction(int[] items, int count) {
         setItems(items);
         this.count = count;
+        prediction2Weights =new TIntDoubleHashMap();
 
     }
 
@@ -105,4 +108,23 @@ public class Transaction{
 //        setItems(Ints.toArray(transDiff));
 //    }
 
+
+
+    //Predictions
+    TIntDoubleHashMap prediction2Weights;
+
+    public void addPrediction(int item,double weight){
+        if(prediction2Weights.containsKey(item)){
+            double oldWeight= prediction2Weights.get(item);
+            // Currently take the maximum
+            weight=Math.max(oldWeight,weight);
+        }
+
+        prediction2Weights.put(item,weight);
+    }
+
+
+    public double getItemWeight(int item){
+        return prediction2Weights.get(item);
+    }
 }

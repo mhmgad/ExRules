@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
+import gnu.trove.map.hash.TIntDoubleHashMap;
 import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
 
@@ -90,8 +91,9 @@ public class TransactionsDatabase {
                 final Transaction tr=t;
                 // add to items
                 Arrays.stream(items).forEach((i)->items2transactions.put(i,tr));
+            }else {
+                t.incrementCount();
             }
-            t.incrementCount();
 
 
         }
@@ -160,5 +162,13 @@ public class TransactionsDatabase {
     public static int getTransactionsCount(Collection<Transaction> transactions){
         return  transactions.stream().mapToInt(Transaction::getCount).sum();
     }
+
+
+    public void addPrediction(int item,Transaction transactionWithPrediction){
+        predictedItems2transactions.put(item,transactionWithPrediction);
+    }
+
+
+
 
 }
