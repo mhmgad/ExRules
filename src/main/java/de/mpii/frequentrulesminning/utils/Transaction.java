@@ -12,6 +12,7 @@ import java.util.List;
 public class Transaction{
     int [] items;
     int count;
+    private int id;
 
 //    TIntObjectHashMap<ItemMetaData> predictedItems;
 
@@ -32,17 +33,28 @@ public class Transaction{
     }
 
     public Transaction(String transLine, int count) {
-        this(Arrays.stream(transLine.split(" ")).map(String::trim).mapToInt(Integer::parseInt).toArray(), count);
+        this(parseIntItems(transLine), count);
     }
+
+
+//    @Override
+//    public int hashCode() {
+//        return Arrays.hashCode(items);
+//    }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(items);
+        return Integer.hashCode(id);
     }
+
+//    @Override
+//    public boolean equals(Object obj) {
+//        return Arrays.equals(((Transaction)obj).getItems(),getItems());
+//    }
 
     @Override
     public boolean equals(Object obj) {
-        return Arrays.equals(((Transaction)obj).getItems(),getItems());
+        return ((Transaction)obj).getId()==getId();
     }
 
     public List<Integer> getItemsAsList() {
@@ -70,6 +82,23 @@ public class Transaction{
     public String toString() {
         return Joiner.on(' ').join(Ints.asList(items));
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public static int[] parseIntItems(String transLine) {
+        return Arrays.stream(transLine.split(" ")).map(String::trim).mapToInt(Integer::parseInt).toArray();
+    }
+
+    public void incrementCount() {
+        count++;
+    }
+
 
 //    public void removeItems(int[] excludingList) {
 //        Set<Integer> transDiff= Sets.difference(ImmutableSet.copyOf(this.getItemsAsList()),ImmutableSet.copyOf(Ints.asList(excludingList)));

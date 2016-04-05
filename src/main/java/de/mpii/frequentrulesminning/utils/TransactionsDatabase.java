@@ -1,6 +1,7 @@
 package de.mpii.frequentrulesminning.utils;
 
 import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
 import gnu.trove.map.hash.TObjectIntHashMap;
@@ -10,7 +11,9 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 
 /**
@@ -18,13 +21,32 @@ import java.util.Set;
  */
 public class TransactionsDatabase {
 
-    TObjectIntHashMap<Transaction> transactionsSet;
+//    TObjectIntHashMap<Transaction> transactionsSet;
+
+    HashMap<int[],Transaction> transactionsSet;
+
+
+    int distinctId;
 
     SetMultimap<Integer,Transaction> items2transactions;
 
+
+    SetMultimap<Integer,Transaction> predictedItems2transactions;
+
+
     public TransactionsDatabase(){
         this.items2transactions = HashMultimap.create();
-        this.transactionsSet = new TObjectIntHashMap<>();
+//        this.transactionsSet = new TObjectIntHashMap<>();
+        this.transactionsSet=new HashMap<>();
+        distinctId=0;
+
+    }
+
+
+    public synchronized int getNextId(){
+        distinctId++;
+        return distinctId;
+
     }
 
     public TransactionsDatabase(String transactionFilePath) throws IOException {
@@ -47,18 +69,40 @@ public class TransactionsDatabase {
         BufferedReader br= FileUtils.getBufferedUTF8Reader(transactionsStream);
         // read transactions file
         for (String line=br.readLine();line!=null&&!line.isEmpty();line=br.readLine()){
-            Transaction t=new Transaction(line);
 
-            if (transactionsSet.adjustOrPutValue(t, 1, 1) == 1) {
-                // add it to the map
-                for (int i:t.getItems()){
-                    items2transactions.put(i,t);
-                }
+
+//            Transaction t=new Transaction(line);
+//
+//            if (transactionsSet.adjustOrPutValue(t, 1, 1) == 1) {
+//                // add it to the map
+//                for (int i:t.getItems()){
+//                    items2transactions.put(i,t);
+//                }
+//            }
+
+            int []items=Transaction.parseIntItems(line);
+            Transaction t=transactionsSet.get(items);
+            // new Transactions
+            if(t==null){
+                t=new Transaction(items);
+                t.setId(getNextId());
+                transactionsSet.put(items,t);
+                final Transaction tr=t;
+                // add to items
+                Arrays.stream(items).forEach((i)->items2transactions.put(i,tr));
             }
+            t.incrementCount();
+
 
         }
 
-        transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
+        // setCount and ID
+//        transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
+//        for (Transaction t:transactionsSet.keySet()) {
+//            t.setCout(this.transactionsSet.get(t));
+//            t.setId(getNextId());
+//        }
+
 
     }
 
