@@ -8,11 +8,8 @@ import mpi.tools.basics3.Fact;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 /**
  * Created by mhmgad on 14.02.16.

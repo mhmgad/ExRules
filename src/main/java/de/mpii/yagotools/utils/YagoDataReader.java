@@ -6,17 +6,8 @@ import com.google.common.collect.Multimap;
 import mpi.tools.basics3.Fact;
 import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.filehandlers.UTF8Reader;
-import java.net.URL;
 
-
-import java.io.File;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.MalformedURLException;
-
-import java.lang.*;
-import java.io.*;
 /**
  * Created by gadelrab on 2/11/16.
  */

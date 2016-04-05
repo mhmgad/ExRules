@@ -7,16 +7,9 @@ import de.mpii.yagotools.utils.YagoDataReader;
 import de.mpii.yagotools.utils.YagoRelations;
 import mpi.tools.javatools.util.FileUtils;
 
-import java.lang.*;
-import java.io.*;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.net.URL;
 
 
 /**

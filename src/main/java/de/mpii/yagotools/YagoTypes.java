@@ -1,6 +1,5 @@
 package de.mpii.yagotools;
 
-import com.google.common.base.Strings;
 import com.google.common.collect.Multimap;
 import de.mpii.yagotools.utils.YagoDataReader;
 import de.mpii.yagotools.utils.YagoRelations;

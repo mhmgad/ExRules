@@ -2,13 +2,14 @@ package de.mpii.predicatelifting;
 
 import com.google.common.collect.ImmutableSet;
 import de.mpii.yagotools.YagoLocation;
-import de.mpii.yagotools.YagoTypes;
 import de.mpii.yagotools.YagoTaxonomy;
+import de.mpii.yagotools.YagoTypes;
 import mpi.tools.basics3.Fact;
 import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.util.FileUtils;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
