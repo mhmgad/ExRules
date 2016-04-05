@@ -1,10 +1,10 @@
 package mpi.tools.basics3;
 
+import mpi.tools.javatools.filehandlers.FileSet;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
-
-import mpi.tools.javatools.filehandlers.FileSet;
 
 /**
  * Class FactWriter

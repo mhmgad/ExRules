@@ -1,18 +1,11 @@
 package mpi.tools.javatools.parsers;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import mpi.tools.javatools.administrative.D;
 import mpi.tools.javatools.datatypes.Triple;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This class is part of the Java Tools (see

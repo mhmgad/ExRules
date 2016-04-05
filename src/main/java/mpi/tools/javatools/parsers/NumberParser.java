@@ -1,13 +1,13 @@
 package mpi.tools.javatools.parsers;
 
+import mpi.tools.javatools.administrative.D;
+import mpi.tools.javatools.datatypes.FinalMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import mpi.tools.javatools.administrative.D;
-import mpi.tools.javatools.datatypes.FinalMap;
 
 /**
  * This class is part of the Java Tools (see

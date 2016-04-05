@@ -1,10 +1,6 @@
 package mpi.tools.javatools.parsers;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * This class is part of the Java Tools (see

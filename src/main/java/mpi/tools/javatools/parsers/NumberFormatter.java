@@ -1,10 +1,11 @@
 package mpi.tools.javatools.parsers;
+
+import mpi.tools.javatools.administrative.D;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import mpi.tools.javatools.administrative.D;
 
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).

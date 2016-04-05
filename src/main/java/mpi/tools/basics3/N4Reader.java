@@ -1,5 +1,10 @@
 package mpi.tools.basics3;
 
+import mpi.tools.javatools.administrative.Announce;
+import mpi.tools.javatools.filehandlers.FileLines;
+import mpi.tools.javatools.parsers.Char17;
+import mpi.tools.javatools.util.FileUtils;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -7,11 +12,6 @@ import java.io.Reader;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-
-import mpi.tools.javatools.administrative.Announce;
-import mpi.tools.javatools.filehandlers.FileLines;
-import mpi.tools.javatools.parsers.Char17;
-import mpi.tools.javatools.util.FileUtils;
 
 /**
  * N4Reader

@@ -1,12 +1,8 @@
 package mpi.tools.javatools.parsers;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import mpi.tools.javatools.administrative.Announce;
+
+import java.util.*;
 
 
 

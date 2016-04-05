@@ -1,15 +1,10 @@
 package mpi.tools.javatools.filehandlers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Reader;
-import java.net.URL;
-
 import mpi.tools.javatools.administrative.Announce;
 import mpi.tools.javatools.parsers.Char17;
+
+import java.io.*;
+import java.net.URL;
 
 /** 
  This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).

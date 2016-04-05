@@ -1,16 +1,9 @@
 package mpi.tools.javatools.datatypes;
 
-import java.util.AbstractSet;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import mpi.tools.javatools.administrative.D;
 
-import  mpi.tools.javatools.administrative.D;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * 

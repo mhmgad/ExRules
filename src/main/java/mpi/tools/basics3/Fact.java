@@ -1,10 +1,10 @@
 package mpi.tools.basics3;
 
-import java.util.regex.Pattern;
-
 import mpi.tools.javatools.administrative.D;
 import mpi.tools.javatools.parsers.DateParser;
 import mpi.tools.javatools.parsers.NumberParser;
+
+import java.util.regex.Pattern;
 
 /**
  * Class Fact

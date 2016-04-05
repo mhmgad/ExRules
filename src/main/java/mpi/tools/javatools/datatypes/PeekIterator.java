@@ -1,15 +1,9 @@
 package mpi.tools.javatools.datatypes;
 
-import java.io.Closeable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
-
 import mpi.tools.javatools.administrative.D;
+
+import java.io.Closeable;
+import java.util.*;
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
 It is licensed under the Creative Commons Attribution License 

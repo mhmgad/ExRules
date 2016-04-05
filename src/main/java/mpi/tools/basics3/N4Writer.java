@@ -1,13 +1,13 @@
 package mpi.tools.basics3;
 
+import mpi.tools.javatools.filehandlers.FileSet;
+import mpi.tools.javatools.util.FileUtils;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
-
-import mpi.tools.javatools.filehandlers.FileSet;
-import mpi.tools.javatools.util.FileUtils;
 
 /**
  * Class N4Writer

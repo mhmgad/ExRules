@@ -1,19 +1,11 @@
 package mpi.tools.javatools.filehandlers;
 
-import java.io.BufferedReader;
-import java.io.Closeable;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.Iterator;
-import java.util.List;
-
 import mpi.tools.javatools.administrative.Announce;
 import mpi.tools.javatools.datatypes.PeekIterator;
+
+import java.io.*;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This class is part of the Java Tools (see

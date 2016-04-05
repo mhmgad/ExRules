@@ -1,10 +1,10 @@
 package mpi.tools.javatools.datatypes;
 
+import mpi.tools.javatools.administrative.D;
+
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-
-import  mpi.tools.javatools.administrative.D;
 
 /**
  * 

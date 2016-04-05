@@ -1,12 +1,8 @@
 package mpi.tools.javatools.filehandlers;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Writer;
-
 import mpi.tools.javatools.parsers.Char17;
+
+import java.io.*;
 
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).

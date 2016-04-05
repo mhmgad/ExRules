@@ -1,15 +1,15 @@
 package mpi.tools.basics3;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import mpi.tools.javatools.administrative.D;
 import mpi.tools.javatools.datatypes.FinalMap;
 import mpi.tools.javatools.parsers.Char17;
 import mpi.tools.javatools.parsers.DateParser;
 import mpi.tools.javatools.parsers.NumberParser;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Class FactComponent

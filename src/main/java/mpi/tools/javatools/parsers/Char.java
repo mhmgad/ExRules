@@ -1,13 +1,13 @@
 package mpi.tools.javatools.parsers;
 
+import mpi.tools.javatools.datatypes.FinalMap;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import mpi.tools.javatools.datatypes.FinalMap;
 
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).

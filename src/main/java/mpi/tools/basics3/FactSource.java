@@ -1,14 +1,14 @@
 package mpi.tools.basics3;
 
+import mpi.tools.javatools.administrative.D;
+import mpi.tools.javatools.filehandlers.FileSet;
+import mpi.tools.javatools.util.FileUtils;
+
 import java.io.File;
 import java.io.Reader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
-
-import mpi.tools.javatools.administrative.D;
-import mpi.tools.javatools.filehandlers.FileSet;
-import mpi.tools.javatools.util.FileUtils;
 
 /**
  * Class FactSource

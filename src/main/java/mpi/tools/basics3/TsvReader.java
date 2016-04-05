@@ -1,12 +1,12 @@
 package mpi.tools.basics3;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.Reader;
-
 import mpi.tools.javatools.administrative.Announce;
 import mpi.tools.javatools.datatypes.PeekIterator;
 import mpi.tools.javatools.filehandlers.FileLines;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
 
 /**
  * Class TsvReader

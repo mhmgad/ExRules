@@ -1,9 +1,9 @@
 package mpi.tools.javatools.parsers;
 
-import java.util.Arrays;
-
 import mpi.tools.javatools.datatypes.IntHashMap;
 import mpi.tools.javatools.datatypes.IntKeyMap;
+
+import java.util.Arrays;
 
 /** 
 This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).

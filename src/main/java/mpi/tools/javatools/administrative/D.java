@@ -1,20 +1,9 @@
 package mpi.tools.javatools.administrative;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Writer;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-
 import mpi.tools.javatools.parsers.Char17;
+
+import java.io.*;
+import java.util.*;
 
 /** 
  This class is part of the Java Tools (see http://mpii.de/yago-naga/javatools).
