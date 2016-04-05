@@ -1,15 +1,14 @@
 package de.mpii.frequentrulesminning;
 
 import com.google.common.collect.Sets;
-import com.google.common.math.BigIntegerMath;
 import de.mpii.frequentrulesminning.utils.*;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by gadelrab on 3/8/16.
@@ -103,7 +102,7 @@ public class RulesEvaluator {
     }
 
     public static double computeLift(int ruleSupport,int bodySupport,  int headSupport) {
-        return ((double) ruleSupport) /(headSupport*bodySupport);
+        return (((double) ruleSupport) / headSupport) / bodySupport;
     }
 
 
