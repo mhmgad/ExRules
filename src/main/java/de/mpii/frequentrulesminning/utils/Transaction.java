@@ -25,9 +25,10 @@ public class Transaction{
     }
 
     public Transaction(int[] items, int count) {
+        items2Weights =new TIntDoubleHashMap();
         setItems(items);
         this.count = count;
-        items2Weights =new TIntDoubleHashMap();
+
 
     }
 
