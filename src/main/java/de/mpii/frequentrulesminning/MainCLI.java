@@ -25,6 +25,7 @@ public class MainCLI {
     private Option sortingOp;
     private Option outputRulesWithExceptionsOnlyOp;
     private Option helpOp;
+    private Option debugMaterializationOp;
 
     public MainCLI() {
          options= new Options();
@@ -68,7 +69,7 @@ public class MainCLI {
         excpMinSupportOp= Option.builder("exMinSup").hasArg().desc("Exception Minimum support for the rule").argName("EXCEPTION_MIN_SUPP_RATIO").build();
         options.addOption(excpMinSupportOp);
 
-        sortingOp=Option.builder("s").longOpt("sorting").longOpt("sorting").hasArg().desc("Output sorting("+ Joiner.on("|").join(AssocRulesExtended.SortingType.values())+")").argName("file").build();
+        sortingOp=Option.builder("s").longOpt("sorting").hasArg().desc("Output sorting("+ Joiner.on("|").join(AssocRulesExtended.SortingType.values())+")").argName("file").build();
         options.addOption(sortingOp);
 
         outputRulesWithExceptionsOnlyOp =new Option("expOnly",false,"Output rules with exceptions only");
@@ -79,6 +80,8 @@ public class MainCLI {
         options.addOption(helpOp);
 
 
+        debugMaterializationOp=Option.builder("dM").longOpt("Debug_materialization").hasArg().desc("debug Materialization file").argName("file").build();
+        options.addOption(debugMaterializationOp);
 
 
     }
@@ -131,8 +134,13 @@ public class MainCLI {
         if(cmd.hasOption(sortingOp.getOpt()))
             outputSorting=AssocRulesExtended.SortingType.valueOf(cmd.getOptionValue(sortingOp.getOpt(),"CONF"));
 
+        String debugMaterializationFile=null;
+        if(cmd.hasOption(debugMaterializationOp.getOpt()))
+            debugMaterializationFile=cmd.getOptionValue(debugMaterializationOp.getOpt());
+
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
+        miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
         AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, true, withExceptions, excepminSupp);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 

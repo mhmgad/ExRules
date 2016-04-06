@@ -35,8 +35,8 @@ public class RulesEvaluator {
 
 //        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
 //        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> bodyTransactions=transactionsDB.filterOutTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems());
+        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems(),false);
+        Set<Transaction> bodyTransactions=transactionsDB.filterOutTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems(),false);
 
         return computeConfidence(ruleTransactions, bodyTransactions);
 
@@ -61,8 +61,8 @@ public class RulesEvaluator {
     public double coverage(AssocRuleWithExceptions rule, ExceptionItem exceptionItem){
 //        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
 //        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
-        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> headTransactions=transactionsDB.filterOutTransactionsWith(rule.getHeadTransactions(),null);
+        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems(),false);
+        Set<Transaction> headTransactions=transactionsDB.filterOutTransactionsWith(rule.getHeadTransactions(),null,false);
 
         return computeCoverage(ruleTransactions, headTransactions);
 
@@ -87,9 +87,9 @@ public class RulesEvaluator {
 //        int ruleSupport=transactionsDB.getTransactionsCount(ArrayUtils.addAll(rule.getItemset2(),rule.getItemset1()), exceptionItem==null? null:exceptionItem.getItems());
 //        int bodySupport=transactionsDB.getTransactionsCount(rule.getItemset1(),exceptionItem==null? null:exceptionItem.getItems());
 //        int headSupport=transactionsDB.getTransactionsCount(rule.getItemset2(),null);
-        Set<Transaction> bodyTransactions=transactionsDB.filterOutTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems());
-        Set<Transaction> headTransactions=transactionsDB.filterOutTransactionsWith(rule.getHeadTransactions(),null);
+        Set<Transaction> bodyTransactions=transactionsDB.filterOutTransactionsWith(rule.getBodyTransactions(),exceptionItem==null? null:exceptionItem.getItems(),false);
+        Set<Transaction> ruleTransactions=transactionsDB.filterOutTransactionsWith(rule.getHornRuleTransactions(),exceptionItem==null? null:exceptionItem.getItems(),false);
+        Set<Transaction> headTransactions=transactionsDB.filterOutTransactionsWith(rule.getHeadTransactions(),null,false);
         return computeLift(ruleTransactions,bodyTransactions,  headTransactions);
 
     }
@@ -118,7 +118,7 @@ public class RulesEvaluator {
 
 //        Set<Transaction> containsBodyOrHead= new HashSet<>(transactionsDB.getTransactions(head.getHeadItems(),null));
 //        Set<Transaction> containsBodyOrHead= Sets.union()
-        Set<Transaction> containsBodyOrHead= transactionsDB.getTransactions(head.getHeadItems(),null);
+        Set<Transaction> containsBodyOrHead= transactionsDB.getTransactions(head.getHeadItems(),null,false);
 
         //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
         BigDecimal coverageMultiplication=BigDecimal.ONE;
@@ -185,7 +185,7 @@ public class RulesEvaluator {
 
         int bodyTransactionsCount=TransactionsDatabase.getTransactionsCount(containsBody);
 
-        int rulesBodyandHeadCount=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(containsBody,head.getHeadItems()));
+        int rulesBodyandHeadCount=TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(containsBody,head.getHeadItems(),false));
 
         head.setConfidence((double)rulesBodyandHeadCount/bodyTransactionsCount);
 
@@ -235,7 +235,7 @@ public class RulesEvaluator {
 
                 // filter transactions that contains the body and the excpetion
 //                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(predictableTransactions.get(rule), ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
-                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(rule.getSafePredictableTransactions(), ArrayUtils.addAll(e.getItems(),targetRule.getBody()));
+                Set<Transaction> transactionsWithBodyandException=transactionsDB.filterTransactionsWith(rule.getSafePredictableTransactions(), ArrayUtils.addAll(e.getItems(),targetRule.getBody()),false);
                 int singleConflictTransactionsCount=TransactionsDatabase.getTransactionsCount(transactionsWithBodyandException);
                 conflictScore+=(singleConflictTransactionsCount*rule.getConfidence());
                 conflictTransactionsCount+=singleConflictTransactionsCount;
@@ -301,7 +301,7 @@ public class RulesEvaluator {
 
 
         // positive examples of the rule that fo not contain the target exception
-        Set<Transaction> ruleTransactionsWithoutException=transactionsDB.filterOutTransactionsWith(targetRule.getHornRuleTransactions(),exceptionCandidate.getItems());
+        Set<Transaction> ruleTransactionsWithoutException=transactionsDB.filterOutTransactionsWith(targetRule.getHornRuleTransactions(),exceptionCandidate.getItems(),false);
 
 //        HashMap<AssocRuleWithExceptions,Set<Transaction>> predictableTransactions=new HashMap<>(exceptionRules.size());
         double conflictScore=0;

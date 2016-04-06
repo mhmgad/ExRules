@@ -36,6 +36,8 @@ public class AssociationRuleMiningSPMF {
     private String temperorayTransactiosFile;
     private String temporaryMappingFile;
     private YagoTaxonomy yagoTaxonomy;
+    private boolean debugMatherialization;
+    private String debugMaterializationFile;
 
 //    private TransactionsDatabase transactionsDB;
 
@@ -78,7 +80,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp) throws IOException {
+    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp) throws Exception {
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
 
@@ -115,7 +117,8 @@ public class AssociationRuleMiningSPMF {
         }
 
 
-
+        Materializer materializer=new Materializer(transactionsDB,debugMatherialization,debugMaterializationFile);
+        materializer.materialize(rules.getRules(),true,true);
 
         // predictable transactions
         computeSafePredictableTransactions(rules,transactionsDB);
@@ -131,7 +134,7 @@ public class AssociationRuleMiningSPMF {
 
     private void computeSafePredictableTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
         rules.getRules().parallelStream().forEach(r -> {
-            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
+            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts(),false));
 
         });
 
@@ -140,10 +143,10 @@ public class AssociationRuleMiningSPMF {
     private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
 
         rules.getRules().parallelStream().forEach(r -> {
-            r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null));
-            r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null));
-            r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead()));
-            r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead()));
+            r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null,false));
+            r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null,false));
+            r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead(),false));
+            r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead(),false));
 //            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
             r.computeQualityMeasurements();
         });
@@ -333,6 +336,11 @@ public class AssociationRuleMiningSPMF {
 
         }
         return transactionsFilePath;
+    }
+
+    public void setDebugMaterialization(boolean debugMatherialization, String debugMaterializationFile) {
+        this.debugMatherialization=debugMatherialization;
+        this.debugMaterializationFile=debugMaterializationFile;
     }
 
 

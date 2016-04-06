@@ -108,44 +108,52 @@ public class TransactionsDatabase {
 
     }
 
-    public Set<Transaction> getTransactionsWithItem(int itemId){
-        return items2transactions.get(itemId);
+    public Set<Transaction> getTransactionsWithItem(int itemId,boolean withPredictions){
+
+        if(!withPredictions)
+            return items2transactions.get(itemId);
+        else
+            return Sets.union(items2transactions.get(itemId),predictedItems2transactions.get(itemId));
     }
 
-    public Set<Transaction> getTransactions(int[] withItems,int [] withoutItems){
+//    public Set<Transaction> getTransactions(int[] withItems,int [] withoutItems){
+//        return getTransactions(withItems,withoutItems,false);
+//    }
 
-        Set<Transaction> transactions=getTransactionsWithItem(withItems[0]);
-        transactions = filterTransactionsWith(transactions, withItems, 1);
+    public Set<Transaction> getTransactions(int[] withItems,int [] withoutItems, boolean withPredictions){
 
-        transactions = filterOutTransactionsWith(transactions,withoutItems,0 );
+        Set<Transaction> transactions=getTransactionsWithItem(withItems[0],withPredictions);
+        transactions = filterTransactionsWith(transactions, withItems, 1, withPredictions);
+
+        transactions = filterOutTransactionsWith(transactions,withoutItems,0, withPredictions );
 
 //        return new HashSet<>(transactions);
         return transactions;
     }
 
-    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems){
-        return filterTransactionsWith(transactions,withItems,0);
+    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems,boolean withPredictions){
+        return filterTransactionsWith(transactions,withItems,0,withPredictions);
     }
 
-    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems, int startIndex) {
+    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems, int startIndex, boolean withPredictions) {
         if(withItems!=null) {
             for (int i = startIndex; i < withItems.length && transactions.size() > 0; i++) {
-                transactions = Sets.intersection(transactions, getTransactionsWithItem(withItems[i]));
+                transactions = Sets.intersection(transactions, getTransactionsWithItem(withItems[i],withPredictions));
             }
         //transactions=new HashSet<>(transactions);
         }
         return transactions;
     }
 
-    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems){
-        return filterOutTransactionsWith(transactions,excludedItems,0);
+    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems,boolean withPredictions){
+        return filterOutTransactionsWith(transactions,excludedItems,0,withPredictions);
     }
 
-    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex) {
+    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex, boolean withPredictions) {
 
         if(excludedItems!=null){
             for (int i=startIndex;i<excludedItems.length&&transactions.size()>0;i++){
-                transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i]));
+                transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i],withPredictions));
 
             }
             //transactions=new HashSet<>(transactions);
@@ -154,10 +162,10 @@ public class TransactionsDatabase {
     }
 
 
-    public int getTransactionsCount(int[] withItems,int [] withoutItems) {
-        return TransactionsDatabase.getTransactionsCount(getTransactions(withItems,withoutItems));//.stream().mapToInt(Transaction::getCount).sum();
-
-    }
+//    public int getTransactionsCount(int[] withItems,int [] withoutItems) {
+//        return TransactionsDatabase.getTransactionsCount(getTransactions(withItems,withoutItems));//.stream().mapToInt(Transaction::getCount).sum();
+//
+//    }
 
     public static int getTransactionsCount(Collection<Transaction> transactions){
         return  transactions.stream().mapToInt(Transaction::getCount).sum();
@@ -168,7 +176,19 @@ public class TransactionsDatabase {
         predictedItems2transactions.put(item,transactionWithPrediction);
     }
 
+    /**
+     * add transaction to set of predicted items in the materialization map
+     * @param items
+     * @param transaction
+     */
+    public void addPredictions(int[] items, Transaction transaction) {
+        Arrays.stream(items).forEach((i)->addPrediction(i,transaction));
+    }
 
 
+    public Set<Transaction> getTransactionsFromExtendedDB(int [] withItems,int[] withoutItems){
 
+        return getTransactions(withItems,withoutItems,true);
+
+    }
 }

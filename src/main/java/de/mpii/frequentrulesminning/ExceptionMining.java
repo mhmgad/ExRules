@@ -94,7 +94,7 @@ public class ExceptionMining {
             int[] body = rule.getItemset1();
             int[] head = rule.getItemset2();
 
-            transactions = transactionDB.getTransactions(body, head);
+            transactions = transactionDB.getTransactions(body, head,false);
         }
         else
         {
@@ -113,7 +113,7 @@ public class ExceptionMining {
         if(rule.getHornRuleTransactions()==null){
         int [] body=rule.getItemset1();
         int [] head=rule.getItemset2();
-            transactions = transactionDB.getTransactions(ArrayUtils.addAll(body,head),null);}
+            transactions = transactionDB.getTransactions(ArrayUtils.addAll(body,head),null,false);}
         else
         {
             transactions= rule.getHornRuleTransactions();

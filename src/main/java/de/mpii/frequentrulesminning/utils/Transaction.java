@@ -27,7 +27,7 @@ public class Transaction{
     public Transaction(int[] items, int count) {
         setItems(items);
         this.count = count;
-        prediction2Weights =new TIntDoubleHashMap();
+        items2Weights =new TIntDoubleHashMap();
 
     }
 
@@ -75,7 +75,11 @@ public class Transaction{
     public void setItems(int[] items) {
         this.items = items;
         Arrays.sort(items);
+        // adds item to weights
+        Arrays.stream(items).forEach((i)-> addItemWithWeight(i,1));
     }
+
+
 
     public void setCout(int count){
         this.count=count;
@@ -111,20 +115,32 @@ public class Transaction{
 
 
     //Predictions
-    TIntDoubleHashMap prediction2Weights;
+    TIntDoubleHashMap items2Weights;
 
-    public void addPrediction(int item,double weight){
-        if(prediction2Weights.containsKey(item)){
-            double oldWeight= prediction2Weights.get(item);
+    public void addItemWithWeight(int item, double weight){
+        if(items2Weights.containsKey(item)){
+            double oldWeight= items2Weights.get(item);
             // Currently take the maximum
             weight=Math.max(oldWeight,weight);
         }
 
-        prediction2Weights.put(item,weight);
+        items2Weights.put(item,weight);
     }
 
 
     public double getItemWeight(int item){
-        return prediction2Weights.get(item);
+        return items2Weights.get(item);
+    }
+
+    public boolean contains(int item){
+            return items2Weights.containsKey(item);
+    }
+
+    public boolean contains(int[] body) {
+        return Arrays.stream(body).allMatch((i)->contains(i));
+    }
+
+    public void addItemsWithWeight(int[] items, double weight) {
+        Arrays.stream(items).forEach((i)-> addItemWithWeight(i,weight));
     }
 }
