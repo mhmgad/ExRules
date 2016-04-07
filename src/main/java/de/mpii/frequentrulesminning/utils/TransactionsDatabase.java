@@ -21,10 +21,37 @@ import java.util.Set;
  * Created by gadelrab on 3/8/16.
  */
 public class TransactionsDatabase {
+    private int[] items;
 
 //    TObjectIntHashMap<Transaction> transactionsSet;
 
-    HashMap<int[],Transaction> transactionsSet;
+    static class  ItemsArray{
+        int [] items;
+        public ItemsArray(int [] items) {
+            setItems(items);
+        }
+
+        public void setItems(int[] items) {
+            this.items = items;
+            Arrays.sort(this.items);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(items);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return Arrays.equals(((ItemsArray)obj).items,items);
+        }
+
+        public int[] getItems() {
+            return items;
+        }
+    }
+
+    HashMap<ItemsArray,Transaction> transactionsSet;
 
 
     int distinctId;
@@ -68,9 +95,9 @@ public class TransactionsDatabase {
 
     public void loadTransactions(InputStream transactionsStream) throws IOException {
 
-        BufferedReader br= FileUtils.getBufferedUTF8Reader(transactionsStream);
+        BufferedReader br = FileUtils.getBufferedUTF8Reader(transactionsStream);
         // read transactions file
-        for (String line=br.readLine();line!=null&&!line.isEmpty();line=br.readLine()){
+        for (String line = br.readLine(); line != null && !line.isEmpty(); line = br.readLine()) {
 
 
 //            Transaction t=new Transaction(line);
@@ -82,17 +109,18 @@ public class TransactionsDatabase {
 //                }
 //            }
 
-            int []items=Transaction.parseIntItems(line);
-            Transaction t=transactionsSet.get(items);
+            ItemsArray items = new ItemsArray(Transaction.parseIntItems(line));
+
+            Transaction t = transactionsSet.get(items);
             // new Transactions
-            if(t==null){
-                t=new Transaction(items);
+            if (t == null) {
+                t = new Transaction(items.getItems());
                 t.setId(getNextId());
-                transactionsSet.put(items,t);
-                final Transaction tr=t;
+                transactionsSet.put(items, t);
+                final Transaction tr = t;
                 // add to items
-                Arrays.stream(items).forEach((i)->items2transactions.put(i,tr));
-            }else {
+                Arrays.stream(items.getItems()).forEach((i) -> items2transactions.put(i, tr));
+            } else {
 
                 t.incrementCount();
             }
