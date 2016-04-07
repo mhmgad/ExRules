@@ -93,12 +93,13 @@ public class TransactionsDatabase {
                 // add to items
                 Arrays.stream(items).forEach((i)->items2transactions.put(i,tr));
             }else {
+
                 t.incrementCount();
             }
 
 
         }
-
+        System.out.println(transactionsSet.values().size());
         // setCount and ID
 //        transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
 //        for (Transaction t:transactionsSet.keySet()) {

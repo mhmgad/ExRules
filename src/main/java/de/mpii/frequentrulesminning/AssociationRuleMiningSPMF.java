@@ -95,6 +95,8 @@ public class AssociationRuleMiningSPMF {
             System.out.println("Rules after filtering1: "+rules.getRulesCount());
         }
 
+        TransactionsDatabase transactionsDB=new TransactionsDatabase(transactionsFilePath);
+
         // decode
         decodeRules( rules, mappingFilePath,decode,!encode);
 
@@ -105,7 +107,7 @@ public class AssociationRuleMiningSPMF {
 
 
 
-        TransactionsDatabase transactionsDB=new TransactionsDatabase(transactionsFilePath);
+
 
         // distribute Transactions
 
