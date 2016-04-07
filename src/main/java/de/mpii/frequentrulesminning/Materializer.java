@@ -35,27 +35,41 @@ public class Materializer {
         }
     }
 
-    public void materialize(List<AssocRuleWithExceptions> rules, boolean cautious, boolean withPredictions){
+    public void materialize(List<AssocRuleWithExceptions> rules, boolean cautious, boolean withPredictions) throws IOException {
 
-        rules.stream().sorted(Comparator.comparing(AssocRuleWithExceptions::getLift).reversed()).forEach((r)->materialize(r,cautious,withPredictions));
-
-    }
-
-
-    public void materialize(AssocRuleWithExceptions rule,boolean cautious,boolean withPredictions){
-        Set<Transaction> transactionSet=transDB.getTransactions(rule.getBody(),ArrayUtils.addAll(rule.getHead(),rule.getExceptionsCandidatesInts()),withPredictions);
-        materialize(rule,transactionSet,cautious);
-    }
-
-    public void materialize(AssocRuleWithExceptions rule, Collection<Transaction> transactions, boolean cautious){
-
-        transactions.parallelStream().forEach((transaction -> {
+        rules.stream().sorted(Comparator.comparing(AssocRuleWithExceptions::getLift).reversed()).forEach((r) -> {
             try {
-                materialize(rule, transaction, cautious);
+                materialize(r, cautious, withPredictions);
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        });
+        this.outputBufferedWritter.flush();
+
+    }
+
+
+    public void materialize(AssocRuleWithExceptions rule,boolean cautious,boolean withPredictions) throws IOException {
+        Set<Transaction> transactionSet=transDB.getTransactions(rule.getBody(),ArrayUtils.addAll(rule.getHead(),rule.getExceptionsCandidatesInts()),withPredictions);
+        materialize(rule,transactionSet,cautious);
+
+    }
+
+    public void materialize(AssocRuleWithExceptions rule, Collection<Transaction> transactions, boolean cautious) throws IOException {
+
+        this.outputBufferedWritter.write(rule.toString());
+        this.outputBufferedWritter.newLine();
+        transactions.parallelStream().forEach((transaction -> {
+            try {
+
+                materialize(rule, transaction, cautious);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         }));
+        this.outputBufferedWritter.newLine();
 
     }
 

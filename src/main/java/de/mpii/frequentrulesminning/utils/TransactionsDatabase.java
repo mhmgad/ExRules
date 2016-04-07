@@ -39,6 +39,7 @@ public class TransactionsDatabase {
         this.items2transactions = HashMultimap.create();
 //        this.transactionsSet = new TObjectIntHashMap<>();
         this.transactionsSet=new HashMap<>();
+        this. predictedItems2transactions=HashMultimap.create();
         distinctId=0;
 
     }
