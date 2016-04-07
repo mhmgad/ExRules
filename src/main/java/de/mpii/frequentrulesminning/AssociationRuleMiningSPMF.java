@@ -117,8 +117,7 @@ public class AssociationRuleMiningSPMF {
         }
 
 
-        Materializer materializer=new Materializer(transactionsDB,debugMatherialization,debugMaterializationFile);
-        materializer.materialize(rules.getRules(),true,true);
+        materialize(rules, transactionsDB);
 
         // predictable transactions
         computeSafePredictableTransactions(rules,transactionsDB);
@@ -132,6 +131,14 @@ public class AssociationRuleMiningSPMF {
         return rules;
     }
 
+    public void materialize(AssocRulesExtended rules,TransactionsDatabase transactionsDB) throws Exception {
+        System.out.println("Materialization ... ");
+        Materializer materializer=new Materializer(transactionsDB,debugMatherialization,debugMaterializationFile);
+        materializer.materialize(rules.getRules(),true,true);
+        System.out.println("Done Materialization !");
+
+    }
+
     private void computeSafePredictableTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
         rules.getRules().parallelStream().forEach(r -> {
             r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts(),false));
@@ -141,7 +148,7 @@ public class AssociationRuleMiningSPMF {
     }
 
     private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
-
+        System.out.println("Resolving Transactions.. ");
         rules.getRules().parallelStream().forEach(r -> {
             r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null,false));
             r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null,false));
@@ -150,6 +157,7 @@ public class AssociationRuleMiningSPMF {
 //            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
             r.computeQualityMeasurements();
         });
+        System.out.println("Done Resolving Transactions!");
 
     }
 

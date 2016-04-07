@@ -91,7 +91,7 @@ public class Materializer {
         transDB.addPredictions(rule.getHead(),transaction);
 
         if(debugMaterialization){
-            outputBufferedWritter.write(Arrays.toString(rule.getBody())+" ==> " +Arrays.toString(rule.getHead())+"\t "+Arrays.toString(bodyWeights)+" = " + rule.getConfidence()+ " => "+ weight);
+            outputBufferedWritter.write(transaction.getId()+"\t"+Arrays.toString(bodyWeights)+" = " + rule.getConfidence()+ " => "+ weight);
             outputBufferedWritter.newLine();
         }
 
