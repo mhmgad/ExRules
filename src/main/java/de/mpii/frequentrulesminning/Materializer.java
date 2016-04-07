@@ -81,8 +81,8 @@ public class Materializer {
         if(cautious && transaction.contains(rule.getExceptionsCandidatesInts()))
             return;
 
-        DoubleStream bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i));
-        double averageBodyConf=bodyWeights.average().getAsDouble();
+        double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i)).toArray();
+        double averageBodyConf=Arrays.stream(bodyWeights).average().getAsDouble();
         // new prediction weight = averageBodyWeight * ruleWeight .. Weight=Confidence for now.
         double weight= averageBodyConf* rule.getConfidence();
 
@@ -91,7 +91,7 @@ public class Materializer {
         transDB.addPredictions(rule.getHead(),transaction);
 
         if(debugMaterialization){
-            outputBufferedWritter.write(Arrays.toString(rule.getBody())+" ==> " +Arrays.toString(rule.getHead())+"\t "+Arrays.toString(bodyWeights.toArray())+" = " + rule.getConfidence()+ " => "+ weight);
+            outputBufferedWritter.write(Arrays.toString(rule.getBody())+" ==> " +Arrays.toString(rule.getHead())+"\t "+Arrays.toString(bodyWeights)+" = " + rule.getConfidence()+ " => "+ weight);
             outputBufferedWritter.newLine();
         }
 
