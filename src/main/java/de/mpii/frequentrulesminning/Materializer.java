@@ -3,6 +3,7 @@ package de.mpii.frequentrulesminning;
 import de.mpii.frequentrulesminning.utils.AssocRuleWithExceptions;
 import de.mpii.frequentrulesminning.utils.Transaction;
 import de.mpii.frequentrulesminning.utils.TransactionsDatabase;
+import de.mpii.frequentrulesminning.utils.Weight;
 import mpi.tools.javatools.util.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -74,21 +75,27 @@ public class Materializer {
     }
 
     public void materialize(AssocRuleWithExceptions rule, Transaction transaction,boolean cautious) throws IOException {
-
+        // TODO needs more thinking about accumlating weights
         if(!transaction.contains(rule.getBody()))
             return;
 
         if(cautious && transaction.contains(rule.getExceptionsCandidatesInts()))
             return;
 
-        double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i)).toArray();
-        double averageBodyConf=Arrays.stream(bodyWeights).average().getAsDouble();
+//        double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i)).toArray();
+//        double averageBodyConf=Arrays.stream(bodyWeights).average().getAsDouble();
+        double bodyWeightValue=transaction.getWeight(rule.getBody(),rule.getExceptionsCandidatesInts());
+        Weight bodyWeight=null;
+
         // new prediction weight = averageBodyWeight * ruleWeight .. Weight=Confidence for now.
         double weight= averageBodyConf* rule.getConfidence();
 
-        transaction.addItemsWithWeight(rule.getHead(),weight);
+//        transaction.addItemsWithWeight(rule.getHead(),weight);
         // add the predicted to the transaction
         transDB.addPredictions(rule.getHead(),transaction);
+
+
+
 
         if(debugMaterialization){
             outputBufferedWritter.write(transaction.getId()+"\t"+Arrays.toString(bodyWeights)+" = " + rule.getConfidence()+ " => "+ weight);

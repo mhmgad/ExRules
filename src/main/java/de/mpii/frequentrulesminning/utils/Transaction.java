@@ -1,16 +1,18 @@
 package de.mpii.frequentrulesminning.utils;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.SetMultimap;
 import com.google.common.primitives.Ints;
-import gnu.trove.map.hash.TIntDoubleHashMap;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by gadelrab on 2/26/16.
  */
 public class Transaction{
+
+
     int [] items;
 
     int count;
@@ -25,7 +27,8 @@ public class Transaction{
     }
 
     public Transaction(int[] items, int count) {
-        items2Weights =new TIntDoubleHashMap();
+//        items2Weights =new TIntDoubleHashMap();
+        items2Weights = HashMultimap.create();
         setItems(items);
         this.count = count;
 
@@ -77,7 +80,8 @@ public class Transaction{
         this.items = items;
         Arrays.sort(items);
         // adds item to weights
-        Arrays.stream(items).forEach((i)-> addItemWithWeight(i,1));
+//        Arrays.stream(items).forEach((i)-> addItemWithWeight(i,1));
+        Arrays.stream(items).forEach((i)-> addItemWithWeight(i,Weight.INDEPENDENT));
     }
 
 
@@ -116,20 +120,21 @@ public class Transaction{
 
 
     //Predictions
-    TIntDoubleHashMap items2Weights;
+    SetMultimap<Integer,Weight> items2Weights;
 
-    public void addItemWithWeight(int item, double weight){
-        if(items2Weights.containsKey(item)){
-            double oldWeight= items2Weights.get(item);
-            // Currently take the maximum
-            weight=Math.max(oldWeight,weight);
-        }
-
-        items2Weights.put(item,weight);
+    public void addItemWithWeight(int item, Weight weight){
+//        if(items2Weights.containsKey(item)){
+//            double oldWeight= items2Weights.get(item);
+//            // Currently take the maximum
+//            weight=Math.max(oldWeight,weight);
+//        }
+        // Do not replace procedure
+        if(!items2Weights.containsKey(item))
+            items2Weights.put(item,weight);
     }
 
 
-    public double getItemWeight(int item){
+    public Set<Weight> getItemWeight(int item){
         return items2Weights.get(item);
     }
 
@@ -141,7 +146,24 @@ public class Transaction{
         return Arrays.stream(body).allMatch((i)->contains(i));
     }
 
-    public void addItemsWithWeight(int[] items, double weight) {
+    public void addItemsWithWeight(int[] items, Weight weight) {
         Arrays.stream(items).forEach((i)-> addItemWithWeight(i,weight));
+    }
+
+    public double getWeight(int[] with, int[] without) {
+    // TODO needs more thinking about accumlating weights
+        double tranWeight=1;
+        TreeSet<Integer> computed=new TreeSet<>();
+
+        for (int i: with) {
+
+            Weight itemWeight= items2Weights.get(i).stream().findFirst().get();
+            if(itemWeight.isIndependent())
+                tranWeight*=itemWeight.getFinalWeight();
+
+
+
+        }
+        return  tranWeight;
     }
 }
