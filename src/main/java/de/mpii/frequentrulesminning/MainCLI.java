@@ -8,6 +8,7 @@ import org.apache.commons.cli.*;
  * Created by gadelrab on 3/22/16.
  */
 public class MainCLI {
+    private  Options helpOptions;
     private DefaultParser parser;
     Options options;
 
@@ -32,12 +33,18 @@ public class MainCLI {
 
     public MainCLI() {
          options= new Options();
+         helpOptions = new Options();
         parser = new DefaultParser();
 
 
     }
 
     public void defineOptions(){
+
+        helpOp =new Option("h",false,"Show Help");
+        helpOp.setLongOpt("help");
+        helpOptions.addOption(helpOp);
+
         shouldEncodeOp =new Option("en",false,"Encode the input");
         options.addOption(shouldEncodeOp);
 
@@ -79,9 +86,7 @@ public class MainCLI {
         options.addOption(outputRulesWithExceptionsOnlyOp);
 
 
-        helpOp =new Option("h",false,"Show Help");
-        helpOp.setLongOpt("help");
-        options.addOption(helpOp);
+
 
 
         debugMaterializationOp=Option.builder("dPM").longOpt("Debug_materialization").hasArg().desc("debug Materialization file").argName("file").build();
@@ -112,11 +117,7 @@ public class MainCLI {
         double minconf = 0.01;//0.01D;
         double maxconf = 1;//0.01D;
 
-        if(cmd.hasOption(helpOp.getOpt())){
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp( "mine_rules.sh", options );
-            System.exit(0);
-        }
+
 
         if(cmd.hasOption(minSupportOp.getOpt())){
             minsupp = Double.valueOf(cmd.getOptionValue(minSupportOp.getOpt()));
@@ -187,6 +188,14 @@ public class MainCLI {
     }
 
     private CommandLine parse(String[] args) throws ParseException {
+        CommandLine cmdHelp=parser.parse(helpOptions,args);
+        if(cmdHelp.hasOption(helpOp.getOpt())){
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp( "mine_rules.sh", options );
+            System.exit(0);
+        }
+
+
         return parser.parse(options,args);
     }
 }
