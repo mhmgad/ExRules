@@ -90,7 +90,7 @@ public class AssociationRuleMiningSPMF {
         // generate Association rules
         AssocRulesExtended rules=getFrequentAssociationRules(frequentPatterns);
 
-        if(filter||level2Filter) {
+        if(filter) {
             filterRules(rules);
             System.out.println("Rules after filtering1: "+rules.getRulesCount());
         }
