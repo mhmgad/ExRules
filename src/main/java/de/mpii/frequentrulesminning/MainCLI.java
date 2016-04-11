@@ -100,6 +100,12 @@ public class MainCLI {
         double minconf = 0.01;//0.01D;
         double maxconf = 1;//0.01D;
 
+        if(cmd.hasOption(helpOp.getOpt())){
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp( "mine_rules.sh", options );
+            System.exit(0);
+        }
+
         if(cmd.hasOption(minSupportOp.getOpt())){
             minsupp = Double.valueOf(cmd.getOptionValue(minSupportOp.getOpt()));
         }
@@ -162,63 +168,6 @@ public class MainCLI {
         MainCLI instance=new MainCLI();
         instance.defineOptions();
         instance.run(instance.parse(args));
-
-//        if(args.length<4){
-//            System.out.println("Usage: rules_spmf.sh <infile> <outFile>  <minsupp> <minConf> <maxConf> [<Sorting (CONF|HEAD_CONF)> <encode(1|0)> <decode(1|0)> <rdf2intMapping file>] <withExceptions(0|1)> <Exception Minsupp>");
-//            System.exit(0);
-//        }
-
-//        String inputFile=args[0];
-//        String outputFilePath=args[1];
-//
-//
-//
-
-//        double excepminSupp =0.5D;
-
-
-//        boolean encode=true;
-//        boolean decode=true;
-//        boolean withExceptions=false;
-
-//        String rdf2idsMappingFile=null;
-//        AssocRulesExtended.SortingType outputSorting= AssocRulesExtended.SortingType.CONF;
-//
-//        if(args.length>5){
-//            outputSorting=AssocRulesExtended.SortingType.valueOf(args[5]);
-//        }
-
-//        if(args.length>6){
-//            encode=args[6].equals("1");
-//        }
-//        if(args.length>7){
-//            decode=args[7].equals("1");
-//        }
-//        if(args.length>8){
-//            rdf2idsMappingFile=args[8];
-//        }
-//
-//        if(args.length>9){
-//            withExceptions=args[9].equals("1");
-//
-//        }
-//
-//        if(args.length>10){
-//            excepminSupp=Double.valueOf(args[10]);
-//        }
-
-//        boolean showRulesWithExceptionsOnly=false;
-//
-//        if(args.length>11){
-//            showRulesWithExceptionsOnly=args[11].equals("1");
-//
-//        }
-
-
-//        AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
-
-//        AssocRulesExtended rulesStrings=miner.getFrequentAssociationRules(inputFile,rdf2idsMappingFile,encode,decode,true, withExceptions,excepminSupp);
-//        miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 
 
     }
