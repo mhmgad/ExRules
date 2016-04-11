@@ -80,7 +80,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp) throws Exception {
+    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp, boolean materialize) throws Exception {
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
 
@@ -118,14 +118,15 @@ public class AssociationRuleMiningSPMF {
             mineExceptions(rules,transactionsDB,exceptionMinSupp);
         }
 
-
+        if(materialize)
         materialize(rules, transactionsDB);
 
-        // predictable transactions
-        computeSafePredictableTransactions(rules,transactionsDB);
+
 
 
         if(withExceptions) {
+            // predictable transactions
+            computeSafePredictableTransactions(rules,transactionsDB);
             evaluateRules(rules,transactionsDB);
         }
 

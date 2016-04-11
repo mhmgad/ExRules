@@ -83,9 +83,10 @@ public class Materializer {
             return;
 
 //        double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i)).toArray();
-//        double averageBodyConf=Arrays.stream(bodyWeights).average().getAsDouble();
-        double bodyWeightValue=transaction.getWeight(rule.getBody(),rule.getExceptionsCandidatesInts());
-        Weight bodyWeight=null;
+        double [] bodyWeights=new double[1];
+        double averageBodyConf=Arrays.stream(bodyWeights).average().getAsDouble();
+//        double bodyWeightValue=transaction.getWeight(rule.getBody(),rule.getExceptionsCandidatesInts());
+//        Weight bodyWeight=null;
 
         // new prediction weight = averageBodyWeight * ruleWeight .. Weight=Confidence for now.
         double weight= averageBodyConf* rule.getConfidence();

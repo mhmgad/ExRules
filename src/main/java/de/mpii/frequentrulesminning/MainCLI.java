@@ -26,6 +26,7 @@ public class MainCLI {
     private Option outputRulesWithExceptionsOnlyOp;
     private Option helpOp;
     private Option debugMaterializationOp;
+    private Option partialMaterializationOp;
 
     public MainCLI() {
          options= new Options();
@@ -76,12 +77,16 @@ public class MainCLI {
         options.addOption(outputRulesWithExceptionsOnlyOp);
 
 
-        helpOp =new Option("expOnly",false,"Show Help");
+        helpOp =new Option("h",false,"Show Help");
+        helpOp.setLongOpt("help");
         options.addOption(helpOp);
 
 
-        debugMaterializationOp=Option.builder("dM").longOpt("Debug_materialization").hasArg().desc("debug Materialization file").argName("file").build();
+        debugMaterializationOp=Option.builder("dPM").longOpt("Debug_materialization").hasArg().desc("debug Materialization file").argName("file").build();
         options.addOption(debugMaterializationOp);
+
+        partialMaterializationOp=Option.builder("pm").longOpt("materialization").hasArg(false).desc(" Use partial materialization" ).build();
+        options.addOption(partialMaterializationOp);
 
 
     }
@@ -138,10 +143,13 @@ public class MainCLI {
         if(cmd.hasOption(debugMaterializationOp.getOpt()))
             debugMaterializationFile=cmd.getOptionValue(debugMaterializationOp.getOpt());
 
+        boolean materialize = cmd.hasOption(partialMaterializationOp.getOpt());
+
+
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
         miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
-        AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, true, withExceptions, excepminSupp);
+        AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, true, withExceptions, excepminSupp, materialize);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 
 
