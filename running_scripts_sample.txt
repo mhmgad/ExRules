@@ -12,4 +12,6 @@ sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mi
 
 
 #With exceptions and materialization
-sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_integer_transactions.tsv -o /GW/D5data-5/gadelrab/yago3/spmf/out/rules_spmf_supp0001_conf30_90_body4_filtered2_exceptions05_reval_group.tsv.lift -minConf 0.3 -maxConf 0.9  -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_mapping.tsv -ex -exMinSup 0.05 -s LIFT -pm -dPM /GW/D5data-5/gadelrab/yago3/spmf/materialization.tsv
+sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_integer_transactions.tsv -o /GW/D5data-5/gadelrab/yago3/spmf/out/rules_spmf_supp0001_conf30_90_body4_filtered2_exceptions05_reval_group.tsv.lift -minConf 0.3 -maxConf 0.9  -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_mapping.tsv -ex -exMinSup 0.05 -s LIFT -pm -dPM /GW/D5data-5/gadelrab/yago3/spmf/materialization.tsv -f1 -f2
+
+sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_integer_transactions.tsv -o /GW/D5data-5/gadelrab/yago3/spmf/out/rules_spmf_supp0001_conf30_90_body4_filtered2_exceptions05_reval_group.tsv.lift -minConf 0.3 -maxConf 0.9 -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine_mapping.tsv -ex -exMinSup 0.05 -s LIFT  -f1
