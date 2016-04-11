@@ -9,6 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.*;
 import java.util.*;
+import java.util.function.DoubleBinaryOperator;
 import java.util.stream.DoubleStream;
 import java.util.stream.Stream;
 
@@ -79,30 +80,36 @@ public class Materializer {
         if(!transaction.contains(rule.getBody()))
             return;
 
-        if(cautious && transaction.contains(rule.getExceptionsCandidatesInts()))
+        // if we are cautiously materializing .. then we skipp transactions with any exception candidates
+        if(cautious && transaction.containsAny(rule.getExceptionsCandidatesInts()))
             return;
 
-//        double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i)).toArray();
-        double [] bodyWeights=new double[1];
-        double averageBodyConf=Arrays.stream(bodyWeights).average().getAsDouble();
-//        double bodyWeightValue=transaction.getWeight(rule.getBody(),rule.getExceptionsCandidatesInts());
-//        Weight bodyWeight=null;
 
-        // new prediction weight = averageBodyWeight * ruleWeight .. Weight=Confidence for now.
-        double weight= averageBodyConf* rule.getConfidence();
+        // Do not generate based on generated data. All previous data should be independent
+        if(!Arrays.stream(rule.getBody()).allMatch((i) -> transaction.getItemWeight(i).isIndependent()))
+            return;
 
-//        transaction.addItemsWithWeight(rule.getHead(),weight);
+        // get transaction weight with respect to body and exceptions
+        double bodyWeightValue=transaction.getWeight(rule.getBody(),rule.getExceptionsCandidatesInts());
+
+
+        // new prediction weight = bodyWeightValue * ruleWeight .. Weight=Confidence for now.
+        double weight= bodyWeightValue * rule.getConfidence();
+
+
         // add the predicted to the transaction
         transDB.addPredictions(rule.getHead(),transaction);
 
+        // add Item with weight to transaction
+        transaction.addItemsWithWeight(rule.getHead(),new Weight(rule.getBody(),rule.getConfidence(),weight));
 
-
-
+        // exports the
         if(debugMaterialization){
+            double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i).getFinalWeight()).toArray();
             outputBufferedWritter.write(transaction.getId()+"\t"+Arrays.toString(bodyWeights)+" = " + rule.getConfidence()+ " => "+ weight);
             outputBufferedWritter.newLine();
         }
 
-    //transaction.
+
     }
 }

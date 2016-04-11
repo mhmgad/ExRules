@@ -155,7 +155,8 @@ public class TransactionsDatabase {
         Set<Transaction> transactions=getTransactionsWithItem(withItems[0],withPredictions);
         transactions = filterTransactionsWith(transactions, withItems, 1, withPredictions);
 
-        transactions = filterOutTransactionsWith(transactions,withoutItems,0, withPredictions );
+        //TODO if withPredictions is set, thats mean we need to KEEP the predictions.. so do not remove transactions if without exists in predictions
+        transactions = filterOutTransactionsWith(transactions,withoutItems,0, !withPredictions );
 
 //        return new HashSet<>(transactions);
         return transactions;
@@ -175,15 +176,18 @@ public class TransactionsDatabase {
         return transactions;
     }
 
-    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems,boolean withPredictions){
-        return filterOutTransactionsWith(transactions,excludedItems,0,withPredictions);
+    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems,boolean evenInPrediction){
+        return filterOutTransactionsWith(transactions,excludedItems,0,evenInPrediction);
     }
 
-    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex, boolean withPredictions) {
+    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex, boolean evenInPrediction) {
 
         if(excludedItems!=null){
             for (int i=startIndex;i<excludedItems.length&&transactions.size()>0;i++){
-                transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i],withPredictions));
+                //transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i],withPredictions));
+
+                // TODO (Recheck) currently, we say if evenInPrediction is set remove the transaction
+                transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i],evenInPrediction));
 
             }
             //transactions=new HashSet<>(transactions);

@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.primitives.Ints;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 
@@ -28,7 +29,8 @@ public class Transaction{
 
     public Transaction(int[] items, int count) {
 //        items2Weights =new TIntDoubleHashMap();
-        items2Weights = HashMultimap.create();
+//        items2Weights = HashMultimap.create();
+        items2Weights = new HashMap<>();
         setItems(items);
         this.count = count;
 
@@ -120,7 +122,7 @@ public class Transaction{
 
 
     //Predictions
-    SetMultimap<Integer,Weight> items2Weights;
+    HashMap<Integer,Weight> items2Weights;
 
     public void addItemWithWeight(int item, Weight weight){
 //        if(items2Weights.containsKey(item)){
@@ -134,12 +136,15 @@ public class Transaction{
     }
 
 
-    public Set<Weight> getItemWeight(int item){
+    public Weight getItemWeight(int item){
         return items2Weights.get(item);
     }
 
     public boolean contains(int item){
-            return items2Weights.containsKey(item);
+            //return items2Weights.containsKey(item);
+
+        // check the original transaction Items only
+        return ArrayUtils.contains(items,item);
     }
 
     public boolean contains(int[] body) {
@@ -151,19 +156,36 @@ public class Transaction{
     }
 
     public double getWeight(int[] with, int[] without) {
-    // TODO needs more thinking about accumlating weights
+    // TODO needs more thinking about accumulating weights in case of dependency
+
+
         double tranWeight=1;
-        TreeSet<Integer> computed=new TreeSet<>();
 
+        // Currently we assume that there is no rule chaining ... so multiplying the weights is enough
         for (int i: with) {
-
-            Weight itemWeight= items2Weights.get(i).stream().findFirst().get();
+            Weight itemWeight= items2Weights.get(i);
             if(itemWeight.isIndependent())
                 tranWeight*=itemWeight.getFinalWeight();
-
-
-
+            else
+                tranWeight*=itemWeight.getRuleWeight();
         }
+
+        for (int i: without) {
+            Weight itemWeight= items2Weights.get(i);
+            // if not in the transactions (we are good) just * 1 otherwise * (1-tranWeight)
+            if(itemWeight==null)
+                tranWeight*=1;
+            else
+                tranWeight*=1-itemWeight.getFinalWeight();
+        }
+
+
+
         return  tranWeight;
+    }
+
+    public boolean containsAny(int[] items) {
+        return Arrays.stream(items).anyMatch((i)->contains(i));
+
     }
 }
