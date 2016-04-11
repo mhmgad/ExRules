@@ -80,7 +80,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp, boolean materialize) throws Exception {
+    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp, boolean materialize, boolean level2Filter) throws Exception {
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
 
@@ -90,7 +90,7 @@ public class AssociationRuleMiningSPMF {
         // generate Association rules
         AssocRulesExtended rules=getFrequentAssociationRules(frequentPatterns);
 
-        if(filter) {
+        if(filter||level2Filter) {
             filterRules(rules);
             System.out.println("Rules after filtering1: "+rules.getRulesCount());
         }
@@ -100,7 +100,7 @@ public class AssociationRuleMiningSPMF {
         // decode
         decodeRules( rules, mappingFilePath,decode,!encode);
 
-        if(decode&&filter){
+        if(decode&&level2Filter){
             filterAfterDecoding(rules);
             System.out.println("Rules after filtering2: "+rules.getRulesCount());
         }

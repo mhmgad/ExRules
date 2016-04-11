@@ -27,6 +27,8 @@ public class MainCLI {
     private Option helpOp;
     private Option debugMaterializationOp;
     private Option partialMaterializationOp;
+    private Option filterOp;
+    private Option filter2Op;
 
     public MainCLI() {
          options= new Options();
@@ -87,6 +89,16 @@ public class MainCLI {
 
         partialMaterializationOp=Option.builder("pm").longOpt("materialization").hasArg(false).desc(" Use partial materialization" ).build();
         options.addOption(partialMaterializationOp);
+
+        debugMaterializationOp=Option.builder("dPM").longOpt("Debug_materialization").hasArg().desc("debug Materialization file").argName("file").build();
+        options.addOption(debugMaterializationOp);
+
+        filterOp=Option.builder("f1").longOpt("first_filter").hasArg(true).desc(" first filter based on size " ).build();
+        options.addOption(filterOp);
+
+        filter2Op=Option.builder("f2").longOpt("second_filter").hasArg(false).desc(" Second filter based on size " ).build();
+        options.addOption(filter2Op);
+
 
 
     }
@@ -151,11 +163,13 @@ public class MainCLI {
 
         boolean materialize = cmd.hasOption(partialMaterializationOp.getOpt());
 
+        boolean filter = cmd.hasOption(filterOp.getOpt());
+        boolean level2Filter = cmd.hasOption(filter2Op.getOpt());
 
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
         miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
-        AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, true, withExceptions, excepminSupp, materialize);
+        AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 
 
