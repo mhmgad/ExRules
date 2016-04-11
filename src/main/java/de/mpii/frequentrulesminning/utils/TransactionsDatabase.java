@@ -176,10 +176,25 @@ public class TransactionsDatabase {
         return transactions;
     }
 
+    /**
+     *
+     * @param transactions
+     * @param excludedItems
+     * @param evenInPrediction exclude transactions of the item even if it is in the prediction
+     * @return
+     */
     public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems,boolean evenInPrediction){
         return filterOutTransactionsWith(transactions,excludedItems,0,evenInPrediction);
     }
 
+    /**
+     *
+     * @param transactions
+     * @param excludedItems
+     * @param startIndex
+     * @param evenInPrediction exclude transactions of the item even if it is in the prediction
+     * @return
+     */
     public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex, boolean evenInPrediction) {
 
         if(excludedItems!=null){
