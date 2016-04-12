@@ -106,6 +106,7 @@ public class MainCLI {
 
 
 
+
     }
 
 
@@ -188,12 +189,12 @@ public class MainCLI {
     }
 
     private CommandLine parse(String[] args) throws ParseException {
-        CommandLine cmdHelp=parser.parse(helpOptions,args);
-        if(cmdHelp.hasOption(helpOp.getOpt())){
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp( "mine_rules.sh", options );
-            System.exit(0);
-        }
+//        CommandLine cmdHelp=parser.parse(helpOptions,args);
+//        if(cmdHelp.hasOption(helpOp.getOpt())){
+//            HelpFormatter formatter = new HelpFormatter();
+//            formatter.printHelp( "mine_rules.sh", options );
+//            System.exit(0);
+//        }
 
 
         return parser.parse(options,args);
