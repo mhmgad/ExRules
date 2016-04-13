@@ -171,6 +171,10 @@ public class MainCLI {
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
         miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
+
+
+        SystemConfig sConf=new SystemConfig(materialize,false,false);
+        miner.setConfiguration(sConf);
         AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 

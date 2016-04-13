@@ -155,7 +155,11 @@ public class Transaction{
         Arrays.stream(items).forEach((i)-> addItemWithWeight(i,weight));
     }
 
+
     public double getWeight(int[] with, int[] without) {
+        return   getWeight( with, without,  0.0) ;
+    }
+    public double getWeight(int[] with, int[] without, double minQuality) {
     // TODO needs more thinking about accumulating weights in case of dependency
 
 
@@ -163,7 +167,15 @@ public class Transaction{
 
         // Currently we assume that there is no rule chaining ... so multiplying the weights is enough
         for (int i: with) {
+
             Weight itemWeight= items2Weights.get(i);
+            // if any of the item has quality less than our threshold
+            if(itemWeight==null||itemWeight.getRuleQuality()<minQuality)
+            {
+                tranWeight=0;
+                return tranWeight;
+            }
+
             if(itemWeight.isIndependent())
                 tranWeight*=itemWeight.getFinalWeight();
             else
@@ -176,7 +188,12 @@ public class Transaction{
             if(itemWeight==null)
                 tranWeight*=1;
             else
-                tranWeight*=1-itemWeight.getFinalWeight();
+            // if generated with lower quality rule, neglect it (1)
+                if(itemWeight.getRuleQuality()<minQuality)
+                    tranWeight*=1;
+                else
+                    tranWeight *= 1 - itemWeight.getFinalWeight();
+
         }
 
 
@@ -188,4 +205,13 @@ public class Transaction{
         return Arrays.stream(items).anyMatch((i)->contains(i));
 
     }
+
+    public  double getWeightedCount(int[] with, int[] without, double minQuality,boolean noFractions) {
+        double weight= getWeight(with,  without,  minQuality);
+
+        return (weight>0 && noFractions? 1:weight)*getCount();
+
+    }
+
+
 }

@@ -4,7 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
-import de.mpii.frequentrulesminning.RulesEvaluator;
+import de.mpii.frequentrulesminning.Evaluator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -227,11 +227,11 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return headTransactions;
     }
 
-//    public void setCoverage(RulesEvaluator evaluator) {
+//    public void setCoverage(Evaluator evaluator) {
 //        setCoverage(evaluator.coverage(this));
 //    }
 //
-//    public void setLift(RulesEvaluator evaluator) {
+//    public void setLift(Evaluator evaluator) {
 //        setLift(evaluator.lift(this));
 //    }
 
@@ -243,10 +243,5 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return safePredictableTransactions;
     }
 
-    public void computeQualityMeasurements() {
 
-        this.setLift(RulesEvaluator.computeLift(getHornRuleTransactions(),this.getBodyTransactions(),getHeadTransactions()));
-        this.setCoverage(RulesEvaluator.computeCoverage(this.getHornRuleTransactions(),this.getHeadTransactions()));
-
-    }
 }

@@ -101,7 +101,7 @@ public class Materializer {
         transDB.addPredictions(rule.getHead(),transaction);
 
         // add Item with weight to transaction
-        transaction.addItemsWithWeight(rule.getHead(),new Weight(rule.getBody(),rule.getConfidence(),weight));
+        transaction.addItemsWithWeight(rule.getHead(),new Weight(rule,weight));
 
         // exports the
         if(debugMaterialization){

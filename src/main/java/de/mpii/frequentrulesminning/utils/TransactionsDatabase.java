@@ -21,62 +21,24 @@ import java.util.Set;
  * Created by gadelrab on 3/8/16.
  */
 public class TransactionsDatabase {
+    HashMap<ItemsArray, Transaction> transactionsSet;
+
+    //    TObjectIntHashMap<Transaction> transactionsSet;
+    int distinctId;
+    SetMultimap<Integer, Transaction> items2transactions;
+    SetMultimap<Integer, Transaction> predictedItems2transactions;
     private int[] items;
 
-//    TObjectIntHashMap<Transaction> transactionsSet;
 
-    static class  ItemsArray{
-        int [] items;
-        public ItemsArray(int [] items) {
-            setItems(items);
-        }
-
-        public void setItems(int[] items) {
-            this.items = items;
-            Arrays.sort(this.items);
-        }
-
-        @Override
-        public int hashCode() {
-            return Arrays.hashCode(items);
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            return Arrays.equals(((ItemsArray)obj).items,items);
-        }
-
-        public int[] getItems() {
-            return items;
-        }
-    }
-
-    HashMap<ItemsArray,Transaction> transactionsSet;
-
-
-    int distinctId;
-
-    SetMultimap<Integer,Transaction> items2transactions;
-
-
-    SetMultimap<Integer,Transaction> predictedItems2transactions;
-
-
-    public TransactionsDatabase(){
+    public TransactionsDatabase() {
         this.items2transactions = HashMultimap.create();
 //        this.transactionsSet = new TObjectIntHashMap<>();
-        this.transactionsSet=new HashMap<>();
-        this. predictedItems2transactions=HashMultimap.create();
-        distinctId=0;
+        this.transactionsSet = new HashMap<>();
+        this.predictedItems2transactions = HashMultimap.create();
+        distinctId = 0;
 
     }
 
-
-    public synchronized int getNextId(){
-        distinctId++;
-        return distinctId;
-
-    }
 
     public TransactionsDatabase(String transactionFilePath) throws IOException {
 
@@ -84,6 +46,7 @@ public class TransactionsDatabase {
 
 
     }
+
 
     public TransactionsDatabase(InputStream transactions) throws IOException {
         this();
@@ -93,21 +56,26 @@ public class TransactionsDatabase {
 
     }
 
+    public static double getTransactionsCount(Collection<Transaction> transactions) {
+        return transactions.stream().mapToInt(Transaction::getCount).sum();
+    }
+
+    public static double getTransactionsCount(Collection<Transaction> transactions,boolean weighted,boolean order) {
+        return transactions.stream().mapToDouble(weighted? Transaction::getWeightedCount:Transaction::getCount).sum();
+    }
+
+    public synchronized int getNextId() {
+        distinctId++;
+        return distinctId;
+
+    }
+
     public void loadTransactions(InputStream transactionsStream) throws IOException {
 
         BufferedReader br = FileUtils.getBufferedUTF8Reader(transactionsStream);
         // read transactions file
         for (String line = br.readLine(); line != null && !line.isEmpty(); line = br.readLine()) {
 
-
-//            Transaction t=new Transaction(line);
-//
-//            if (transactionsSet.adjustOrPutValue(t, 1, 1) == 1) {
-//                // add it to the map
-//                for (int i:t.getItems()){
-//                    items2transactions.put(i,t);
-//                }
-//            }
 
             ItemsArray items = new ItemsArray(Transaction.parseIntItems(line));
 
@@ -128,67 +96,57 @@ public class TransactionsDatabase {
 
         }
         System.out.println(transactionsSet.values().size());
-        // setCount and ID
-//        transactionsSet.keySet().forEach((Transaction x)->  x.setCout(this.transactionsSet.get(x)));
-//        for (Transaction t:transactionsSet.keySet()) {
-//            t.setCout(this.transactionsSet.get(t));
-//            t.setId(getNextId());
-//        }
 
 
     }
 
-    public Set<Transaction> getTransactionsWithItem(int itemId,boolean withPredictions){
+    public Set<Transaction> getTransactionsWithItem(int itemId, boolean withPredictions) {
 
-        if(!withPredictions)
+        if (!withPredictions)
             return items2transactions.get(itemId);
         else
-            return Sets.union(items2transactions.get(itemId),predictedItems2transactions.get(itemId));
+            return Sets.union(items2transactions.get(itemId), predictedItems2transactions.get(itemId));
     }
 
-//    public Set<Transaction> getTransactions(int[] withItems,int [] withoutItems){
-//        return getTransactions(withItems,withoutItems,false);
-//    }
 
-    public Set<Transaction> getTransactions(int[] withItems,int [] withoutItems, boolean withPredictions){
 
-        Set<Transaction> transactions=getTransactionsWithItem(withItems[0],withPredictions);
+    public Set<Transaction> getTransactions(int[] withItems, int[] withoutItems, boolean withPredictions) {
+
+        Set<Transaction> transactions = getTransactionsWithItem(withItems[0], withPredictions);
         transactions = filterTransactionsWith(transactions, withItems, 1, withPredictions);
 
         //TODO if withPredictions is set, thats mean we need to KEEP the predictions.. so do not remove transactions if without exists in predictions
-        transactions = filterOutTransactionsWith(transactions,withoutItems,0, !withPredictions );
+        transactions = filterOutTransactionsWith(transactions, withoutItems, 0, !withPredictions);
 
 //        return new HashSet<>(transactions);
         return transactions;
     }
 
-    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems,boolean withPredictions){
-        return filterTransactionsWith(transactions,withItems,0,withPredictions);
+    public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems, boolean withPredictions) {
+        return filterTransactionsWith(transactions, withItems, 0, withPredictions);
     }
 
     public Set<Transaction> filterTransactionsWith(Set<Transaction> transactions, int[] withItems, int startIndex, boolean withPredictions) {
-        if(withItems!=null) {
+        if (withItems != null) {
             for (int i = startIndex; i < withItems.length && transactions.size() > 0; i++) {
-                transactions = Sets.intersection(transactions, getTransactionsWithItem(withItems[i],withPredictions));
+                transactions = Sets.intersection(transactions, getTransactionsWithItem(withItems[i], withPredictions));
             }
-        //transactions=new HashSet<>(transactions);
+            //transactions=new HashSet<>(transactions);
         }
         return transactions;
     }
 
     /**
-     *
      * @param transactions
      * @param excludedItems
      * @param evenInPrediction exclude transactions of the item even if it is in the prediction
      * @return
      */
-    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems,boolean evenInPrediction){
-        return filterOutTransactionsWith(transactions,excludedItems,0,evenInPrediction);
+    public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, boolean evenInPrediction) {
+        return filterOutTransactionsWith(transactions, excludedItems, 0, evenInPrediction);
     }
 
     /**
-     *
      * @param transactions
      * @param excludedItems
      * @param startIndex
@@ -197,12 +155,12 @@ public class TransactionsDatabase {
      */
     public Set<Transaction> filterOutTransactionsWith(Set<Transaction> transactions, int[] excludedItems, int startIndex, boolean evenInPrediction) {
 
-        if(excludedItems!=null){
-            for (int i=startIndex;i<excludedItems.length&&transactions.size()>0;i++){
+        if (excludedItems != null) {
+            for (int i = startIndex; i < excludedItems.length && transactions.size() > 0; i++) {
                 //transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i],withPredictions));
 
                 // TODO (Recheck) currently, we say if evenInPrediction is set remove the transaction
-                transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i],evenInPrediction));
+                transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i], evenInPrediction));
 
             }
             //transactions=new HashSet<>(transactions);
@@ -216,29 +174,51 @@ public class TransactionsDatabase {
 //
 //    }
 
-    public static int getTransactionsCount(Collection<Transaction> transactions){
-        return  transactions.stream().mapToInt(Transaction::getCount).sum();
-    }
-
-
-    public void addPrediction(int item,Transaction transactionWithPrediction){
-        predictedItems2transactions.put(item,transactionWithPrediction);
+    public void addPrediction(int item, Transaction transactionWithPrediction) {
+        predictedItems2transactions.put(item, transactionWithPrediction);
     }
 
     /**
      * add transaction to set of predicted items in the materialization map
+     *
      * @param items
      * @param transaction
      */
     public void addPredictions(int[] items, Transaction transaction) {
-        Arrays.stream(items).forEach((i)->addPrediction(i,transaction));
+        Arrays.stream(items).forEach((i) -> addPrediction(i, transaction));
     }
 
+    public Set<Transaction> getTransactionsFromExtendedDB(int[] withItems, int[] withoutItems) {
 
-    public Set<Transaction> getTransactionsFromExtendedDB(int [] withItems,int[] withoutItems){
+        return getTransactions(withItems, withoutItems, true);
 
-        return getTransactions(withItems,withoutItems,true);
+    }
 
+    static class ItemsArray {
+        int[] items;
+
+        public ItemsArray(int[] items) {
+            setItems(items);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(items);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return Arrays.equals(((ItemsArray) obj).items, items);
+        }
+
+        public int[] getItems() {
+            return items;
+        }
+
+        public void setItems(int[] items) {
+            this.items = items;
+            Arrays.sort(this.items);
+        }
     }
 
 

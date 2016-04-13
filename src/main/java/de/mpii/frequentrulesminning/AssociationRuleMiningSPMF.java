@@ -38,6 +38,7 @@ public class AssociationRuleMiningSPMF {
     private YagoTaxonomy yagoTaxonomy;
     private boolean debugMatherialization;
     private String debugMaterializationFile;
+    private SystemConfig configuration;
 
 //    private TransactionsDatabase transactionsDB;
 
@@ -95,7 +96,10 @@ public class AssociationRuleMiningSPMF {
             System.out.println("Rules after filtering1: "+rules.getRulesCount());
         }
 
+
         TransactionsDatabase transactionsDB=new TransactionsDatabase(transactionsFilePath);
+
+
 
         // decode
         decodeRules( rules, mappingFilePath,decode,!encode);
@@ -118,16 +122,17 @@ public class AssociationRuleMiningSPMF {
             mineExceptions(rules,transactionsDB,exceptionMinSupp);
         }
 
-        if(materialize)
-        materialize(rules, transactionsDB);
 
-
+        // materialize predictions of the rules
+        if(materialize) {
+            materialize(rules, transactionsDB);
+        }
 
 
         if(withExceptions) {
             // predictable transactions
             computeSafePredictableTransactions(rules,transactionsDB);
-            evaluateRules(rules,transactionsDB);
+            rankException(rules,transactionsDB);
         }
 
 
@@ -152,30 +157,43 @@ public class AssociationRuleMiningSPMF {
 
     private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
         System.out.println("Resolving Transactions.. ");
+        Evaluator eval=new Evaluator(transactionsDB);
         rules.getRules().parallelStream().forEach(r -> {
             r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null,false));
             r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null,false));
             r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead(),false));
             r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead(),false));
 //            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
-            r.computeQualityMeasurements();
+            // set quality meaurements
+            r.setLift(eval.computeLift(r.getHornRuleTransactions(),r.getBodyTransactions(),r.getHeadTransactions()));
+            r.setCoverage(eval.computeCoverage(r.getHornRuleTransactions(),r.getHeadTransactions()));
+
         });
         System.out.println("Done Resolving Transactions!");
 
     }
 
-    private void evaluateRules(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
-        System.out.println("Re-evaluate rules with Exceptions.. ");
-        RulesEvaluator  evaluator=new RulesEvaluator(transactionsDB);
+    private void rankException(AssocRulesExtended rules, TransactionsDatabase transactionsDB)
+    {
+        System.out.println("Re-rank Exceptions.. ");
 
+        Evaluator evaluator=new Evaluator(transactionsDB);
+        evaluator.setCountPrediction(configuration.isMaterialization());
+        evaluator.setUseWeights(configuration.isWeight());
+        evaluator.setUseOrder(configuration.isOrder());
+
+
+        ExceptionRanker ranker=new ExceptionRanker(evaluator);
+
+        ranker.rankExceptions(rules);
 
         // Evaluate individual Rules
-        rules.evaluateIndividuals(evaluator);
+        //rules.evaluateIndividuals(evaluator);
 
         // Groups Evaluation
         //rules.evaluateHeadGroups(evaluator);
 
-        System.out.println("Done Re-evaluating rules!");
+        System.out.println("\"Re-rank Exceptions!");
 
     }
 
@@ -352,6 +370,10 @@ public class AssociationRuleMiningSPMF {
     public void setDebugMaterialization(boolean debugMatherialization, String debugMaterializationFile) {
         this.debugMatherialization=debugMatherialization;
         this.debugMaterializationFile=debugMaterializationFile;
+    }
+
+    public void setConfiguration(SystemConfig configuration) {
+        this.configuration = configuration;
     }
 
 

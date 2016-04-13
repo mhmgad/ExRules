@@ -4,7 +4,7 @@ package de.mpii.frequentrulesminning.utils;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import de.mpii.frequentrulesminning.RulesEvaluator;
+import de.mpii.frequentrulesminning.Evaluator;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -84,44 +84,44 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
-    public void evaluateIndividuals(RulesEvaluator evaluator) {
-        // Individual Rules Evaluation
-        getRules().stream().parallel().forEach((r) -> {
-//            r.setCoverage(evaluator);
-//            r.setLift(evaluator);
-            r.getExceptionCandidates().forEach((ex) -> {
-                ex.setCoverage(evaluator.coverage(r, ex));
-                ex.setConfidence(evaluator.confidence(r, ex));
-                ex.setLift(evaluator.lift(r,ex));
-//                ex.setInvertedConflictScore(evaluator.invertedConflictScore(r,ex,this.getRules(ex.getItems(),null)));
-            });
+//    public void evaluateIndividuals(Evaluator evaluator) {
+//        // Individual Rules Evaluation
+//        getRules().stream().parallel().forEach((r) -> {
+////            r.setCoverage(evaluator);
+////            r.setLift(evaluator);
+//            r.getExceptionCandidates().forEach((ex) -> {
+////                ex.setCoverage(evaluator.coverage(r, ex));
+////                ex.setConfidence(evaluator.confidence(r, ex));
+////                ex.setLift(evaluator.lift(r,ex));
+////                ex.setInvertedConflictScore(evaluator.invertedConflictScore(r,ex,this.getRules(ex.getItems(),null)));
+//            });
+//
+//        });
+//
+//    }
 
-        });
+//    public void evaluateHeadGroups(Evaluator evaluator) {
+//
+//        System.out.println("headGroups: "+head2Rules.keySet().size());;
+//        head2Rules.keySet().parallelStream().forEach((key) -> evaluateHeadGroup(evaluator, key));
+//
+//
+//    }
 
-    }
+//    private void evaluateHeadGroup(Evaluator evaluator, HeadGroup key) {
+//        evaluator.coverage(key,head2Rules.get(key));
+//        evaluator.confidence(key,head2Rules.get(key));
+////        evaluator.lift(key,head2Rules.get(key));
+//        evaluator.conflict(key,head2Rules.get(key),this);
+//
+//
+//
+////        if(coverage==0)
+////            System.out.println("\t"+key);
+////        key.setCoverage(coverage);
+//
 
-    public void evaluateHeadGroups(RulesEvaluator evaluator) {
-
-        System.out.println("headGroups: "+head2Rules.keySet().size());;
-        head2Rules.keySet().parallelStream().forEach((key) -> evaluateHeadGroup(evaluator, key));
-
-
-    }
-
-    private void evaluateHeadGroup(RulesEvaluator evaluator, HeadGroup key) {
-        evaluator.coverage(key,head2Rules.get(key));
-        evaluator.confidence(key,head2Rules.get(key));
-//        evaluator.lift(key,head2Rules.get(key));
-        evaluator.conflict(key,head2Rules.get(key),this);
-
-
-
-//        if(coverage==0)
-//            System.out.println("\t"+key);
-//        key.setCoverage(coverage);
-
-
-    }
+//    }
 
     public void sortByConfidence(List<AssocRuleWithExceptions> rulesToSort) {
         Collections.sort(rulesToSort, (AssocRuleWithExceptions c1, AssocRuleWithExceptions c2) -> ((int) ((c2.getConfidence() - c1.getConfidence()) * 2.147483647E9D)));

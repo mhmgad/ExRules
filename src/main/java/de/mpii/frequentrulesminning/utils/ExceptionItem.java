@@ -15,6 +15,7 @@ public class ExceptionItem extends ItemsetString{
     private int invertedConflictCount;
     private int conflictCount;
     private double lift;
+    private double posNegConf;
 
     public double getInvertedConflictScore() {
         return invertedConflictScore;
@@ -105,5 +106,9 @@ public class ExceptionItem extends ItemsetString{
 
     public double getLift() {
         return lift;
+    }
+
+    public void setPosNegConf(double posNegConf) {
+        this.posNegConf = posNegConf;
     }
 }

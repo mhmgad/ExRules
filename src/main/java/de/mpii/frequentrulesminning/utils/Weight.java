@@ -11,20 +11,24 @@ public class Weight {
 
     TIntSet dependencyItems;
 
-    double ruleWeight;
+    AssocRuleWithExceptions rule;
 
     double finalWeight;
 
     public Weight(){
-            this(null,1,1);
+            this(null,null,1);
     }
 
-    public Weight(int[] dependencyItems, double ruleWeight, double finalWeight) {
+    public Weight(int[] dependencyItems, AssocRuleWithExceptions rule, double finalWeight) {
 
         this.dependencyItems = new TIntHashSet();
         addDependencyItems(dependencyItems);
-        this.ruleWeight = ruleWeight;
+        this.rule = rule;
         this.finalWeight = finalWeight;
+    }
+
+    public Weight(AssocRuleWithExceptions rule, double finalWeight) {
+        this(rule.getBody(),rule,finalWeight);
     }
 
     public void addDependencyItems(int[] dependencyItemsArr) {
@@ -34,10 +38,8 @@ public class Weight {
     }
 
 
-    public void addDependencyItems(TIntSet dependencyItemsSet) {
-        if(dependencyItemsSet!=null){
-            addDependencyItems(dependencyItemsSet.toArray());
-        }
+    public double getRuleQuality(){
+        return rule.getLift();
     }
 
     public boolean isIndependent() {
@@ -49,6 +51,6 @@ public class Weight {
     }
 
     public double getRuleWeight(){
-        return ruleWeight;
+        return rule.getConfidence();
     }
 }
