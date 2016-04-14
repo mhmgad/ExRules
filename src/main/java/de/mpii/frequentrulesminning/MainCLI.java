@@ -97,16 +97,15 @@ public class MainCLI {
         partialMaterializationOp=Option.builder("pm").longOpt("materialization").hasArg(false).desc(" Use partial materialization" ).build();
         options.addOption(partialMaterializationOp);
 
-        debugMaterializationOp=Option.builder("dPM").longOpt("Debug_materialization").hasArg().desc("debug Materialization file").argName("file").build();
-        options.addOption(debugMaterializationOp);
 
-        filterOp=Option.builder("f1").longOpt("first_filter").hasArg(true).desc(" first filter based on size (4 body atoms at most, 1 head and Max conf) " ).build();
+
+        filterOp=Option.builder("f1").longOpt("first_filter").hasArg(false).desc(" first filter based on size (4 body atoms at most, 1 head and Max conf) " ).build();
         options.addOption(filterOp);
 
         filter2Op=Option.builder("f2").longOpt("second_filter").hasArg(false).desc(" Second filter based on type hierarchy " ).build();
         options.addOption(filter2Op);
 
-        weightsOp=Option.builder("w").longOpt("weighted_transactions").hasArg(true).desc("Count transactions with weights. Only useful with Materialization" ).build();
+        weightsOp=Option.builder("w").longOpt("weighted_transactions").hasArg(false).desc("Count transactions with weights. Only useful with Materialization" ).build();
         options.addOption(weightsOp);
 
 
