@@ -40,6 +40,16 @@ public class AssociationRuleMiningSPMF {
     private String debugMaterializationFile;
     private SystemConfig configuration;
 
+    public ExceptionRanker.Order getExceptionRanking() {
+        return exceptionRanking;
+    }
+
+    public void setExceptionRanking(ExceptionRanker.Order exceptionRanking) {
+        this.exceptionRanking = exceptionRanking;
+    }
+
+    private ExceptionRanker.Order exceptionRanking= ExceptionRanker.Order.LIFT;
+
 //    private TransactionsDatabase transactionsDB;
 
 
@@ -169,6 +179,7 @@ public class AssociationRuleMiningSPMF {
 //            r.setCoverage(eval.computeCoverage(r.getHornRuleTransactions(),r.getHeadTransactions()));
             r.setLift(eval.lift(r));
             r.setCoverage(eval.coverage(r));
+            r.setNegConfidence(eval.negativeRuleConfidence(r));
 
         });
         System.out.println("Done Resolving Transactions!");
@@ -185,15 +196,9 @@ public class AssociationRuleMiningSPMF {
         evaluator.setUseOrder(configuration.isOrder());
 
 
-        ExceptionRanker ranker=new ExceptionRanker(evaluator);
+        ExceptionRanker ranker=new ExceptionRanker(evaluator,this.exceptionRanking);
 
         ranker.rankExceptions(rules);
-
-        // Evaluate individual Rules
-        //rules.evaluateIndividuals(evaluator);
-
-        // Groups Evaluation
-        //rules.evaluateHeadGroups(evaluator);
 
         System.out.println("\"Re-rank Exceptions!");
 

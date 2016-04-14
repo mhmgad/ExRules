@@ -159,7 +159,6 @@ public class Evaluator {
     public double negativeRuleConfidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
         // negativeConf (not head <- body, exceptionItem)
 
-
 //        Set<Transaction> ruleTrnasactions = Sets.difference(rule.getBodyTransactions(), rule.getHeadTransactions());
 //        Set<Transaction> bodyWithExceptionTransactions = transactionsDB.filterTransactionsWith(rule.getBodyTransactions(), exceptionItem == null ? null : exceptionItem.getItems(), false);
 
@@ -199,17 +198,24 @@ public class Evaluator {
      * @param rule
      * @param exceptionItem
      */
-
-        public double computePosNegConfidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
+    public double computePosNegConfidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
 
         double positiveConf = this.confidence(rule, exceptionItem);
-//        double negConf = computeConfidence(ruleTrnasactions, bodyWithExceptionTransactions);
 
         double negConf = negativeRuleConfidence(rule, exceptionItem);
 
-        return (positiveConf * negConf) / 2;
+        return computePosNegConfidence(positiveConf,negConf);
 
 
+    }
+
+    public static double computePosNegConfidence(double positiveConf,double negConf){
+        return (positiveConf + negConf) / 2;
+    }
+
+
+    public double negativeRuleConfidence(AssocRuleWithExceptions rule) {
+        return negativeRuleConfidence(rule,null);
     }
 
 

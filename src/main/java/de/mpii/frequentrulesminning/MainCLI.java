@@ -30,6 +30,8 @@ public class MainCLI {
     private Option partialMaterializationOp;
     private Option filterOp;
     private Option filter2Op;
+    private Option exceptionRankingOp;
+    private Option weightsOp;
 
     public MainCLI() {
          options= new Options();
@@ -79,7 +81,7 @@ public class MainCLI {
         excpMinSupportOp= Option.builder("exMinSup").hasArg().desc("Exception Minimum support for the rule").argName("EXCEPTION_MIN_SUPP_RATIO").build();
         options.addOption(excpMinSupportOp);
 
-        sortingOp=Option.builder("s").longOpt("sorting").hasArg().desc("Output sorting("+ Joiner.on("|").join(AssocRulesExtended.SortingType.values())+")").argName("file").build();
+        sortingOp=Option.builder("s").longOpt("sorting").hasArg().desc("Output sorting("+ Joiner.on("|").join(AssocRulesExtended.SortingType.values())+")").argName("order").build();
         options.addOption(sortingOp);
 
         outputRulesWithExceptionsOnlyOp =new Option("expOnly",false,"Output rules with exceptions only");
@@ -98,13 +100,18 @@ public class MainCLI {
         debugMaterializationOp=Option.builder("dPM").longOpt("Debug_materialization").hasArg().desc("debug Materialization file").argName("file").build();
         options.addOption(debugMaterializationOp);
 
-        filterOp=Option.builder("f1").longOpt("first_filter (4 body atoms at most, 1 head and Max conf)").hasArg(true).desc(" first filter based on size " ).build();
+        filterOp=Option.builder("f1").longOpt("first_filter").hasArg(true).desc(" first filter based on size (4 body atoms at most, 1 head and Max conf) " ).build();
         options.addOption(filterOp);
 
-        filter2Op=Option.builder("f2").longOpt("second_filter").hasArg(false).desc(" Second filter based on size " ).build();
+        filter2Op=Option.builder("f2").longOpt("second_filter").hasArg(false).desc(" Second filter based on type hierarchy " ).build();
         options.addOption(filter2Op);
 
+        weightsOp=Option.builder("w").longOpt("weighted_transactions").hasArg(true).desc("Count transactions with weights. Only useful with Materialization" ).build();
+        options.addOption(weightsOp);
 
+
+        exceptionRankingOp=Option.builder("exRank").longOpt("sorting").hasArg().desc("Output sorting("+ Joiner.on("|").join(ExceptionRanker.Order.values())+")").argName("order").build();
+        options.addOption(exceptionRankingOp);
 
 
     }
@@ -168,13 +175,17 @@ public class MainCLI {
         boolean filter = cmd.hasOption(filterOp.getOpt());
         boolean level2Filter = cmd.hasOption(filter2Op.getOpt());
 
+        ExceptionRanker.Order exceptionOrdering= ExceptionRanker.Order.valueOf(cmd.getOptionValue(sortingOp.getOpt(),ExceptionRanker.Order.LIFT.toString()));
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
         miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
 
 
-        SystemConfig sConf=new SystemConfig(materialize,false,false);
+        boolean useWeightedTransactions= cmd.hasOption(weightsOp.getOpt());
+
+        SystemConfig sConf=new SystemConfig(materialize,false,true);
         miner.setConfiguration(sConf);
+        miner.setExceptionRanking(exceptionOrdering);
         AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 

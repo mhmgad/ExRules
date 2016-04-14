@@ -34,6 +34,10 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     Set<Transaction> hornRuleTransactions;
     Set<Transaction> safePredictableTransactions;
     private Set<Transaction> predictableTransactions;
+    /**
+     * This is the confidence of not head <- body
+     */
+    private double negConfidence;
 //    private int[] bodyAndHead;
 
 
@@ -92,7 +96,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public String toString() {
         String body = Joiner.on(" ").join(bodyItems);
         String head = Joiner.on(" ").join(this.headItems);
-        return body + " ==> " + head;
+        return head + " <== " + body;
 
 
     }
@@ -157,15 +161,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public Set<Transaction> getPredicatableTransactions(){
         return predictableTransactions;
     }
-//    public Set<Transaction> getPredicatableTransactions(TransactionsDatabase transactionsDB, boolean excludeExceptions) {
-//
-//
-//        Set<Transaction> rulePredictableTransactions=transactionsDB.getTransactions(getBody(),ArrayUtils.addAll(excludeExceptions? getExceptionsCandidatesInts():null,getHead()));
-//
-//
-//        return rulePredictableTransactions;
-//
-//    }
+
 
     /**
      * checks is the rule is subset of another rule. Subset = the body is subset from the other rule body
@@ -190,10 +186,6 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         else
             return false;
     }
-
-//    public Set<Transaction> getKnownPositiveTransactions(TransactionsDatabase transactionsDB, boolean exclupdeExceptions) {
-//       return transactionsDB.getTransactions(ArrayUtils.addAll(getBody(),getHead()),exclupdeExceptions? getExceptionsCandidatesInts():null);
-//    }
 
     public void setLift(double lift) {
         this.lift = lift;
@@ -252,4 +244,18 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public int[] getBodyAndHead() {
         return ArrayUtils.addAll(this.getBody(),this.getHead());
     }
+
+    public double getPosNegConfidence() {
+        return (getConfidence() + getNegConfidence())/2;
+    }
+
+    public double getNegConfidence() {
+        return negConfidence;
+    }
+
+    public void setNegConfidence(double negConfidence){
+        this.negConfidence=negConfidence;
+    }
+
+
 }

@@ -1,5 +1,7 @@
 package de.mpii.frequentrulesminning.utils;
 
+import de.mpii.frequentrulesminning.ExceptionRanker;
+
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -9,6 +11,8 @@ import java.util.function.Consumer;
 public class Exceptions implements Iterable<ExceptionItem>{
 
     List<ExceptionItem> exceptions;
+
+
 
     public Exceptions() {
         exceptions=new ArrayList<>();
@@ -21,7 +25,7 @@ public class Exceptions implements Iterable<ExceptionItem>{
     }public void setExceptions(List<ExceptionItem> exception) {
         this.exceptions = exception;
         //sortOnSupport();
-        sortOnLiftThenInvConflict();
+        //sortOnLiftThenInvConflict();
     }
 
     @Override
@@ -71,5 +75,12 @@ public class Exceptions implements Iterable<ExceptionItem>{
         return exceptions.stream().mapToInt((x) -> x.getFirstItems()).toArray();
     }
 
-    
+
+    public void sortOnPosNegConfidence() {
+        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getPosNegConfidence).reversed());
+    }
+
+    public void sortOnConfidence() {
+        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getConfidence).reversed());
+    }
 }
