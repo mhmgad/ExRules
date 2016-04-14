@@ -36,10 +36,8 @@ public class ExceptionRanker {
             exc.setCoverage(evaluator.coverage(rule, exc));
             exc.setConfidence(evaluator.confidence(rule, exc));
             exc.setLift(evaluator.lift(rule,exc));
-            exc.setPosNegConf(evaluator.computePosNegConfidence(rule,exc));
+            exc.setNegConfidence(evaluator.negativeRuleConfidence(rule,exc));
         });
-
-
 
 
     }

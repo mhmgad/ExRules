@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
 import de.mpii.frequentrulesminning.Evaluator;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +34,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     Set<Transaction> hornRuleTransactions;
     Set<Transaction> safePredictableTransactions;
     private Set<Transaction> predictableTransactions;
-
+//    private int[] bodyAndHead;
 
 
     public AssocRuleWithExceptions(int[] itemset1, int[] itemset2, int coverage, int transactionCount, double confidence) {
@@ -244,4 +245,11 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
 
+    public double getOrderingQuality() {
+        return this.getLift();
+    }
+
+    public int[] getBodyAndHead() {
+        return ArrayUtils.addAll(this.getBody(),this.getHead());
+    }
 }

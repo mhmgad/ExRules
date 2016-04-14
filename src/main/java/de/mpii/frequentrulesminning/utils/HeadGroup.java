@@ -12,7 +12,7 @@ public class HeadGroup {
     int [] headItems;
     private double coverage;
     private double confidence;
-    private int allTransactionsCount;
+//    private int allTransactionsCount;
     private Set<AssocRuleWithExceptions> rules;
 
     public HeadGroup(int[] itemset2) {
@@ -45,20 +45,20 @@ public class HeadGroup {
 
     @Override
     public String toString() {
-        return Arrays.toString(headItems)+" Cov: " + String.format("%.5f", getCoverage()) + " AllTrans: " + getAllTransactionsCount() + " Conf: " + String.format("%.5f",getConfidence());
+        return Arrays.toString(headItems)+" Cov: " + String.format("%.5f", getCoverage())  + " Conf: " + String.format("%.5f",getConfidence());//+" AllTrans: " + getAllTransactionsCount()
     }
 
     public int[] getHeadItems() {
         return headItems;
     }
 
-    public void setAllTransactionsCount(int allTransactionsCount) {
-        this.allTransactionsCount = allTransactionsCount;
-    }
+//    public void setAllTransactionsCount(int allTransactionsCount) {
+//        this.allTransactionsCount = allTransactionsCount;
+//    }
 
-    public int getAllTransactionsCount() {
-        return allTransactionsCount;
-    }
+//    public int getAllTransactionsCount() {
+//        return allTransactionsCount;
+//    }
 
     public void setConfidence(double confidence) {
         this.confidence = confidence;
@@ -67,4 +67,9 @@ public class HeadGroup {
     public void setRules(Set<AssocRuleWithExceptions> rules) {
         this.rules = rules;
     }
+
+    public Set<AssocRuleWithExceptions> getRules(){
+        return rules;
+    }
+
 }

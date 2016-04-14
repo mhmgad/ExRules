@@ -156,25 +156,26 @@ public class Transaction{
     }
 
 
-    public double getWeight(int[] with, int[] without) {
-        return   getWeight( with, without,  0.0) ;
-    }
-    public double getWeight(int[] with, int[] without, double minQuality) {
+//    public double getWeight(int[] with, int[] without) {
+//        return   getWeight( with, without,  0.0) ;
+//    }
+
+
+
+    public double getWeight(int[] positiveItems, int[] negativeItems) {
+        // TODO .. Wraning: the method is NOT suitable for no-order
+
     // TODO needs more thinking about accumulating weights in case of dependency
 
 
         double tranWeight=1;
 
         // Currently we assume that there is no rule chaining ... so multiplying the weights is enough
-        for (int i: with) {
+        for (int i: positiveItems) {
 
             Weight itemWeight= items2Weights.get(i);
             // if any of the item has quality less than our threshold
-            if(itemWeight==null||itemWeight.getRuleQuality()<minQuality)
-            {
-                tranWeight=0;
-                return tranWeight;
-            }
+
 
             if(itemWeight.isIndependent())
                 tranWeight*=itemWeight.getFinalWeight();
@@ -182,17 +183,13 @@ public class Transaction{
                 tranWeight*=itemWeight.getRuleWeight();
         }
 
-        for (int i: without) {
+        for (int i: negativeItems) {
             Weight itemWeight= items2Weights.get(i);
             // if not in the transactions (we are good) just * 1 otherwise * (1-tranWeight)
             if(itemWeight==null)
                 tranWeight*=1;
             else
-            // if generated with lower quality rule, neglect it (1)
-                if(itemWeight.getRuleQuality()<minQuality)
-                    tranWeight*=1;
-                else
-                    tranWeight *= 1 - itemWeight.getFinalWeight();
+                    tranWeight *= (1 - itemWeight.getFinalWeight());
 
         }
 
@@ -206,12 +203,27 @@ public class Transaction{
 
     }
 
-    public  double getWeightedCount(int[] with, int[] without, double minQuality,boolean noFractions) {
-        double weight= getWeight(with,  without,  minQuality);
 
-        return (weight>0 && noFractions? 1:weight)*getCount();
+    /**
+     * Gets the transaction count based on weight of items
+     * @param positiveItems
+     * @param negativeItems
+     * @return
+     */
+    public  double getWeightedCount(int[] positiveItems, int[] negativeItems/*,boolean noFractions*/) {
+        double weight= getWeight(positiveItems,  negativeItems);
+            return weight*getCount();
+//        return (weight>0 && noFractions? 1:weight)*getCount();
 
     }
 
+    /**
+     * Checks if the predicted facts in the transaction are generated from higher quality rules
+     * @param rule
+     * @return
+     */
+    public boolean allPredictionsFromBetterQualityRules(AssocRuleWithExceptions rule) {
+        return Arrays.stream(rule.getBody()).allMatch((i)->items2Weights.get(i).predictedWithBetterQualityRules(rule));
 
+    }
 }

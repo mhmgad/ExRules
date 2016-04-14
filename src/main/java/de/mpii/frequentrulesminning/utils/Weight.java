@@ -39,7 +39,7 @@ public class Weight {
 
 
     public double getRuleQuality(){
-        return rule.getLift();
+        return (rule==null)? 1:rule.getOrderingQuality();
     }
 
     public boolean isIndependent() {
@@ -52,5 +52,31 @@ public class Weight {
 
     public double getRuleWeight(){
         return rule.getConfidence();
+    }
+
+
+    public boolean predictedWithBetterQualityRules(AssocRuleWithExceptions rule) {
+
+        if(rulesChainContains(rule)){
+            return false;
+        }
+
+        if(this.getMinimumRulesChainQuality()<=rule.getOrderingQuality())
+        {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean rulesChainContains(AssocRuleWithExceptions rule) {
+        // Currently one rule only .. no chains yet
+        if(rule==this.rule)
+            return true;
+        return false;
+    }
+
+    public double getMinimumRulesChainQuality() {
+        // Currently only one rule
+        return this.getRuleQuality();
     }
 }

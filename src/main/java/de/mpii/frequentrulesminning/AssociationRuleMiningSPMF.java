@@ -165,8 +165,10 @@ public class AssociationRuleMiningSPMF {
             r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead(),false));
 //            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
             // set quality meaurements
-            r.setLift(eval.computeLift(r.getHornRuleTransactions(),r.getBodyTransactions(),r.getHeadTransactions()));
-            r.setCoverage(eval.computeCoverage(r.getHornRuleTransactions(),r.getHeadTransactions()));
+//            r.setLift(eval.computeLift(r.getHornRuleTransactions(),r.getBodyTransactions(),r.getHeadTransactions()));
+//            r.setCoverage(eval.computeCoverage(r.getHornRuleTransactions(),r.getHeadTransactions()));
+            r.setLift(eval.lift(r));
+            r.setCoverage(eval.coverage(r));
 
         });
         System.out.println("Done Resolving Transactions!");

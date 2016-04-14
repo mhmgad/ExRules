@@ -1,21 +1,16 @@
 package de.mpii.frequentrulesminning.utils;
 
 import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
 import com.google.common.collect.SetMultimap;
 import com.google.common.collect.Sets;
-import gnu.trove.map.hash.TIntDoubleHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
 import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by gadelrab on 3/8/16.
@@ -57,11 +52,23 @@ public class TransactionsDatabase {
     }
 
     public static double getTransactionsCount(Collection<Transaction> transactions) {
-        return transactions.stream().mapToInt(Transaction::getCount).sum();
+        return getTransactionsCount(transactions,null,null,false);
+        //return transactions.stream().mapToInt(Transaction::getCount).sum();
     }
 
-    public static double getTransactionsCount(Collection<Transaction> transactions,boolean weighted,boolean order) {
-        return transactions.stream().mapToDouble(weighted? Transaction::getWeightedCount:Transaction::getCount).sum();
+    public static Set<Transaction> filterBetterQualityRules(Collection<Transaction> transactions,AssocRuleWithExceptions rule){
+        // Restrict on transactions of higher quality
+        return  transactions.stream().filter((t)-> t.allPredictionsFromBetterQualityRules(rule)).collect(Collectors.toSet());
+    }
+
+
+    public static double getTransactionsCount(Collection<Transaction> transactions,int[]positiveItens,int[]negativeItems,boolean weighted) {
+
+        return transactions.stream().mapToDouble((t)->{
+            if(weighted)
+                return t.getWeightedCount(positiveItens,negativeItems);
+            else
+            return t.getCount();}).sum();
     }
 
     public synchronized int getNextId() {
@@ -115,7 +122,7 @@ public class TransactionsDatabase {
         Set<Transaction> transactions = getTransactionsWithItem(withItems[0], withPredictions);
         transactions = filterTransactionsWith(transactions, withItems, 1, withPredictions);
 
-        //TODO if withPredictions is set, thats mean we need to KEEP the predictions.. so do not remove transactions if without exists in predictions
+        //TODO if withPredictions is set, that means we need to KEEP the predictions.. so do not remove transactions if without exists in predictions
         transactions = filterOutTransactionsWith(transactions, withoutItems, 0, !withPredictions);
 
 //        return new HashSet<>(transactions);

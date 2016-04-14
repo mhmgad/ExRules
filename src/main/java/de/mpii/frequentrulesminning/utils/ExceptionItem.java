@@ -15,7 +15,7 @@ public class ExceptionItem extends ItemsetString{
     private int invertedConflictCount;
     private int conflictCount;
     private double lift;
-    private double posNegConf;
+    private double negConfidence;
 
     public double getInvertedConflictScore() {
         return invertedConflictScore;
@@ -65,7 +65,8 @@ public class ExceptionItem extends ItemsetString{
 
     @Override
     public String toString() {
-        return super.toString()+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+"\tlift: "+String.format("%.5f",getLift())+	"\tgConflict: "+String.format("%.5f",getConflictScore())+	"\tinvConflict: "+String.format("%.5f",getInvertedConflictScore()) +	"\ttotalConflict: "+String.format("%.5f",getCombinedConflict());
+        return super.toString()+"\tlift: "+String.format("%.5f",getLift())+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+ 	"\tNegConf: "+String.format("%.5f",getNegConfidence())+"\tPosNegConf: "+String.format("%.5f",getPosNegConfidence());
+                //"\tgConflict: "+String.format("%.5f",getConflictScore())+	"\tinvConflict: "+String.format("%.5f",getInvertedConflictScore()) +	"\ttotalConflict: "+String.format("%.5f",getCombinedConflict());
     }
 
     public double getCoverage() {
@@ -108,7 +109,20 @@ public class ExceptionItem extends ItemsetString{
         return lift;
     }
 
-    public void setPosNegConf(double posNegConf) {
-        this.posNegConf = posNegConf;
+    public void setNegConfidence(double negConfidence) {
+        this.negConfidence = negConfidence;
+    }
+
+    public static int[] toArray(ExceptionItem exceptionItem) {
+        return exceptionItem==null? null:exceptionItem.getItems();
+
+    }
+
+    public double getPosNegConfidence() {
+        return (getNegConfidence()+getConfidence())/2;
+    }
+
+    public double getNegConfidence() {
+        return negConfidence;
     }
 }
