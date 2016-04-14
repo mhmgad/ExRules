@@ -110,7 +110,7 @@ public class MainCLI {
         options.addOption(weightsOp);
 
 
-        exceptionRankingOp=Option.builder("exRank").longOpt("sorting").hasArg().desc("Output sorting("+ Joiner.on("|").join(ExceptionRanker.Order.values())+")").argName("order").build();
+        exceptionRankingOp=Option.builder("exRank").longOpt("exception_ranking").hasArg().desc("Exception ranking method("+ Joiner.on("|").join(ExceptionRanker.Order.values())+")").argName("order").build();
         options.addOption(exceptionRankingOp);
 
 
@@ -183,7 +183,7 @@ public class MainCLI {
 
         boolean useWeightedTransactions= cmd.hasOption(weightsOp.getOpt());
 
-        SystemConfig sConf=new SystemConfig(materialize,false,true);
+        SystemConfig sConf=new SystemConfig(materialize,useWeightedTransactions,true);
         miner.setConfiguration(sConf);
         miner.setExceptionRanking(exceptionOrdering);
         AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter);
