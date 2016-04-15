@@ -1,9 +1,6 @@
 package de.mpii.frequentrulesminning;
 
-import de.mpii.frequentrulesminning.utils.AssocRuleWithExceptions;
-import de.mpii.frequentrulesminning.utils.Transaction;
-import de.mpii.frequentrulesminning.utils.TransactionsDatabase;
-import de.mpii.frequentrulesminning.utils.Weight;
+import de.mpii.frequentrulesminning.utils.*;
 import mpi.tools.javatools.util.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -19,19 +16,21 @@ import java.util.stream.Stream;
 public class Materializer {
 
 
+    private double cautiousMaterializationThreshold;
     private BufferedWriter outputBufferedWritter;
     TransactionsDatabase transDB;
 
     boolean debugMaterialization;
 
     public Materializer(TransactionsDatabase transDB) throws Exception {
-        this(transDB,false,null);
+        this(transDB,0.01,false,null);
     }
 
 
-    public Materializer(TransactionsDatabase transDB,boolean debugMaterialization, String materializationFile) throws Exception {
+    public Materializer(TransactionsDatabase transDB,double cautiousMaterializationThreshold,boolean debugMaterialization, String materializationFile) throws Exception {
         this.transDB = transDB;
         this.debugMaterialization=debugMaterialization;
+        this.cautiousMaterializationThreshold=cautiousMaterializationThreshold;
         if(debugMaterialization){
             this.outputBufferedWritter= FileUtils.getBufferedUTF8Writer(materializationFile);
         }
@@ -53,12 +52,18 @@ public class Materializer {
 
 
     public void materialize(AssocRuleWithExceptions rule,boolean cautious,boolean withPredictions) throws IOException {
-        Set<Transaction> transactionSet=transDB.getTransactions(rule.getBody(),ArrayUtils.addAll(rule.getHead(),rule.getExceptionsCandidatesInts()),withPredictions);
-        materialize(rule,transactionSet,cautious);
+
+        int [] exceptions=new int[0];
+        if(cautious)
+            exceptions=rule.getExceptionsCandidatesInts(this.cautiousMaterializationThreshold);
+        Set<Transaction> transactionSet=transDB.getTransactions(rule.getBody(),ArrayUtils.addAll(rule.getHead(),exceptions),withPredictions);
+        materialize(rule,transactionSet,exceptions);
 
     }
 
-    public void materialize(AssocRuleWithExceptions rule, Collection<Transaction> transactions, boolean cautious) throws IOException {
+
+
+    public void materialize(AssocRuleWithExceptions rule, Collection<Transaction> transactions,int[] exceptions ) throws IOException {
         if(debugMaterialization) {
             this.outputBufferedWritter.write(rule.toString());
             this.outputBufferedWritter.newLine();
@@ -66,7 +71,7 @@ public class Materializer {
         transactions.stream().forEach((transaction -> {
             try {
 
-                materialize(rule, transaction, cautious);
+                materialize(rule, transaction, exceptions);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -78,13 +83,13 @@ public class Materializer {
         }
     }
 
-    public void materialize(AssocRuleWithExceptions rule, Transaction transaction,boolean cautious) throws IOException {
+    public void materialize(AssocRuleWithExceptions rule, Transaction transaction,int[] exceptions/*,boolean cautious*/) throws IOException {
         // TODO needs more thinking about accumlating weights
         if(!transaction.contains(rule.getBody()))
             return;
 
         // if we are cautiously materializing .. then we skipp transactions with any exception candidates
-        if(cautious && transaction.containsAny(rule.getExceptionsCandidatesInts()))
+        if(transaction.containsAny(exceptions))
             return;
 
 

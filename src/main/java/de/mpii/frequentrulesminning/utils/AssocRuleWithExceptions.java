@@ -10,6 +10,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * Created by gadelrab on 2/22/16.
@@ -119,6 +121,10 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     public int[] getExceptionsCandidatesInts(){
         return exceptionCandidates.getExceptionsInts();
+    }
+
+    public int[] getExceptionsCandidatesInts(double minimumSupport){
+        return exceptionCandidates.getExceptionsInts(minimumSupport);
     }
 
     public void setExceptionCandidates(List<ExceptionItem> exceptionCandidates) {
@@ -258,4 +264,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
 
+    public List<ExceptionItem> getExceptionCandidates(double minimumException) {
+        return getExceptionCandidates().getExceptions(minimumException);
+    }
 }

@@ -4,6 +4,8 @@ import de.mpii.frequentrulesminning.ExceptionRanker;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by gadelrab on 3/11/16.
@@ -11,6 +13,10 @@ import java.util.function.Consumer;
 public class Exceptions implements Iterable<ExceptionItem>{
 
     List<ExceptionItem> exceptions;
+
+    public List<ExceptionItem> getExceptions() {
+        return exceptions;
+    }
 
 
 
@@ -82,5 +88,14 @@ public class Exceptions implements Iterable<ExceptionItem>{
 
     public void sortOnConfidence() {
         Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getConfidence).reversed());
+    }
+
+    public List<ExceptionItem> getExceptions(double minimumSupport) {
+        return exceptions.stream().filter((e)->e.getRelativeSupport()>=minimumSupport).collect(Collectors.toList());
+    }
+
+    public int[] getExceptionsInts(double minimumSupport) {
+        return getExceptions( minimumSupport).stream().mapToInt(ExceptionItem::getFirstItems).toArray();
+
     }
 }

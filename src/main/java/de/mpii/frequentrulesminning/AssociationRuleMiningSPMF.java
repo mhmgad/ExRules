@@ -39,6 +39,7 @@ public class AssociationRuleMiningSPMF {
     private boolean debugMatherialization;
     private String debugMaterializationFile;
     private SystemConfig configuration;
+    private double cautiousMatrializationThreshold;
 
     public ExceptionRanker.Order getExceptionRanking() {
         return exceptionRanking;
@@ -151,7 +152,7 @@ public class AssociationRuleMiningSPMF {
 
     public void materialize(AssocRulesExtended rules,TransactionsDatabase transactionsDB) throws Exception {
         System.out.println("Materialization ... ");
-        Materializer materializer=new Materializer(transactionsDB,debugMatherialization,debugMaterializationFile);
+        Materializer materializer=new Materializer(transactionsDB,cautiousMatrializationThreshold,debugMatherialization,debugMaterializationFile);
         materializer.materialize(rules.getRules(),true,true);
         System.out.println("Done Materialization !");
 
@@ -381,6 +382,10 @@ public class AssociationRuleMiningSPMF {
 
     public void setConfiguration(SystemConfig configuration) {
         this.configuration = configuration;
+    }
+
+    public void setCautiousMatrializationThreshold(double cautiousMatrializationThreshold) {
+        this.cautiousMatrializationThreshold = cautiousMatrializationThreshold;
     }
 
 

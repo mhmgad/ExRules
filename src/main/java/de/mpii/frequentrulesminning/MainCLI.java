@@ -32,6 +32,7 @@ public class MainCLI {
     private Option filter2Op;
     private Option exceptionRankingOp;
     private Option weightsOp;
+    private Option cautiousPartialMaterializationOp;
 
     public MainCLI() {
          options= new Options();
@@ -96,6 +97,9 @@ public class MainCLI {
 
         partialMaterializationOp=Option.builder("pm").longOpt("materialization").hasArg(false).desc(" Use partial materialization" ).build();
         options.addOption(partialMaterializationOp);
+
+        cautiousPartialMaterializationOp=Option.builder("cPM").longOpt("cautious-materialization").hasArg(true).desc(" Use partial materialization cautiously, here the minimum support for exceptions" ).build();
+        options.addOption(cautiousPartialMaterializationOp);
 
 
 
@@ -171,20 +175,27 @@ public class MainCLI {
 
         boolean materialize = cmd.hasOption(partialMaterializationOp.getOpt());
 
+        double cautionMaterializationValue=excepminSupp;
+
+        if(cmd.hasOption(cautiousPartialMaterializationOp.getOpt()))
+            cautionMaterializationValue=Double.valueOf(cmd.getOptionValue(cautiousPartialMaterializationOp.getOpt()));
+
+
         boolean filter = cmd.hasOption(filterOp.getOpt());
         boolean level2Filter = cmd.hasOption(filter2Op.getOpt());
 
         ExceptionRanker.Order exceptionOrdering= ExceptionRanker.Order.valueOf(cmd.getOptionValue(exceptionRankingOp.getOpt(),ExceptionRanker.Order.LIFT.toString()));
 
+        boolean useWeightedTransactions= cmd.hasOption(weightsOp.getOpt());
+
+
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
         miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
-
-
-        boolean useWeightedTransactions= cmd.hasOption(weightsOp.getOpt());
 
         SystemConfig sConf=new SystemConfig(materialize,useWeightedTransactions,true);
         miner.setConfiguration(sConf);
         miner.setExceptionRanking(exceptionOrdering);
+        miner.setCautiousMatrializationThreshold(cautionMaterializationValue);
         AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
 
