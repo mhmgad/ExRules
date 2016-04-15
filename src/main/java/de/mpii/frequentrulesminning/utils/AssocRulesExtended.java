@@ -15,6 +15,8 @@ import java.util.function.Predicate;
 public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
 
+
+
     public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT}
 
     List<AssocRuleWithExceptions> rules;
@@ -285,7 +287,21 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
+    public String toStringPrASP(SortingType sortType, boolean showRulesWithExceptionsOnly) {
 
+        sort(this.getRules(), sortType);
+
+        StringBuilder buffer = new StringBuilder();
+
+        for(AssocRuleWithExceptions r:getRules()){
+            buffer.append(r.toStringPrASP());
+            buffer.append('\n');
+        }
+
+        buffer.append('\n');
+        return buffer.toString();
+
+    }
 
 
 

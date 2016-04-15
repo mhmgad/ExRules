@@ -10,6 +10,7 @@ import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -386,6 +387,15 @@ public class AssociationRuleMiningSPMF {
 
     public void setCautiousMatrializationThreshold(double cautiousMatrializationThreshold) {
         this.cautiousMatrializationThreshold = cautiousMatrializationThreshold;
+    }
+
+
+    public void exportRulesForPrASP(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly) throws IOException {
+        BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
+        bw.write(rules.toStringPrASP(sortType,showRulesWithExceptionsOnly));
+        bw.close();
+
+
     }
 
 

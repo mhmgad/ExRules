@@ -95,4 +95,9 @@ public class Item implements  Comparable<Item>{
 
         return this.object.compareTo(o.object);
     }
+
+    public String toStringPrASP() {
+        return predicate+"_"+object+"(X)";
+
+    }
 }

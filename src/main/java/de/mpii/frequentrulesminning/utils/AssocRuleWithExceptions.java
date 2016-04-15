@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
+import com.sun.org.apache.xpath.internal.operations.String;
 import de.mpii.frequentrulesminning.Evaluator;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -266,5 +267,18 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     public List<ExceptionItem> getExceptionCandidates(double minimumException) {
         return getExceptionCandidates().getExceptions(minimumException);
+    }
+
+    public String toStringPrASP() {
+        String body = Joiner.on(" ").join(itemsToStringPrASP(getbodyItems()));
+        String negBody=
+        String head = Joiner.on(" ").join(this.headItems);
+        return "["+getConfidence()+"] "+head+" :- "+body+" "+negBody+".";
+    }
+
+    private List<String> itemsToStringPrASP(Item[] items) {
+
+        List<String> itemsString= Arrays.stream(items).map((item)-> item.toStringPrASP()).collect(Collectors.toList());
+
     }
 }
