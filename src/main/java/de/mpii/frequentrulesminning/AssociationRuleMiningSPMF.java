@@ -200,7 +200,7 @@ public class AssociationRuleMiningSPMF {
 
         ranker.rankExceptions(rules);
 
-        System.out.println("\"Re-rank Exceptions!");
+        System.out.println("Done Re-rank Exceptions!");
 
     }
 

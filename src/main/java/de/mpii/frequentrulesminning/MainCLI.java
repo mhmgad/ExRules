@@ -174,7 +174,7 @@ public class MainCLI {
         boolean filter = cmd.hasOption(filterOp.getOpt());
         boolean level2Filter = cmd.hasOption(filter2Op.getOpt());
 
-        ExceptionRanker.Order exceptionOrdering= ExceptionRanker.Order.valueOf(cmd.getOptionValue(sortingOp.getOpt(),ExceptionRanker.Order.LIFT.toString()));
+        ExceptionRanker.Order exceptionOrdering= ExceptionRanker.Order.valueOf(cmd.getOptionValue(exceptionRankingOp.getOpt(),ExceptionRanker.Order.LIFT.toString()));
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
         miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
