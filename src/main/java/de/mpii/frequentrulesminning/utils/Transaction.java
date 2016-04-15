@@ -173,26 +173,31 @@ public class Transaction{
         double tranWeight=1;
 
         // Currently we assume that there is no rule chaining ... so multiplying the weights is enough
-        for (int i: positiveItems) {
 
-            Weight itemWeight= items2Weights.get(i);
-            // if any of the item has quality less than our threshold
+        if(positiveItems!=null) {
+            for (int i : positiveItems) {
+
+                Weight itemWeight = items2Weights.get(i);
+                // if any of the item has quality less than our threshold
 
 
-            if(itemWeight.isIndependent())
-                tranWeight*=itemWeight.getFinalWeight();
-            else
-                tranWeight*=itemWeight.getRuleWeight();
+                if (itemWeight.isIndependent())
+                    tranWeight *= itemWeight.getFinalWeight();
+                else
+                    tranWeight *= itemWeight.getRuleWeight();
+            }
         }
 
-        for (int i: negativeItems) {
-            Weight itemWeight= items2Weights.get(i);
-            // if not in the transactions (we are good) just * 1 otherwise * (1-tranWeight)
-            if(itemWeight==null)
-                tranWeight*=1;
-            else
+        if(negativeItems!=null) {
+            for (int i : negativeItems) {
+                Weight itemWeight = items2Weights.get(i);
+                // if not in the transactions (we are good) just * 1 otherwise * (1-tranWeight)
+                if (itemWeight == null)
+                    tranWeight *= 1;
+                else
                     tranWeight *= (1 - itemWeight.getFinalWeight());
 
+            }
         }
 
 
