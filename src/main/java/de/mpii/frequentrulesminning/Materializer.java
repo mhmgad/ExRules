@@ -90,7 +90,7 @@ public class Materializer {
             return;
 
         // get transaction weight with respect to body and exceptions
-        double bodyWeightValue=transaction.getWeight(rule.getBody(),rule.getExceptionsCandidatesInts());
+        double bodyWeightValue=transaction.getWeight(rule.getBody(),null);
 
 
         // new prediction weight = bodyWeightValue * ruleWeight .. Weight=Confidence for now.
@@ -106,7 +106,7 @@ public class Materializer {
         // exports the
         if(debugMaterialization){
             double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i).getFinalWeight()).toArray();
-            outputBufferedWritter.write(transaction.getId()+"\t"+Arrays.toString(bodyWeights)+" = " + rule.getConfidence()+ " => "+ weight);
+            outputBufferedWritter.write(transaction.getId()+"\t"+weight+" <= " + rule.getConfidence()+ " = "+Arrays.toString(bodyWeights) );
             outputBufferedWritter.newLine();
         }
 

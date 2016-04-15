@@ -57,6 +57,9 @@ public class Weight {
 
     public boolean predictedWithBetterQualityRules(AssocRuleWithExceptions rule) {
 
+        if(isIndependent())
+            return true;
+
         if(rulesChainContains(rule)){
             return false;
         }

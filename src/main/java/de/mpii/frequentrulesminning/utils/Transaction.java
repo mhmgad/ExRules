@@ -137,7 +137,9 @@ public class Transaction{
 
 
     public Weight getItemWeight(int item){
-        return items2Weights.get(item);
+        Weight   w =  items2Weights.get(item);
+        return w==null? Weight.INDEPENDENT:w;
+
     }
 
     public boolean contains(int item){
@@ -223,7 +225,7 @@ public class Transaction{
      * @return
      */
     public boolean allPredictionsFromBetterQualityRules(AssocRuleWithExceptions rule) {
-        return Arrays.stream(rule.getBody()).allMatch((i)->items2Weights.get(i).predictedWithBetterQualityRules(rule));
+        return Arrays.stream(rule.getBody()).allMatch((i)->getItemWeight(i).predictedWithBetterQualityRules(rule));
 
     }
 }
