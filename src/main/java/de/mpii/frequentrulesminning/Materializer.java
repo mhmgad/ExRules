@@ -46,8 +46,9 @@ public class Materializer {
                 e.printStackTrace();
             }
         });
-        this.outputBufferedWritter.flush();
-
+        if(debugMaterialization) {
+            this.outputBufferedWritter.flush();
+        }
     }
 
 
@@ -58,10 +59,11 @@ public class Materializer {
     }
 
     public void materialize(AssocRuleWithExceptions rule, Collection<Transaction> transactions, boolean cautious) throws IOException {
-
-        this.outputBufferedWritter.write(rule.toString());
-        this.outputBufferedWritter.newLine();
-        transactions.parallelStream().forEach((transaction -> {
+        if(debugMaterialization) {
+            this.outputBufferedWritter.write(rule.toString());
+            this.outputBufferedWritter.newLine();
+        }
+        transactions.stream().forEach((transaction -> {
             try {
 
                 materialize(rule, transaction, cautious);
@@ -71,8 +73,9 @@ public class Materializer {
             }
 
         }));
-        this.outputBufferedWritter.newLine();
-
+        if(debugMaterialization) {
+            this.outputBufferedWritter.newLine();
+        }
     }
 
     public void materialize(AssocRuleWithExceptions rule, Transaction transaction,boolean cautious) throws IOException {
@@ -106,8 +109,8 @@ public class Materializer {
         // exports the
         if(debugMaterialization){
             double[] bodyWeights = Arrays.stream(rule.getBody()).mapToDouble((i) -> transaction.getItemWeight(i).getFinalWeight()).toArray();
-            outputBufferedWritter.write(transaction.getId()+"\t"+weight+" <= " + rule.getConfidence()+ " = "+Arrays.toString(bodyWeights) );
-            outputBufferedWritter.newLine();
+            outputBufferedWritter.write(transaction.getId()+"\t"+weight+" <= " + rule.getConfidence()+ " = "+Arrays.toString(bodyWeights) +"\n");
+            //outputBufferedWritter.newLine();
         }
 
 
