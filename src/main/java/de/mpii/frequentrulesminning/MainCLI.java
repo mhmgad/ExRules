@@ -33,6 +33,7 @@ public class MainCLI {
     private Option exceptionRankingOp;
     private Option weightsOp;
     private Option cautiousPartialMaterializationOp;
+    private Option exportasPrASPOp;
 
     public MainCLI() {
          options= new Options();
@@ -117,6 +118,9 @@ public class MainCLI {
         options.addOption(exceptionRankingOp);
 
 
+        exportasPrASPOp=Option.builder("oPrASP").longOpt("output_PrASP").hasArg().desc("Export rules as PrASP" ).argName("file").build();
+        options.addOption(exportasPrASPOp);
+
     }
 
 
@@ -198,6 +202,13 @@ public class MainCLI {
         miner.setCautiousMatrializationThreshold(cautionMaterializationValue);
         AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter);
         miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
+
+        // Export rules as PrASP
+
+        if(cmd.hasOption(exportasPrASPOp.getOpt())){
+            String prASPOutFile=cmd.getOptionValue(exportasPrASPOp.getOpt());
+            miner.exportRulesForPrASP(rulesStrings,prASPOutFile,outputSorting,showRulesWithExceptionsOnly);
+        }
 
 
 

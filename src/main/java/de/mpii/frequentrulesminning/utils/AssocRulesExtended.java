@@ -287,14 +287,16 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public String toStringPrASP(SortingType sortType, boolean showRulesWithExceptionsOnly) {
+    public String toStringPrASP(SortingType sortType, int exceptionsNumber,boolean showRulesWithExceptionsOnly) {
 
         sort(this.getRules(), sortType);
 
         StringBuilder buffer = new StringBuilder();
 
         for(AssocRuleWithExceptions r:getRules()){
-            buffer.append(r.toStringPrASP());
+            if(showRulesWithExceptionsOnly&&!r.hasExceptions())
+                continue;
+            buffer.append(r.toStringPrASP(exceptionsNumber));
             buffer.append('\n');
         }
 

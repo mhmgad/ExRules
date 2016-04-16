@@ -1,5 +1,7 @@
 package de.mpii.frequentrulesminning.utils;
 
+import mpi.tools.basics3.FactComponent;
+
 /**
  * Created by gadelrab on 2/18/16.
  */
@@ -97,7 +99,20 @@ public class Item implements  Comparable<Item>{
     }
 
     public String toStringPrASP() {
-        return predicate+"_"+object+"(X)";
+        return readablePredicate()+"_"+readableObject()+"(X)";
 
+    }
+
+    public String readablePredicate(){
+        String cleanPredicate=FactComponent.stripBrackets(predicate);
+        if(cleanPredicate.contains(":"))
+            cleanPredicate=cleanPredicate.split(":")[1];
+        return cleanPredicate;
+    }
+
+    public String readableObject(){
+        String cleanObject=FactComponent.stripBrackets(object);
+        cleanObject=FactComponent.stripClass(cleanObject);
+        return cleanObject;
     }
 }

@@ -8,8 +8,7 @@ import java.util.List;
 public class ExceptionItem extends ItemsetString{
 
 
-    double ruleCoverage;
-    double ruleConfidence;
+
     private double coverage;
     private double confidence;
     private int invertedConflictCount;

@@ -98,4 +98,13 @@ public class Exceptions implements Iterable<ExceptionItem>{
         return getExceptions( minimumSupport).stream().mapToInt(ExceptionItem::getFirstItems).toArray();
 
     }
+
+    public int[] getTopKExceptionsInts(int numberOfEceptions) {
+
+        return exceptions.subList(0,numberOfEceptions).stream().mapToInt(ExceptionItem::getFirstItems).toArray();
+    }
+
+    public Item [] getTopKExceptions(int numberOfEceptions) {
+        return exceptions.subList(0,numberOfEceptions).toArray(new Item[numberOfEceptions]);
+    }
 }

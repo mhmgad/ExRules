@@ -4,7 +4,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
-import com.sun.org.apache.xpath.internal.operations.String;
 import de.mpii.frequentrulesminning.Evaluator;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -269,16 +268,14 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return getExceptionCandidates().getExceptions(minimumException);
     }
 
-    public String toStringPrASP() {
-        String body = Joiner.on(" ").join(itemsToStringPrASP(getbodyItems()));
-        String negBody=
-        String head = Joiner.on(" ").join(this.headItems);
+    public String toStringPrASP(int numberOfEceptions) {
+        String body = Joiner.on(" ").join(itemsToStringPrASP(getbodyItems(),false));
+        String negBody= Joiner.on(" ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptions(numberOfEceptions),true));
+        String head = Joiner.on(" ").join(itemsToStringPrASP(getHeadItems(),false));
         return "["+getConfidence()+"] "+head+" :- "+body+" "+negBody+".";
     }
 
-    private List<String> itemsToStringPrASP(Item[] items) {
-
-        List<String> itemsString= Arrays.stream(items).map((item)-> item.toStringPrASP()).collect(Collectors.toList());
-
+    private List<String> itemsToStringPrASP(Item[] items, boolean negated) {
+       return  Arrays.stream(items).map((item)-> (negated? "not ":"")+item.toStringPrASP()).collect(Collectors.toList());
     }
 }

@@ -392,7 +392,7 @@ public class AssociationRuleMiningSPMF {
 
     public void exportRulesForPrASP(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly) throws IOException {
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
-        bw.write(rules.toStringPrASP(sortType,showRulesWithExceptionsOnly));
+        bw.write(rules.toStringPrASP(sortType,1,showRulesWithExceptionsOnly));
         bw.close();
 
 
