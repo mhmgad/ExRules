@@ -1,6 +1,7 @@
 package de.mpii.frequentrulesminning.utils;
 
 import de.mpii.frequentrulesminning.ExceptionRanker;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -105,6 +106,17 @@ public class Exceptions implements Iterable<ExceptionItem>{
     }
 
     public Item [] getTopKExceptions(int numberOfEceptions) {
-        return exceptions.subList(0,numberOfEceptions).toArray(new Item[numberOfEceptions]);
+        //int size= Math.min(numberOfEceptions,exceptions.size());
+        Item[] output=new Item[0];
+
+        for(int i=0;i<numberOfEceptions;i++){
+            output= ArrayUtils.addAll(output,exceptions.get(i).getItemsetItem());
+        }
+
+        return  output;
+
+        //exceptions.subList(0,numberOfEceptions).stream().flatMap(ExceptionItem::getItemsetItem).
+       // return ArrayUtils.addAll(new Item[0],exceptions.subList(0,numberOfEceptions).stream().map(ExceptionItem::getItemsetItem).collect(Collectors.toList()));
+
     }
 }

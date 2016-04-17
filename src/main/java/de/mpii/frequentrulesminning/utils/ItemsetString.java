@@ -150,4 +150,8 @@ public class ItemsetString {//extends AbstractOrderedItemset {
     public double getRelativeSupport() {
         return this.getRelativeSupport(this.totalCount);
     }
+
+    public Item[] getItemsetItem() {
+        return itemsetItem;
+    }
 }
