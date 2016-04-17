@@ -61,12 +61,19 @@ public class TransactionsDatabase {
         return  transactions.stream().filter((t)-> t.allPredictionsFromBetterQualityRules(rule)).collect(Collectors.toSet());
     }
 
-
-    public static double getTransactionsCount(Collection<Transaction> transactions,int[]positiveItens,int[]negativeItems,boolean weighted) {
+    /**
+     * Return the transactions total count either nor weighted or weighted with respect to set of Items positive and negatives
+     * @param transactions
+     * @param positiveItems
+     * @param negativeItems
+     * @param weighted
+     * @return
+     */
+    public static double getTransactionsCount(Collection<Transaction> transactions,int[]positiveItems,int[]negativeItems,boolean weighted) {
 
         return transactions.stream().mapToDouble((t)->{
             if(weighted)
-                return t.getWeightedCount(positiveItens,negativeItems);
+                return t.getWeightedCount(positiveItems,negativeItems);
             else
             return t.getCount();}).sum();
     }
@@ -227,6 +234,7 @@ public class TransactionsDatabase {
             Arrays.sort(this.items);
         }
     }
+
 
 
 }

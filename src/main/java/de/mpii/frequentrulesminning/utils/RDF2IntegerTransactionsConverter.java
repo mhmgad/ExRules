@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by gadelrab on 2/22/16.
@@ -230,16 +231,40 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
+    private void convertToPrASP(String rdfInputFile, String PrASPFile) {
+        loadRDFFile(rdfInputFile);
+
+        try {
+            BufferedWriter bw = FileUtils.getBufferedUTF8Writer(PrASPFile);
+
+            for (String t : subjects2ItemsIds.keys()) {
+                final String predicateName=Item.readableSubject(t);
+                List<String> itemsAsPrASP=subjects2ItemsIds.get(t).stream().map((i)-> id2Item.get(i).toStringPrASPWithPredicate(predicateName)).collect(Collectors.toList());
+                String transactionText = Joiner.on(". ").join(itemsAsPrASP);
+                bw.write(transactionText);
+                bw.newLine();
+            }
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     public static void main(String [] args){
 
         RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
-        cv.convertandSave(args[0],args[1],args[2]);
+
+        if(args[0].equals("spmf"))
+        cv.convertandSave(args[1],args[2],args[3]);
+        else
+        if(args[0].equals("prasp"))
+        cv.convertToPrASP(args[1],args[2]);
 
         //cv.convertandSave("data/facts_to_mine.tsv","data/facts_to_mine_integer_transactions.tsv","data/facts_to_mine_mapping.tsv");
     }
-
-
-
 
 
 }

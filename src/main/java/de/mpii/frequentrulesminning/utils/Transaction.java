@@ -19,6 +19,8 @@ public class Transaction{
     int count;
     private int id;
 
+
+
 //    TIntObjectHashMap<ItemMetaData> predictedItems;
 
 

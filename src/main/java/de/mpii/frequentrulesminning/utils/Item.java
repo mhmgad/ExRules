@@ -99,22 +99,31 @@ public class Item implements  Comparable<Item>{
     }
 
     public String toStringPrASP() {
-        return readablePredicate()+"_"+readableObject()+"(X)";
+        return toStringPrASPWithPredicate("X");
 
     }
 
-    public String readablePredicate(){
+    public String toStringPrASPWithPredicate(String predicate){
+        return readablePredicate(predicate)+"_"+readableObject(object)+"("+predicate+")";
+    }
+
+    public static String readablePredicate(String predicate){
         String cleanPredicate=FactComponent.stripBrackets(predicate);
         if(cleanPredicate.contains(":"))
             cleanPredicate=cleanPredicate.split(":")[1];
         return cleanPredicate;
     }
 
-    public String readableObject(){
+    public static String readableObject(String object){
         String cleanObject=FactComponent.stripBrackets(object);
         //cleanObject=FactComponent.stripClass(cleanObject);
         cleanObject=cleanObject.replaceAll("\\p{Punct}","");
         //cleanObject=cleanObject.replace("(","").replace(")","");
         return cleanObject;
+    }
+
+    public static String readableSubject(String subject){
+        // currently deal as object
+        return readableObject(subject);
     }
 }
