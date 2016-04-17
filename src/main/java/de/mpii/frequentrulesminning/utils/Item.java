@@ -112,7 +112,9 @@ public class Item implements  Comparable<Item>{
 
     public String readableObject(){
         String cleanObject=FactComponent.stripBrackets(object);
-        cleanObject=FactComponent.stripClass(cleanObject);
+        //cleanObject=FactComponent.stripClass(cleanObject);
+        cleanObject=cleanObject.replaceAll("\\p{Punct}","");
+        //cleanObject=cleanObject.replace("(","").replace(")","");
         return cleanObject;
     }
 }
