@@ -103,8 +103,8 @@ public class Item implements  Comparable<Item>{
 
     }
 
-    public String toStringPrASPWithPredicate(String predicate){
-        return readablePredicate(predicate)+"_"+readableObject(object)+"("+predicate+")";
+    public String toStringPrASPWithPredicate(String subject){
+        return readablePredicate(predicate)+"_"+readableObject(object)+"("+subject+")";
     }
 
     public static String readablePredicate(String predicate){
