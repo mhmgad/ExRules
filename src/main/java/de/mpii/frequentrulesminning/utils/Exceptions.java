@@ -106,10 +106,10 @@ public class Exceptions implements Iterable<ExceptionItem>{
     }
 
     public Item [] getTopKExceptions(int numberOfEceptions) {
-        //int size= Math.min(numberOfEceptions,exceptions.size());
+        int size= Math.min(numberOfEceptions,exceptions.size());
         Item[] output=new Item[0];
 
-        for(int i=0;i<numberOfEceptions;i++){
+        for(int i=0;i<size;i++){
             output= ArrayUtils.addAll(output,exceptions.get(i).getItemsetItem());
         }
 
