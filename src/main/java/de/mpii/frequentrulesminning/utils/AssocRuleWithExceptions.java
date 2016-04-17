@@ -269,10 +269,15 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
     public String toStringPrASP(int numberOfEceptions) {
-        String body = Joiner.on(" ").join(itemsToStringPrASP(getbodyItems(),false));
-        String negBody= Joiner.on(" ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptions(numberOfEceptions),true));
+        String body = Joiner.on(", ").join(itemsToStringPrASP(getbodyItems(),false));
+        String negBody= Joiner.on(", ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptions(numberOfEceptions),true));
         String head = Joiner.on(" ").join(itemsToStringPrASP(getHeadItems(),false));
-        return "["+getConfidence()+"] "+head+" :- "+body+" "+negBody+".";
+        return head+" :- "+body+ (negBody.isEmpty()? (", "+negBody):"")+".";
+    }
+
+    public String toStringPrASPWithWeight(int numberOfEceptions) {
+
+        return "["+String.format("%.5f",getConfidence())+"] "+toStringPrASP(numberOfEceptions);
     }
 
     private List<String> itemsToStringPrASP(Item[] items, boolean negated) {

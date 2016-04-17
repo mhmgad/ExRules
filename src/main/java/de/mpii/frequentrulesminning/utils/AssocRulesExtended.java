@@ -296,7 +296,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         for(AssocRuleWithExceptions r:getRules()){
             if(showRulesWithExceptionsOnly&&!r.hasExceptions())
                 continue;
-            buffer.append(r.toStringPrASP(exceptionsNumber));
+            buffer.append(r.toStringPrASPWithWeight(exceptionsNumber));
             buffer.append('\n');
         }
 
