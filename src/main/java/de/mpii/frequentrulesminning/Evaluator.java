@@ -227,18 +227,18 @@ public class Evaluator {
         Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getBody(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
         Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
 
-        Set<Transaction> bodyAndHeadUnion= Sets.union(bodyTransactions,headTransactions);
-
         if (this.useOrder) {
             ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-            bodyAndHeadUnion = TransactionsDatabase.filterBetterQualityRules(bodyAndHeadUnion, rule);
-            //headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
+            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
         }
 
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
-        double bodyAndHeadUnionSupport = TransactionsDatabase.getTransactionsCount(bodyAndHeadUnion, ArrayUtils.addAll(rule.getBody(),rule.getHead()), ExceptionItem.toArray(exceptionItem), this.useWeights);
-//        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
 
+
+        double bodyAndHeadUnionSupport=bodySupport+headSupport-ruleSupport;
 
         return computeJaccardCoefficient(ruleSupport, bodyAndHeadUnionSupport);
 
