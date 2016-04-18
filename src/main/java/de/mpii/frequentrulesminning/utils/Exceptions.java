@@ -105,7 +105,7 @@ public class Exceptions implements Iterable<ExceptionItem>{
         return exceptions.subList(0,numberOfEceptions).stream().mapToInt(ExceptionItem::getFirstItems).toArray();
     }
 
-    public Item [] getTopKExceptions(int numberOfEceptions) {
+    public Item [] getTopKExceptionsItem(int numberOfExceptions) {
 //        int size= Math.min(numberOfEceptions,exceptions.size());
 //        Item[] output=new Item[0];
 //
@@ -115,11 +115,22 @@ public class Exceptions implements Iterable<ExceptionItem>{
 //
 //        return  output;
 
-        Item[] out=exceptions.stream().limit(numberOfEceptions).map((e)-> e.getItemsetItem()).flatMap((arr)->Stream.of(arr)).toArray(Item[]::new);
+        Item[] out=exceptions.stream().limit(numberOfExceptions).map((e)-> e.getItemsetItem()).flatMap((arr)->Stream.of(arr)).toArray(Item[]::new);
         return out;
 
         //exceptions.subList(0,numberOfEceptions).stream().flatMap(ExceptionItem::getItemsetItem).
        // return ArrayUtils.addAll(new Item[0],exceptions.subList(0,numberOfEceptions).stream().map(ExceptionItem::getItemsetItem).collect(Collectors.toList()));
 
     }
+
+
+    public ExceptionItem getTopException() {
+        if(!exceptions.isEmpty())
+        return exceptions.get(0);
+        else
+            return  null;
+//
+
+    }
+
 }

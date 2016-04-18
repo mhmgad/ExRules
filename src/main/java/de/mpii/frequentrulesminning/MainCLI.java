@@ -34,6 +34,7 @@ public class MainCLI {
     private Option weightsOp;
     private Option cautiousPartialMaterializationOp;
     private Option exportasPrASPOp;
+    private Option statsOp;
 
     public MainCLI() {
          options= new Options();
@@ -121,6 +122,10 @@ public class MainCLI {
         exportasPrASPOp=Option.builder("oPrASP").longOpt("output_PrASP").hasArg().desc("Export rules as PrASP" ).argName("file").build();
         options.addOption(exportasPrASPOp);
 
+
+        statsOp=Option.builder("stats").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
+        options.addOption(statsOp);
+
     }
 
 
@@ -200,17 +205,28 @@ public class MainCLI {
         miner.setConfiguration(sConf);
         miner.setExceptionRanking(exceptionOrdering);
         miner.setCautiousMatrializationThreshold(cautionMaterializationValue);
-        AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter);
-        miner.exportRules(rulesStrings, outputFilePath,outputSorting,showRulesWithExceptionsOnly);
+        miner.setEncode(encode);
+        miner.setDecode(decode);
+        miner.setFilter(filter);
+        miner.setWithExceptions(withExceptions);
+        miner.setExceptionMinSupp(excepminSupp);
+        miner.setMaterialize(materialize);
+        miner.setLevel2Filter(level2Filter);
+        miner.setShowRulesWithExceptionsOnly(showRulesWithExceptionsOnly);
+        miner.setSortType(outputSorting);
+        AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile/*, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter*/);
+        miner.exportRules(rulesStrings, outputFilePath/*,outputSorting,showRulesWithExceptionsOnly*/);
 
         // Export rules as PrASP
 
         if(cmd.hasOption(exportasPrASPOp.getOpt())){
             String prASPOutFile=cmd.getOptionValue(exportasPrASPOp.getOpt());
-            miner.exportRulesForPrASP(rulesStrings,prASPOutFile,outputSorting,showRulesWithExceptionsOnly);
+            miner.exportRulesForPrASP(rulesStrings,prASPOutFile/*,outputSorting,showRulesWithExceptionsOnly*/);
         }
 
-
+        boolean export=cmd.hasOption(statsOp.getOpt());;
+        String fileName=outputFilePath+".stat";
+        miner.showStatistics( rulesStrings,export, fileName);
 
     }
 

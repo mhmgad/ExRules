@@ -29,11 +29,38 @@ public class AssociationRuleMiningSPMF {
     double minconf;
     double maxconf;
 
+    boolean encode; boolean decode; boolean filter; boolean withExceptions; double exceptionMinSupp; boolean materialize; boolean level2Filter;
+
+    AssocRulesExtended.SortingType sortType;
+    boolean showRulesWithExceptionsOnly;
+
 
 
     private AlgoFPGrowth fpgrowth ;
     AlgoAgrawalFaster94 algoAgrawal;
     RDF2IntegerTransactionsConverter rdf2TransactionsConverter;
+
+    @Override
+    public String toString() {
+        return "AssociationRuleMiningSPMF{" +
+                "minsupp=" + minsupp +
+                ", minconf=" + minconf +
+                ", maxconf=" + maxconf +
+                ", encode=" + encode +
+                ", decode=" + decode +
+                ", filter=" + filter +
+                ", withExceptions=" + withExceptions +
+                ", exceptionMinSupp=" + exceptionMinSupp +
+                ", materialize=" + materialize +
+                ", level2Filter=" + level2Filter +
+                ", configuration=" + configuration +
+                ", cautiousMatrializationThreshold=" + cautiousMatrializationThreshold +
+                ", exceptionRanking=" + exceptionRanking +
+                ", outputSortType;"+sortType+
+                ", showRulesWithExceptionsOnly"+showRulesWithExceptionsOnly+
+                '}';
+    }
+
     private String temperorayTransactiosFile;
     private String temporaryMappingFile;
     private YagoTaxonomy yagoTaxonomy;
@@ -93,7 +120,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp, boolean materialize, boolean level2Filter) throws Exception {
+    public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath/*, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp, boolean materialize, boolean level2Filter*/) throws Exception {
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
 
@@ -182,6 +209,7 @@ public class AssociationRuleMiningSPMF {
             r.setLift(eval.lift(r));
             r.setCoverage(eval.coverage(r));
             r.setNegConfidence(eval.negativeRuleConfidence(r));
+            r.setJaccardCoefficient(eval.JaccardCoefficient(r));
 
         });
         System.out.println("Done Resolving Transactions!");
@@ -303,7 +331,7 @@ public class AssociationRuleMiningSPMF {
 
 
 
-    public void exportRules(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly) throws IOException {
+    public void exportRules(AssocRulesExtended rules, String outputFilePath/*, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly*/) throws IOException {
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
         bw.write(rules.toString(sortType,showRulesWithExceptionsOnly));
         bw.close();
@@ -390,7 +418,7 @@ public class AssociationRuleMiningSPMF {
     }
 
 
-    public void exportRulesForPrASP(AssocRulesExtended rules, String outputFilePath, AssocRulesExtended.SortingType sortType,boolean showRulesWithExceptionsOnly) throws IOException {
+    public void exportRulesForPrASP(AssocRulesExtended rules, String outputFilePath) throws IOException {
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(outputFilePath);
         bw.write(rules.toStringPrASP(sortType,1,showRulesWithExceptionsOnly));
         bw.close();
@@ -398,8 +426,139 @@ public class AssociationRuleMiningSPMF {
 
     }
 
+    public void showStatistics(AssocRulesExtended rules,boolean export, String fileName) throws Exception {
+        StringBuilder st=new StringBuilder();
+        st.append(toString());
+        st.append('\n');
 
-//    public static  void main(String [] args) throws IOException {
+        st.append("topK\tAvgConfidence\tAvgLIFT\tAvgJaccardCof");
+        st.append('\n');
+        for(int i=1;i<=10;i++) {
+            int k=(int)Math.ceil((i*0.1)*rules.size());
+
+            st.append(k+"\t");
+            st.append(String.format("%.5f", rules.getAvgConfidence(k, true))+"\t");
+            st.append(String.format("%.6f", rules.getAvgLift(k, true))+"\t");
+            st.append(String.format("%.5f", rules.getAvgJaccardCoefficient(k, true))+"\t");
+
+            st.append('\n');
+
+
+        }
+
+        System.out.println(st.toString());
+        if(export){
+            BufferedWriter bw=FileUtils.getBufferedUTF8Writer(fileName);
+            bw.write(st.toString());
+            bw.close();
+        }
+
+
+
+    }
+
+
+    public double getMinsupp() {
+        return minsupp;
+    }
+
+    public void setMinsupp(double minsupp) {
+        this.minsupp = minsupp;
+    }
+
+    public double getMinconf() {
+        return minconf;
+    }
+
+    public void setMinconf(double minconf) {
+        this.minconf = minconf;
+    }
+
+    public double getMaxconf() {
+        return maxconf;
+    }
+
+    public void setMaxconf(double maxconf) {
+        this.maxconf = maxconf;
+    }
+
+    public boolean isEncode() {
+        return encode;
+    }
+
+    public void setEncode(boolean encode) {
+        this.encode = encode;
+    }
+
+    public boolean isDecode() {
+        return decode;
+    }
+
+    public void setDecode(boolean decode) {
+        this.decode = decode;
+    }
+
+    public boolean isFilter() {
+        return filter;
+    }
+
+    public void setFilter(boolean filter) {
+        this.filter = filter;
+    }
+
+    public boolean isWithExceptions() {
+        return withExceptions;
+    }
+
+    public void setWithExceptions(boolean withExceptions) {
+        this.withExceptions = withExceptions;
+    }
+
+    public double getExceptionMinSupp() {
+        return exceptionMinSupp;
+    }
+
+    public void setExceptionMinSupp(double exceptionMinSupp) {
+        this.exceptionMinSupp = exceptionMinSupp;
+    }
+
+    public boolean isMaterialize() {
+        return materialize;
+    }
+
+    public void setMaterialize(boolean materialize) {
+        this.materialize = materialize;
+    }
+
+    public boolean isLevel2Filter() {
+        return level2Filter;
+    }
+
+    public void setLevel2Filter(boolean level2Filter) {
+        this.level2Filter = level2Filter;
+    }
+
+    public double getCautiousMatrializationThreshold() {
+        return cautiousMatrializationThreshold;
+    }
+
+    public AssocRulesExtended.SortingType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(AssocRulesExtended.SortingType sortType) {
+        this.sortType = sortType;
+    }
+
+    public boolean isShowRulesWithExceptionsOnly() {
+        return showRulesWithExceptionsOnly;
+    }
+
+    public void setShowRulesWithExceptionsOnly(boolean showRulesWithExceptionsOnly) {
+        this.showRulesWithExceptionsOnly = showRulesWithExceptionsOnly;
+    }
+
+    //    public static  void main(String [] args) throws IOException {
 //
 //
 //        if(args.length<4){

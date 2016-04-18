@@ -64,6 +64,7 @@ public class ExceptionRanker {
             exc.setConfidence(evaluator.confidence(rule, exc));
             exc.setLift(evaluator.lift(rule,exc));
             exc.setNegConfidence(evaluator.negativeRuleConfidence(rule,exc));
+            exc.setJaccardCoefficient(evaluator.JaccardCoefficient(rule,exc));
         });
     }
 

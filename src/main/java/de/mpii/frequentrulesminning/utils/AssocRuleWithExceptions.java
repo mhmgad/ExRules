@@ -4,13 +4,11 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.common.primitives.Ints;
-import de.mpii.frequentrulesminning.Evaluator;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +38,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
      * This is the confidence of not head <- body
      */
     private double negConfidence;
+    private double jaccardCoefficient;
 //    private int[] bodyAndHead;
 
 
@@ -133,7 +132,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
     public boolean hasExceptions() {
-        return (exceptionCandidates == null || exceptionCandidates.size() == 0);
+        return (exceptionCandidates != null && exceptionCandidates.size()> 0);
     }
 
     public int[] getItemset1() {
@@ -270,7 +269,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     public String toStringPrASP(int numberOfEceptions) {
         String body = Joiner.on(", ").join(itemsToStringPrASP(getbodyItems(),false));
-        String negBody= Joiner.on(", ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptions(numberOfEceptions),true));
+        String negBody= Joiner.on(", ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptionsItem(numberOfEceptions),true));
         String head = Joiner.on(" ").join(itemsToStringPrASP(getHeadItems(),false));
         return head+" :- "+body+ (!negBody.isEmpty()? (", "+negBody):"")+".";
     }
@@ -282,5 +281,36 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     private List<String> itemsToStringPrASP(Item[] items, boolean negated) {
        return  Arrays.stream(items).map((item)-> (negated? "not ":"")+item.toStringPrASP()).collect(Collectors.toList());
+    }
+
+    public void setJaccardCoefficient(double jaccardCoefficient) {
+        this.jaccardCoefficient = jaccardCoefficient;
+    }
+
+
+    public double getConfidenceWithTopException(){
+        if(hasExceptions())
+            return exceptionCandidates.getTopException().getConfidence();
+        else
+            return getConfidence();
+    }
+
+    public double getJaccardCoefficientWithTopException() {
+        if (hasExceptions())
+            return exceptionCandidates.getTopException().getJaccardCoefficient();
+        else
+            return getJaccardCoefficient();
+    }
+
+    public double getJaccardCoefficient() {
+        return jaccardCoefficient;
+    }
+
+    public  double getLiftWithTopException() {
+
+        if (hasExceptions())
+            return exceptionCandidates.getTopException().getLift();
+        else
+            return getLift();
     }
 }

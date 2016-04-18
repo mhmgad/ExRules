@@ -15,7 +15,9 @@ import java.util.function.Predicate;
 public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
 
-
+    public double size() {
+        return getRules().size();
+    }
 
     public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT}
 
@@ -304,6 +306,32 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return buffer.toString();
 
     }
+
+
+    public double getAvgConfidence(int k,boolean withException){
+        if(withException)
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getConfidenceWithTopException).average().getAsDouble();
+        else
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getConfidence).average().getAsDouble();
+
+    }
+
+
+    public double getAvgJaccardCoefficient(int k,boolean withException){
+        if(withException)
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getJaccardCoefficientWithTopException).average().getAsDouble();
+        else
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getJaccardCoefficient).average().getAsDouble();
+    }
+
+    public double getAvgLift(int k,boolean withException){
+        if(withException)
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getLiftWithTopException).average().getAsDouble();
+        else
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getLift).average().getAsDouble();
+    }
+
+
 
 
 
