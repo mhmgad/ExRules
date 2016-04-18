@@ -60,7 +60,7 @@ public class MainCLI {
 
 
 
-        minSupportOp= Option.builder("minS").hasArg().desc("Minimum support for the rule(default=0.0001)").argName("MIN_SUPP_RATIO").build();
+        minSupportOp= Option.builder("minS").hasArg().desc("Minimum support for the rule(default=0.00005)").argName("MIN_SUPP_RATIO").build();
         options.addOption(minSupportOp);
 
         minConfOp=Option.builder("minConf").hasArg().desc("Minimum Confidence for the rule (default=0.001)").argName("MIN_CONF_RATIO").build();
@@ -128,7 +128,7 @@ public class MainCLI {
 
 
         // Defualts
-        double minsupp = 0.0001;
+        double minsupp = 0.00005;
         double minconf = 0.01;//0.01D;
         double maxconf = 1;//0.01D;
 
