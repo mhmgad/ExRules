@@ -269,7 +269,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     public String toStringPrASP(int numberOfEceptions) {
         String body = Joiner.on(", ").join(itemsToStringPrASP(getbodyItems(),false));
-        String negBody= Joiner.on(", ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptionsItem(numberOfEceptions),true));
+        String negBody= (hasExceptions())? Joiner.on(", ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptionsItem(numberOfEceptions),true)):"";
         String head = Joiner.on(" ").join(itemsToStringPrASP(getHeadItems(),false));
         return head+" :- "+body+ (!negBody.isEmpty()? (", "+negBody):"")+".";
     }
