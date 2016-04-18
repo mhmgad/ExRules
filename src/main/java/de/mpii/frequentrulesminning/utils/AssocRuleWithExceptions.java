@@ -285,7 +285,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         if(hasExceptions())
             return getExceptionCandidates().getTopException();
         else
-                return null;
+            return null;
     }
 
     public String toStringPrASPWithWeight(int numberOfEceptions) {

@@ -129,8 +129,9 @@ public class TransactionsDatabase {
         Set<Transaction> transactions = getTransactionsWithItem(withItems[0], withPredictions);
         transactions = filterTransactionsWith(transactions, withItems, 1, withPredictions);
 
-        //TODO if withPredictions is set, that means we need to KEEP the predictions.. so do not remove transactions if without exists in predictions
-        transactions = filterOutTransactionsWith(transactions, withoutItems, 0, !withPredictions);
+        //TODO if withPredictions is set, that means we need to KEEP the predictions.. so do not remove transactions if without Item exists in predictions
+        // It is safer to fix it to false here
+        transactions = filterOutTransactionsWith(transactions, withoutItems, 0, false/*!withPredictions*/);
 
 //        return new HashSet<>(transactions);
         return transactions;

@@ -126,7 +126,7 @@ public class Exceptions implements Iterable<ExceptionItem>{
 
     public ExceptionItem getTopException() {
         if(!exceptions.isEmpty())
-        return exceptions.get(0);
+            return exceptions.get(0);
         else
             return  null;
 //

@@ -453,10 +453,10 @@ public class AssociationRuleMiningSPMF {
 
 
             st.append(k+":\tBefore\t");
-            st.append(String.format("%.5f",orgAvgConf)+"\t\t");
+            st.append(String.format("%.5f",orgAvgConf)+"\t\t\t");
 
-            st.append(String.format("%.6f", orgAvgLift)+"\t\t");
-            st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t\t");
+            st.append(String.format("%.6f", orgAvgLift)+"\t\t\t");
+            st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t\t\t");
             st.append('\n');
 
             double newAvgConfidence = rules.getAvgConfidence(k, true);
@@ -464,11 +464,11 @@ public class AssociationRuleMiningSPMF {
             double newAvgJaccardCoefficient = rules.getAvgJaccardCoefficient(k, true);
 
             st.append(k+":\tAfter\t");
-            st.append(String.format("%.5f", newAvgConfidence)+"\t");
+            st.append(String.format("%.5f", newAvgConfidence)+"\t\t");
             st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t");
-            st.append(String.format("%.6f", newAvgLift)+"\t");
-            st.append(String.format("%.6f", newAvgLift-orgAvgConf)+"\t");
-            st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t");
+            st.append(String.format("%.6f", newAvgLift)+"\t\t");
+            st.append(String.format("%.6f", newAvgLift-orgAvgLift)+"\t");
+            st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t\t");
             st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgConf)+"\t");
             st.append('\n');
 
