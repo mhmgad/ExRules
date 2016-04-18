@@ -41,4 +41,13 @@ public class SystemConfig {
     public void setOrder(boolean order) {
         this.order = order;
     }
+
+    @Override
+    public String toString() {
+        return "SystemConfig{" +
+                "materialization=" + materialization +
+                ", weight=" + weight +
+                ", order=" + order +
+                '}';
+    }
 }

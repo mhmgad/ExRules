@@ -10,7 +10,6 @@ import mpi.tools.javatools.util.FileUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -174,8 +173,19 @@ public class AssociationRuleMiningSPMF {
             rankException(rules,transactionsDB);
         }
 
-
+        revisetedRuleQuality(rules,transactionsDB);
         return rules;
+    }
+
+    private void revisetedRuleQuality(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
+        Evaluator eval=new Evaluator(transactionsDB);
+        rules.getRules().parallelStream().forEach((r)->{
+            final ExceptionItem e=r.getTopException();
+            r.setRevisedConfidence(e==null? r.getConfidence():eval.confidence(r,e));
+            r.setRevisedLift(e==null? r.getLift():eval.lift(r,e));
+            r.setRevisedJaccardCoefficient(e==null? r.getJaccardCoefficient():eval.JaccardCoefficient(r,e));
+        });
+
     }
 
     public void materialize(AssocRulesExtended rules,TransactionsDatabase transactionsDB) throws Exception {
@@ -431,22 +441,35 @@ public class AssociationRuleMiningSPMF {
         st.append(toString());
         st.append('\n');
 
-        st.append("topK\ttype\tAvgConfidence\tAvgLIFT\tAvgJaccardCof");
+        st.append("topK\ttype\tAvgConfidence\tdiff\tAvgLIFT\tdiff\tAvgJaccardCof\tdiff");
         st.append('\n');
         for(int i=1;i<=10;i++) {
             int k=(int)Math.ceil((i*0.1)*rules.size());
 
 
-            st.append(k+":\tBefore");
-            st.append(String.format("%.5f", rules.getAvgConfidence(k, false))+"\t");
-            st.append(String.format("%.6f", rules.getAvgLift(k, false))+"\t");
-            st.append(String.format("%.5f", rules.getAvgJaccardCoefficient(k, false))+"\t");
-            st.append('\n');
-            st.append(k+":\tAfter");
-            st.append(String.format("%.5f", rules.getAvgConfidence(k, true))+"\t");
-            st.append(String.format("%.6f", rules.getAvgLift(k, true))+"\t");
-            st.append(String.format("%.5f", rules.getAvgJaccardCoefficient(k, true))+"\t");
+            double orgAvgConf= rules.getAvgConfidence(k, false);
+            double orgAvgLift = rules.getAvgLift(k, false);
+            double orgAvgJaccardCoefficient = rules.getAvgJaccardCoefficient(k, false);
 
+
+            st.append(k+":\tBefore\t");
+            st.append(String.format("%.5f",orgAvgConf)+"\t\t");
+
+            st.append(String.format("%.6f", orgAvgLift)+"\t\t");
+            st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t\t");
+            st.append('\n');
+
+            double newAvgConfidence = rules.getAvgConfidence(k, true);
+            double newAvgLift = rules.getAvgLift(k, true);
+            double newAvgJaccardCoefficient = rules.getAvgJaccardCoefficient(k, true);
+
+            st.append(k+":\tAfter\t");
+            st.append(String.format("%.5f", newAvgConfidence)+"\t");
+            st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t");
+            st.append(String.format("%.6f", newAvgLift)+"\t");
+            st.append(String.format("%.6f", newAvgLift-orgAvgConf)+"\t");
+            st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t");
+            st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgConf)+"\t");
             st.append('\n');
 
             st.append("--------------------------------------------------------------------");

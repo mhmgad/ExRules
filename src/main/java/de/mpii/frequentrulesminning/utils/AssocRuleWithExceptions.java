@@ -39,6 +39,9 @@ public class AssocRuleWithExceptions {// extends AssocRule {
      */
     private double negConfidence;
     private double jaccardCoefficient;
+    private double revisedConfidence;
+    private double revisedLift;
+    private double revisedJaccardCoefficient;
 //    private int[] bodyAndHead;
 
 
@@ -269,9 +272,20 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     public String toStringPrASP(int numberOfEceptions) {
         String body = Joiner.on(", ").join(itemsToStringPrASP(getbodyItems(),false));
-        String negBody= (hasExceptions())? Joiner.on(", ").join(itemsToStringPrASP(getExceptionCandidates().getTopKExceptionsItem(numberOfEceptions),true)):"";
+        String negBody= (hasExceptions())? Joiner.on(", ").join(itemsToStringPrASP(getTopKExceptionsItem(numberOfEceptions),true)):"";
         String head = Joiner.on(" ").join(itemsToStringPrASP(getHeadItems(),false));
         return head+" :- "+body+ (!negBody.isEmpty()? (", "+negBody):"")+".";
+    }
+
+    public Item[] getTopKExceptionsItem(int numberOfEceptions) {
+        return getExceptionCandidates().getTopKExceptionsItem(numberOfEceptions);
+    }
+
+    public ExceptionItem getTopException() {
+        if(hasExceptions())
+            return getExceptionCandidates().getTopException();
+        else
+                return null;
     }
 
     public String toStringPrASPWithWeight(int numberOfEceptions) {
@@ -288,29 +302,53 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
 
-    public double getConfidenceWithTopException(){
-        if(hasExceptions())
-            return exceptionCandidates.getTopException().getConfidence();
-        else
-            return getConfidence();
-    }
+//    public double getConfidenceWithTopException(){
+//        if(hasExceptions())
+//            return exceptionCandidates.getTopException().getConfidence();
+//        else
+//            return getConfidence();
+//    }
 
-    public double getJaccardCoefficientWithTopException() {
-        if (hasExceptions())
-            return exceptionCandidates.getTopException().getJaccardCoefficient();
-        else
-            return getJaccardCoefficient();
-    }
+//    public double getJaccardCoefficientWithTopException() {
+//        if (hasExceptions())
+//            return exceptionCandidates.getTopException().getJaccardCoefficient();
+//        else
+//            return getJaccardCoefficient();
+//    }
 
     public double getJaccardCoefficient() {
         return jaccardCoefficient;
     }
 
-    public  double getLiftWithTopException() {
+//    public  double getLiftWithTopException() {
+//
+//        if (hasExceptions())
+//            return exceptionCandidates.getTopException().getLift();
+//        else
+//            return getLift();
+//    }
 
-        if (hasExceptions())
-            return exceptionCandidates.getTopException().getLift();
-        else
-            return getLift();
+    public void setRevisedConfidence(double revisedConfidence) {
+        this.revisedConfidence = revisedConfidence;
+    }
+
+    public void setRevisedLift(double revisedLift) {
+        this.revisedLift = revisedLift;
+    }
+
+    public void setRevisedJaccardCoefficient(double revisedJaccardCoefficient) {
+        this.revisedJaccardCoefficient = revisedJaccardCoefficient;
+    }
+
+    public double getRevisedConfidence() {
+        return revisedConfidence;
+    }
+
+    public double getRevisedLift() {
+        return revisedLift;
+    }
+
+    public double getRevisedJaccardCoefficient() {
+        return revisedJaccardCoefficient;
     }
 }

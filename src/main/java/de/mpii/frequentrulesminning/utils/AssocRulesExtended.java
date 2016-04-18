@@ -310,7 +310,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public double getAvgConfidence(int k,boolean withException){
         if(withException)
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getConfidenceWithTopException).average().getAsDouble();
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).average().getAsDouble();
         else
             return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getConfidence).average().getAsDouble();
 
@@ -319,14 +319,14 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public double getAvgJaccardCoefficient(int k,boolean withException){
         if(withException)
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getJaccardCoefficientWithTopException).average().getAsDouble();
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedJaccardCoefficient).average().getAsDouble();
         else
             return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getJaccardCoefficient).average().getAsDouble();
     }
 
     public double getAvgLift(int k,boolean withException){
         if(withException)
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getLiftWithTopException).average().getAsDouble();
+            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedLift).average().getAsDouble();
         else
             return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getLift).average().getAsDouble();
     }
