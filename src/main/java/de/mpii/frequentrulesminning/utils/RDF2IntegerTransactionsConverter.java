@@ -63,7 +63,7 @@ public class RDF2IntegerTransactionsConverter {
             }
              id2Item= items2Ids.inverse();
             System.out.println("Items size: " + items2Ids.size());
-            System.out.println("Transactions Size: "+subjects2ItemsIds.size());
+            System.out.println("Transactions Size: "+subjects2ItemsIds.keySet().size()+" Total facts: "+subjects2ItemsIds.size());
 
         } catch (MalformedURLException e2) {
             e2.printStackTrace();
@@ -239,8 +239,8 @@ public class RDF2IntegerTransactionsConverter {
 
             for (String t : subjects2ItemsIds.keySet()) {
                 final String predicateName=Item.readableSubject(t);
-                List<String> itemsAsPrASP=subjects2ItemsIds.get(t).stream().map((i)-> id2Item.get(i).toStringPrASPWithPredicate(predicateName)).collect(Collectors.toList());
-                String transactionText = Joiner.on(". ").join(itemsAsPrASP)+".";
+                List<String> itemsAsPrASP=subjects2ItemsIds.get(t).stream().map((i)-> id2Item.get(i).toStringPrASPWithPredicate(predicateName)+".").collect(Collectors.toList());
+                String transactionText = Joiner.on(" ").join(itemsAsPrASP);
                 bw.write(transactionText);
                 bw.newLine();
             }
