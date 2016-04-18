@@ -431,16 +431,25 @@ public class AssociationRuleMiningSPMF {
         st.append(toString());
         st.append('\n');
 
-        st.append("topK\tAvgConfidence\tAvgLIFT\tAvgJaccardCof");
+        st.append("topK\ttype\tAvgConfidence\tAvgLIFT\tAvgJaccardCof");
         st.append('\n');
         for(int i=1;i<=10;i++) {
             int k=(int)Math.ceil((i*0.1)*rules.size());
 
-            st.append(k+"\t");
+
+            st.append(k+":\tBefore");
+            st.append(String.format("%.5f", rules.getAvgConfidence(k, false))+"\t");
+            st.append(String.format("%.6f", rules.getAvgLift(k, false))+"\t");
+            st.append(String.format("%.5f", rules.getAvgJaccardCoefficient(k, false))+"\t");
+            st.append('\n');
+            st.append(k+":\tAfter");
             st.append(String.format("%.5f", rules.getAvgConfidence(k, true))+"\t");
             st.append(String.format("%.6f", rules.getAvgLift(k, true))+"\t");
             st.append(String.format("%.5f", rules.getAvgJaccardCoefficient(k, true))+"\t");
 
+            st.append('\n');
+
+            st.append("--------------------------------------------------------------------");
             st.append('\n');
 
 
