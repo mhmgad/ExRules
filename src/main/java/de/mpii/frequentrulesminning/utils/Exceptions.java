@@ -106,14 +106,17 @@ public class Exceptions implements Iterable<ExceptionItem>{
     }
 
     public Item [] getTopKExceptions(int numberOfEceptions) {
-        int size= Math.min(numberOfEceptions,exceptions.size());
-        Item[] output=new Item[0];
+//        int size= Math.min(numberOfEceptions,exceptions.size());
+//        Item[] output=new Item[0];
+//
+//        for(int i=0;i<size;i++){
+//            output= ArrayUtils.addAll(output,exceptions.get(i).getItemsetItem());
+//        }
+//
+//        return  output;
 
-        for(int i=0;i<size;i++){
-            output= ArrayUtils.addAll(output,exceptions.get(i).getItemsetItem());
-        }
-
-        return  output;
+        Item[] out=exceptions.stream().limit(numberOfEceptions).map((e)-> e.getItemsetItem()).flatMap((arr)->Stream.of(arr)).toArray(Item[]::new);
+        return out;
 
         //exceptions.subList(0,numberOfEceptions).stream().flatMap(ExceptionItem::getItemsetItem).
        // return ArrayUtils.addAll(new Item[0],exceptions.subList(0,numberOfEceptions).stream().map(ExceptionItem::getItemsetItem).collect(Collectors.toList()));

@@ -1,5 +1,6 @@
 package de.mpii.frequentrulesminning;
 
+import com.google.common.collect.Sets;
 import de.mpii.frequentrulesminning.utils.AssocRuleWithExceptions;
 import de.mpii.frequentrulesminning.utils.ExceptionItem;
 import de.mpii.frequentrulesminning.utils.Transaction;
@@ -216,6 +217,31 @@ public class Evaluator {
 
     public double negativeRuleConfidence(AssocRuleWithExceptions rule) {
         return negativeRuleConfidence(rule,null);
+    }
+
+
+
+    public double JaccardCoefficient(AssocRuleWithExceptions rule,ExceptionItem exceptionItem){
+
+        Set<Transaction> ruleTransactions = transactionsDB.getTransactions(rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
+        Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getBody(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
+        Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
+
+        Set<Transaction> bodyAndHeadUnion= Sets.union(bodyTransactions,headTransactions);
+
+        if (this.useOrder) {
+            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
+            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
+            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+        }
+
+        double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+
+
+        return computeLift(ruleSupport, bodySupport, headSupport);
+
     }
 
 
