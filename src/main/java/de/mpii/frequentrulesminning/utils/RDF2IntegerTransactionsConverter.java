@@ -75,7 +75,7 @@ public class RDF2IntegerTransactionsConverter {
         try {
             BufferedWriter bw = FileUtils.getBufferedUTF8Writer(outputFilePath);
 
-            for (String t : subjects2ItemsIds.keys()) {
+            for (String t : subjects2ItemsIds.keySet()) {
                 String transactionText = Joiner.on(' ').join(subjects2ItemsIds.get(t));
                 bw.write(transactionText);
                 bw.newLine();
@@ -237,10 +237,10 @@ public class RDF2IntegerTransactionsConverter {
         try {
             BufferedWriter bw = FileUtils.getBufferedUTF8Writer(PrASPFile);
 
-            for (String t : subjects2ItemsIds.keys()) {
+            for (String t : subjects2ItemsIds.keySet()) {
                 final String predicateName=Item.readableSubject(t);
                 List<String> itemsAsPrASP=subjects2ItemsIds.get(t).stream().map((i)-> id2Item.get(i).toStringPrASPWithPredicate(predicateName)).collect(Collectors.toList());
-                String transactionText = Joiner.on(". ").join(itemsAsPrASP);
+                String transactionText = Joiner.on(". ").join(itemsAsPrASP)+".";
                 bw.write(transactionText);
                 bw.newLine();
             }
