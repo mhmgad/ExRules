@@ -112,7 +112,7 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Start Rule Mining ...");
         List<AssocRule> rulesGenerated = algoAgrawal.runAlgorithm(frequentItemsets, null, getDatabaseSize(), minconf).getRules();
         AssocRulesExtended rules=new AssocRulesExtended();
-        rulesGenerated.forEach((r)-> rules.addRule(new AssocRuleWithExceptions(r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift())));
+        rulesGenerated.forEach((r)-> rules.addRule(new AssocRuleWithExceptions(AssocRuleWithExceptions.getNextID(),r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift())));
         algoAgrawal.printStats();
         System.out.println("Done Rule Mining ...");
         return rules;
@@ -285,7 +285,7 @@ public class AssociationRuleMiningSPMF {
     }
 
     private void removeContainingRules(AssocRulesExtended rules) {
-        //Collections.sort(rules.getRules(),(c1, c2) -> ((AssocRule)c2).getItemset1().length - ((AssocRule)c1).getItemset1().length);
+
         rules.sortByBodyLength();
 
         for(int i=0;i<rules.getRules().size();i++){
@@ -453,9 +453,9 @@ public class AssociationRuleMiningSPMF {
 
 
             st.append(k+":\tBefore\t");
-            st.append(String.format("%.5f",orgAvgConf)+"\t\t\t");
+            st.append(String.format("%.5f",orgAvgConf)+"\t\t\t\t\t");
 
-            st.append(String.format("%.6f", orgAvgLift)+"\t\t\t");
+            st.append(String.format("%.6f", orgAvgLift)+"\t\t\t\t\t");
             st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t\t\t");
             st.append('\n');
 
@@ -465,7 +465,7 @@ public class AssociationRuleMiningSPMF {
 
             st.append(k+":\tAfter\t");
             st.append(String.format("%.5f", newAvgConfidence)+"\t\t");
-            st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t");
+            st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t\t");
             st.append(String.format("%.6f", newAvgLift)+"\t\t");
             st.append(String.format("%.6f", newAvgLift-orgAvgLift)+"\t");
             st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t\t");
