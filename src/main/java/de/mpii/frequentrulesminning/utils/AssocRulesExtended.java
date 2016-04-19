@@ -19,7 +19,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return getRules().size();
     }
 
-    public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT}
+    public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, REVISED_LIFT}
 
     List<AssocRuleWithExceptions> rules;
     SetMultimap<HeadGroup, AssocRuleWithExceptions> head2Rules;
@@ -90,96 +90,51 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public void sortByConfidence(List<AssocRuleWithExceptions> rulesToSort) {
-        Collections.sort(rulesToSort, Comparator.comparing(AssocRuleWithExceptions::getConfidence).reversed());
-
-
-    }
-
-
-//    public AssocRulesExtended(String name) {
-//        super(name);
-//    }
-
-    public void sortByHead(List<AssocRuleWithExceptions> rulesToSort) {
-        Collections.sort(rulesToSort, ( c1,  c2) -> (c2).getItemset1()[0] - (c1).getItemset1()[0]);
-    }
 
     public void sortByBodyLength() {
-        sortByBodyLength(getRules());
+        sort(getRules(),SortingType.BODY);
     }
 
-    public void sortByBodyLength(List<AssocRuleWithExceptions> rulesToSort) {
-        Collections.sort(rulesToSort, ( c1,  c2) -> (c2).getItemset1().length - (c1).getItemset1().length);
-    }
-
-    public void sortByHeadAndConfidence(List<AssocRuleWithExceptions> rulesToSort) {
-
-        Collections.sort(rulesToSort, new Comparator<AssocRuleWithExceptions>() {
-            @Override
-            public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {
-                int headDiff = o2.getItemset2()[0] - o1.getItemset2()[0];
-
-                if (headDiff != 0)
-                    return headDiff;
-
-                int confidenceDiff = Double.compare(o2.getConfidence(), o1.getConfidence());
-                if (confidenceDiff != 0)
-                    return confidenceDiff;
-
-                return o1.getItemset1().length - o2.getItemset1().length;
-
-            }
-        });
-    }
-
-    public void sortByHeadAndLift(List<AssocRuleWithExceptions> rulesToSort) {
-
-        Collections.sort(rulesToSort, new Comparator<AssocRuleWithExceptions>() {
-            @Override
-            public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {
-                int headDiff = o2.getItemset2()[0] - o1.getItemset2()[0];
-
-                if (headDiff != 0)
-                    return headDiff;
-
-                int confidenceDiff = Double.compare(o2.getLift(), o1.getLift());
-                if (confidenceDiff != 0)
-                    return confidenceDiff;
-
-                return o1.getItemset1().length - o2.getItemset1().length;
-
-            }
-        });
-    }
 
     public void sort(List<AssocRuleWithExceptions> rules, SortingType type) {
+        Comparator<AssocRuleWithExceptions> comparator = getRulesComparator(type);
+
+        Collections.sort(rules, comparator);
+    }
+
+    public Comparator<AssocRuleWithExceptions> getRulesComparator(SortingType type) {
+        Comparator<AssocRuleWithExceptions> comparator=Comparator.comparing(AssocRuleWithExceptions::getId);
         switch (type) {
             case CONF:
-                sortByConfidence(rules);
+                //sortByConfidence(rules);
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getConfidence).reversed();
                 break;
             case HEAD:
-                sortByHead(rules);
+                //sortByHead(rules);
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getHeadItem);
                 break;
             case HEAD_CONF:
-                sortByHeadAndConfidence(rules);
+                //sortByHeadAndConfidence(rules);
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getHeadItem).thenComparing(Comparator.comparing(AssocRuleWithExceptions::getConfidence).reversed());
                 break;
             case HEAD_LIFT:
-                sortByHeadAndLift(rules);
+//                sortByHeadAndLift(rules);
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getHeadItem).thenComparing(Comparator.comparing(AssocRuleWithExceptions::getLift).reversed());
                 break;
             case LIFT:
-                sortByLift(rules);
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getLift).reversed();
                 break;
             case BODY:
-                sortByBodyLength(rules);
+                //sortByBodyLength(rules);
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getBodyLength).reversed();
+                break;
+            case REVISED_LIFT:
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getRevisedLift).reversed();
                 break;
         }
+        return comparator;
     }
 
-    private void sortByLift(List<AssocRuleWithExceptions> rulesToSort) {
-        Collections.sort(rulesToSort, Comparator.comparing(AssocRuleWithExceptions::getLift).reversed());
-
-    }
 
     public String toString(SortingType sortType, boolean hasExceptionOnly) {
         if (sortType == SortingType.HEAD || sortType == SortingType.HEAD_CONF || sortType == sortType.HEAD_LIFT)
@@ -332,7 +287,70 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
+    //    private void sortByLift(List<AssocRuleWithExceptions> rulesToSort) {
+//        Collections.sort(rulesToSort, Comparator.comparing(AssocRuleWithExceptions::getLift).reversed());
+//
+//    }
 
+//    public void sortByConfidence(List<AssocRuleWithExceptions> rulesToSort) {
+//        Collections.sort(rulesToSort, Comparator.comparing(AssocRuleWithExceptions::getConfidence).reversed());
+//
+//
+//    }
+
+
+//    public AssocRulesExtended(String name) {
+//        super(name);
+//    }
+
+    //    public void sortByHead(List<AssocRuleWithExceptions> rulesToSort) {
+//        Collections.sort(rulesToSort, ( c1,  c2) -> (c2).getHead()[0] - (c1).getHead()[0]);
+//    }
+
+
+//    public void sortByBodyLength(List<AssocRuleWithExceptions> rulesToSort) {
+//        Collections.sort(rulesToSort, ( c1,  c2) -> (c2).getItemset1().length - (c1).getItemset1().length);
+//    }
+
+//    public void sortByHeadAndConfidence(List<AssocRuleWithExceptions> rulesToSort) {
+//
+//        Collections.sort(rulesToSort, new Comparator<AssocRuleWithExceptions>() {
+//            @Override
+//            public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {
+//                int headDiff = o2.getItemset2()[0] - o1.getItemset2()[0];
+//
+//                if (headDiff != 0)
+//                    return headDiff;
+//
+//                int confidenceDiff = Double.compare(o2.getConfidence(), o1.getConfidence());
+//                if (confidenceDiff != 0)
+//                    return confidenceDiff;
+//
+//                return o1.getItemset1().length - o2.getItemset1().length;
+//
+//            }
+//        });
+//    }
+//
+//    public void sortByHeadAndLift(List<AssocRuleWithExceptions> rulesToSort) {
+//
+//        Collections.sort(rulesToSort, new Comparator<AssocRuleWithExceptions>() {
+//            @Override
+//            public int compare(AssocRuleWithExceptions o1, AssocRuleWithExceptions o2) {
+//                int headDiff = o2.getItemset2()[0] - o1.getItemset2()[0];
+//
+//                if (headDiff != 0)
+//                    return headDiff;
+//
+//                int confidenceDiff = Double.compare(o2.getLift(), o1.getLift());
+//                if (confidenceDiff != 0)
+//                    return confidenceDiff;
+//
+//                return o1.getItemset1().length - o2.getItemset1().length;
+//
+//            }
+//        });
+//    }
 
 
 

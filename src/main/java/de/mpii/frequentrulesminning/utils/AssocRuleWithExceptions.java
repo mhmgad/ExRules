@@ -42,30 +42,39 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     private double revisedConfidence;
     private double revisedLift;
     private double revisedJaccardCoefficient;
+    private int id;
+    private static int nextID;
 //    private int[] bodyAndHead;
 
 
-    public AssocRuleWithExceptions(int[] itemset1, int[] itemset2, int coverage, int transactionCount, double confidence) {
+    public AssocRuleWithExceptions(int id,int[] itemset1, int[] itemset2, int coverage, int transactionCount, double confidence) {
+        this.id=id;
         this.itemset1 = itemset1;
         this.itemset2 = itemset2;
         this.coverage = coverage;
         this.transactionCount = transactionCount;
         this.confidence = confidence;
+
     }
 
-    public AssocRuleWithExceptions(Item[] bodyItems, Item[] headItems, int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
-        this(itemset1, itemset2, supportAntecedent, transactionCount, confidence, lift);
+    public AssocRuleWithExceptions(int id,Item[] bodyItems, Item[] headItems, int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
+        this(id,itemset1, itemset2, supportAntecedent, transactionCount, confidence, lift);
         this.bodyItems = bodyItems;
         this.headItems = headItems;
     }
 
 
-    public AssocRuleWithExceptions(int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
-        this(itemset1, itemset2, supportAntecedent, transactionCount, confidence);
+    public AssocRuleWithExceptions(int id,int[] itemset1, int[] itemset2, int supportAntecedent, int transactionCount, double confidence, double lift) {
+        this(id,itemset1, itemset2, supportAntecedent, transactionCount, confidence);
 
         Arrays.sort(this.getItemset1());
         Arrays.sort(this.getItemset2());
         this.lift = lift;
+    }
+
+    public synchronized static int getNextID() {
+        nextID++;
+        return nextID;
     }
 
     public double getRelativeSupport(int databaseSize) {
@@ -183,7 +192,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
        return isBodySubsetOf(superset);
     }
 
-    private int getBodyLength() {
+    public int getBodyLength() {
         return getItemset1().length;
     }
 
@@ -351,4 +360,16 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public double getRevisedJaccardCoefficient() {
         return revisedJaccardCoefficient;
     }
+
+    public int getId() {
+        return this.id;
+
+    }
+
+    public int getHeadItem(){
+        return getHead()[0];
+    }
+
+
+
 }
