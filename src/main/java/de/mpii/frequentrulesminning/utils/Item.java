@@ -124,6 +124,16 @@ public class Item implements  Comparable<Item>{
 
     public static String readableSubject(String subject){
         // currently deal as object
-        return readableObject(subject);
+        return decapitalize(readableObject(subject)).replaceAll("\\p{C}", "");
     }
+
+
+    public static String decapitalize(String x){
+    if (x == null || x.length() == 0) {
+        return x;
+    }
+    char c[] = x.toCharArray();
+    c[0] = Character.toLowerCase(c[0]);
+    return new String(c);
+}
 }
