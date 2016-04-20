@@ -299,7 +299,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     public String toStringPrASPWithWeight(int numberOfEceptions) {
 
-        return "["+String.format("%.5f",getConfidence())+"] "+toStringPrASP(numberOfEceptions);
+        return "["+String.format("%.5f",getRevisedConfidence())+"] "+toStringPrASP(numberOfEceptions);
     }
 
     private List<String> itemsToStringPrASP(Item[] items, boolean negated) {
