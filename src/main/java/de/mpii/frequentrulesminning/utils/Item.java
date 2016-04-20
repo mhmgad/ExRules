@@ -117,14 +117,14 @@ public class Item implements  Comparable<Item>{
     public static String readableObject(String object){
         String cleanObject=FactComponent.stripBrackets(object);
         //cleanObject=FactComponent.stripClass(cleanObject);
-        cleanObject=cleanObject.replaceAll("\\p{Punct}","");
+        cleanObject=cleanObject.replaceAll("\\p{Punct}","").replaceAll("\\P{ASCII}", "");
         //cleanObject=cleanObject.replace("(","").replace(")","");
         return cleanObject;
     }
 
     public static String readableSubject(String subject){
         // currently deal as object
-        return decapitalize(readableObject(subject)).replaceAll("\\P{ASCII}", "");
+        return decapitalize(readableObject(subject));
     }
 
 
