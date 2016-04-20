@@ -177,7 +177,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
                 if (hasExceptionOnly && !rule.hasExceptions())
                     continue;
                 i++;
-                addRuleToPrintBuffer(buffer, i, rule);
+                addRuleToPrintBuffer(buffer, rule.getId(), rule);
 
             }
             buffer.append("**************************************************************************\n");
