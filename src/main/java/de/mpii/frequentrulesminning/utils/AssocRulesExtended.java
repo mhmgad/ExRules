@@ -19,7 +19,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return getRules().size();
     }
 
-    public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, REVISED_LIFT}
+    public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, NEW_LIFT}
 
     List<AssocRuleWithExceptions> rules;
     SetMultimap<HeadGroup, AssocRuleWithExceptions> head2Rules;
@@ -128,7 +128,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
                 //sortByBodyLength(rules);
                 comparator=Comparator.comparing(AssocRuleWithExceptions::getBodyLength).reversed();
                 break;
-            case REVISED_LIFT:
+            case NEW_LIFT:
                 comparator=Comparator.comparing(AssocRuleWithExceptions::getRevisedLift).reversed();
                 break;
         }
