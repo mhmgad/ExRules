@@ -26,18 +26,25 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
-
+    enum EncodingType{SPMF,PrASP,DLV_SAFE}
 
     private HashBiMap<Item,Integer> items2Ids;
     private BiMap<Integer,Item> id2Item;
     private SetMultimap<String, Integer> subjects2ItemsIds;
+
+    private BiMap<String,Integer> subject2Id;
+
+
+
     private int itemsIDs;
+    private int nextSubjectID;
 
 
     public RDF2IntegerTransactionsConverter() {
 
         items2Ids = HashBiMap.create();
         subjects2ItemsIds = HashMultimap.create();
+        subject2Id=HashBiMap.create();
         itemsIDs=0;
     }
 
@@ -47,23 +54,29 @@ public class RDF2IntegerTransactionsConverter {
             //String line;
 
             for (Fact f : FactSource.from(filePath)) {
-                String value = f.getSubject();
+                String subject = f.getSubject();
 
                 //String key=f.getRelation()+"\t"+f.getObject();
-                Item key=new Item(f.getRelation(),f.getObject());
+                Item key = new Item(-1,f.getRelation(), f.getObject());
                 if (!items2Ids.containsKey(key)) {
                     itemsIDs++;
-                    items2Ids.put(key,itemsIDs);
+                    items2Ids.put(key, itemsIDs);
                 }
 
+                int id = items2Ids.get(key);
+                key.setId(id);
 
 
-                int id= items2Ids.get(key);
-                subjects2ItemsIds.put(value, id);
+                subjects2ItemsIds.put(subject, id);
+
+                //
+                if (!subject2Id.containsKey(subject)) {
+                    subject2Id.put(subject, getNextSubjectID());
+                }
             }
-             id2Item= items2Ids.inverse();
+            id2Item = items2Ids.inverse();
             System.out.println("Items size: " + items2Ids.size());
-            System.out.println("Transactions Size: "+subjects2ItemsIds.keySet().size()+" Total facts: "+subjects2ItemsIds.size());
+            System.out.println("Transactions Size: " + subjects2ItemsIds.keySet().size() + " Total facts: " + subjects2ItemsIds.size());
 
         } catch (MalformedURLException e2) {
             e2.printStackTrace();
@@ -88,7 +101,7 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
-    public void exportIds(String idsFilePath) {
+    public void exportPredicates2IdsMapping(String idsFilePath) {
         try {
             BufferedWriter bw = FileUtils.getBufferedUTF8Writer(idsFilePath);
             //List<String> keysList= new ArrayList<>(items2Ids.keySet());
@@ -96,7 +109,7 @@ public class RDF2IntegerTransactionsConverter {
             Collections.sort(keysList);
            // for (String item : keysList) {
             for (Item item : keysList) {
-                String itemText = items2Ids.get(item) + "\t" + item;//.toString();
+                String itemText = /*items2Ids.get(item)*/item.getId() + "\t" + item;//.toString();
                 bw.write(itemText);
                 bw.newLine();
             }
@@ -109,6 +122,29 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
+    public void exportSubjects2IdsMapping(String subjectsIdsFilePath) {
+        try {
+            BufferedWriter bw = FileUtils.getBufferedUTF8Writer(subjectsIdsFilePath);
+            //List<String> keysList= new ArrayList<>(items2Ids.keySet());
+            List<String> keysList= new ArrayList<>(subject2Id.keySet());
+            Collections.sort(keysList);
+            // for (String item : keysList) {
+            for (String subject : keysList) {
+                String itemText = items2Ids.get(subject) + "\t" + subject;//.toString();
+                bw.write(itemText);
+                bw.newLine();
+            }
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
     public void convert(String rdfFilePath){
         System.out.println("Loading RDF data ...");
         loadRDFFile(rdfFilePath);
@@ -117,69 +153,13 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
-    public void convertandSave(String rdfFilePath,String outputTransactionsFilePath,String outputMappingPath){
-        convertandSave( rdfFilePath, outputTransactionsFilePath);
-
-        System.out.println("Writing Mapping ...");
-        exportIds(outputMappingPath);
-        System.out.println("Done!");
-
-    }
-
-    private void convertandSave(String rdfFilePath, String outputTransactionsFilePath) {
-        convert(rdfFilePath);
-
-        System.out.println("Writing Transactions ...");
-        exportTransactions(outputTransactionsFilePath);
-        System.out.println("Done!");
-
-    }
-
-//    public void convertIntegers2Strings(String inputTransactionFilePath, String inputMappingFilePath,String outputTransactionFilePath){
+    //    public void convertIntegers2Strings(String inputTransactionFilePath, String inputMappingFilePath,String outputTransactionFilePath){
 //
 //        loadMappingFromFile(inputMappingFilePath);
 //
 //        convertIntegers2Strings(inputTransactionFilePath,outputTransactionFilePath);
 //
 //
-//    }
-
-    public Item[]convertIntegers2Strings(int [] itemsList){
-
-        Item[] itemsStrList=new Item[itemsList.length];
-        for (int i=0; i<itemsList.length;i++){
-            itemsStrList[i]=convertInteger2Item(itemsList[i]);
-
-        }
-
-        return itemsStrList;
-
-    }
-
-    public int[]convertItems2Integer(Item [] itemsList){
-
-        int[] itemsInt=new int[itemsList.length];
-        for (int i=0; i<itemsList.length;i++){
-            itemsInt[i]= convertItem2Integer(itemsList[i]);
-
-        }
-
-        return itemsInt;
-
-    }
-
-
-    public int convertItem2Integer(Item item){
-        return items2Ids.get(item);
-    }
-
-    public Item convertInteger2Item(int i){
-        return id2Item.get(i);
-    }
-
-
-
-
 //    private void convertIntegers2Strings(String inputTransactionFilePath, String outputTransactionFilePath) {
 //        try {
 //            BiMap<Integer,Item> id2Item=items2Ids.inverse();
@@ -201,6 +181,71 @@ public class RDF2IntegerTransactionsConverter {
 //            e.printStackTrace();
 //        }
 //
+    public void convertandSave(String rdfFilePath,String outputTransactionsFilePath,String outputMappingPath,String subjectsMapping) {
+        convertandSave( rdfFilePath, outputTransactionsFilePath, outputMappingPath);
+
+        System.out.println("Writing Mapping ...");
+        exportSubjects2IdsMapping(subjectsMapping);
+        System.out.println("Done!");
+
+    }
+
+    public void convertandSave(String rdfFilePath,String outputTransactionsFilePath,String outputMappingPath){
+        convertandSave( rdfFilePath, outputTransactionsFilePath);
+
+        System.out.println("Writing Mapping ...");
+        exportPredicates2IdsMapping(outputMappingPath);
+        System.out.println("Done!");
+
+    }
+
+    private void convertandSave(String rdfFilePath, String outputTransactionsFilePath) {
+        convert(rdfFilePath);
+
+        System.out.println("Writing Transactions ...");
+        exportTransactions(outputTransactionsFilePath);
+        System.out.println("Done!");
+
+    }
+
+//    }
+
+    public Item[]convertIntegers2Strings(int [] itemsList){
+
+        Item[] itemsStrList=new Item[itemsList.length];
+        for (int i=0; i<itemsList.length;i++){
+            itemsStrList[i]=convertInteger2Item(itemsList[i]);
+
+        }
+
+        return itemsStrList;
+
+    }
+
+
+    public int[]convertItems2Integer(Item [] itemsList){
+
+        int[] itemsInt=new int[itemsList.length];
+        for (int i=0; i<itemsList.length;i++){
+            itemsInt[i]= convertItem2Integer(itemsList[i]);
+
+        }
+
+        return itemsInt;
+
+    }
+
+    public int convertItem2Integer(Item item){
+        return items2Ids.get(item);
+    }
+
+
+
+
+    public Item convertInteger2Item(int i){
+        return id2Item.get(i);
+    }
+
 //    }
 
     private String[] splitLine(String line) {
@@ -210,6 +255,10 @@ public class RDF2IntegerTransactionsConverter {
         String pattern="(\\s)*(\\d+\\s)+(==>)(\\d+\\)";
         return parts;
     }
+
+
+
+
 
     public void loadMappingFromFile(String inputMappingFilePath) {
         try {
@@ -227,12 +276,8 @@ public class RDF2IntegerTransactionsConverter {
         }
     }
 
+    private void exportAsPrASP( String PrASPFile) {
 
-
-
-
-    private void convertToPrASP(String rdfInputFile, String PrASPFile) {
-        loadRDFFile(rdfInputFile);
 
         try {
             BufferedWriter bw = FileUtils.getBufferedUTF8Writer(PrASPFile);
@@ -257,14 +302,65 @@ public class RDF2IntegerTransactionsConverter {
 
         RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
 
-        if(args[0].equals("spmf"))
-        cv.convertandSave(args[1],args[2],args[3]);
-        else
-        if(args[0].equals("prasp"))
-        cv.convertToPrASP(args[1],args[2]);
+
+        cv.convert(args[1]);
+
+        switch (EncodingType.valueOf(args[0])){
+            case SPMF:
+                cv.exportTransactions(args[2]);
+                break;
+            case PrASP:
+                cv.exportAsPrASP(args[2]);
+                break;
+            case DLV_SAFE:
+                cv.exportToDLVSafe(args[2]);
+
+        }
+
+
+
+
+
+        cv.exportMappings(args[2]+"_mapping_predicates.tsv",args[2]+"_mapping_subjects.tsv" );
 
         //cv.convertandSave("data/facts_to_mine.tsv","data/facts_to_mine_integer_transactions.tsv","data/facts_to_mine_mapping.tsv");
     }
+
+    private void exportToDLVSafe(String dlvFile) {
+        try {
+            BufferedWriter bw = FileUtils.getBufferedUTF8Writer(dlvFile);
+
+            for (String t : subjects2ItemsIds.keySet()) {
+                final String subjectName=dlvSafeSubject(t);
+                List<String> itemsDLVSafe=subjects2ItemsIds.get(t).stream().map((i)-> id2Item.get(i).todlvSafe(subjectName)+".").collect(Collectors.toList());
+                String transactionText = Joiner.on(" ").join(itemsDLVSafe);
+                bw.write(transactionText);
+                bw.newLine();
+            }
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private String dlvSafeSubject(String subject) {
+        return "s"+subject2Id.get(subject)+"t";
+    }
+
+    private  void exportMappings(String predicatesMapping, String subjectsMapping) {
+
+        exportPredicates2IdsMapping(predicatesMapping);
+        exportSubjects2IdsMapping(subjectsMapping);
+    }
+
+
+    public synchronized int getNextSubjectID() {
+        nextSubjectID++;
+        return nextSubjectID;
+    }
+
 
 
 }

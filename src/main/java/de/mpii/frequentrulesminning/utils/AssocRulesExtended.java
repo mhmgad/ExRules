@@ -262,6 +262,24 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
+    public String toStringdlvSafe(SortingType sortType, int exceptionsNumber,boolean showRulesWithExceptionsOnly) {
+
+        sort(this.getRules(), sortType);
+
+        StringBuilder buffer = new StringBuilder();
+
+        for(AssocRuleWithExceptions r:getRules()){
+            if(showRulesWithExceptionsOnly&&!r.hasExceptions())
+                continue;
+            buffer.append(r.toDLVSafe(exceptionsNumber));
+            buffer.append('\n');
+        }
+
+        buffer.append('\n');
+        return buffer.toString();
+
+    }
+
 
     public double getAvgConfidence(int k,boolean withException){
         if(withException)

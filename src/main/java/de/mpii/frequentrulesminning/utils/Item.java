@@ -18,11 +18,12 @@ public class Item implements  Comparable<Item>{
     int id;
 
 
-    public Item(String predicate, String object) {
+    public Item(int id,String predicate, String object) {
         this.predicate = predicate;
         this.object = object;
         this.hashCode= toString().hashCode();
-        this.id=-1;
+//        this.id=-1;
+        this.id=id;
     }
 
     @Override
@@ -35,7 +36,7 @@ public class Item implements  Comparable<Item>{
             int splitIndex = itemString.indexOf(',');
             String pred = itemString.substring(1, splitIndex);
             String obj = itemString.substring(splitIndex + 1, itemString.length() - 1);
-            return new Item(pred, obj);
+            return new Item(-1,pred, obj);
         }catch (Exception e){
             System.out.println(itemString);
             e.printStackTrace();
@@ -117,7 +118,7 @@ public class Item implements  Comparable<Item>{
     public static String readableObject(String object){
         String cleanObject=FactComponent.stripBrackets(object);
         //cleanObject=FactComponent.stripClass(cleanObject);
-        cleanObject=cleanObject.replaceAll("\\p{Punct}","").replaceAll("\\P{ASCII}", "");
+        cleanObject=cleanObject.replaceAll("\\p{Punct}","");//.replaceAll("\\P{ASCII}", "");
         //cleanObject=cleanObject.replace("(","").replace(")","");
         return cleanObject;
     }
@@ -136,4 +137,9 @@ public class Item implements  Comparable<Item>{
     c[0] = Character.toLowerCase(c[0]);
     return new String(c);
 }
+
+    public String todlvSafe(String subjectName) {
+
+        return "p"+this.id+"o("+subjectName+")";
+    }
 }

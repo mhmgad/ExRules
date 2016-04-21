@@ -38,6 +38,7 @@ public class AssociationRuleMiningSPMF {
     private AlgoFPGrowth fpgrowth ;
     AlgoAgrawalFaster94 algoAgrawal;
     RDF2IntegerTransactionsConverter rdf2TransactionsConverter;
+    private String temporarySubjectsMappingFile;
 
     @Override
     public String toString() {
@@ -398,12 +399,13 @@ public class AssociationRuleMiningSPMF {
 
 
             String date=new SimpleDateFormat("yyyyMMddhhmm").format(new Date());
-            temperorayTransactiosFile=tmpDataFolder+"transactions_"+date+".txt";
+            this.temperorayTransactiosFile=tmpDataFolder+"transactions_"+date+".txt";
             this.temporaryMappingFile=tmpDataFolder+"mapping_"+date+".tsv";
+            this.temporarySubjectsMappingFile=tmpDataFolder+"mapping_subjects_"+date+".tsv";
 
             transactionsFilePath=temperorayTransactiosFile;
             System.out.println("Start Encoding ...");
-            rdf2TransactionsConverter.convertandSave(inFilePath,transactionsFilePath , temporaryMappingFile);
+            rdf2TransactionsConverter.convertandSave(inFilePath,transactionsFilePath , temporaryMappingFile,temporarySubjectsMappingFile);
             System.out.println("Done Encoding!");
         }else
         {
