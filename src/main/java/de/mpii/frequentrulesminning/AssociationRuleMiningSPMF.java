@@ -358,7 +358,7 @@ public class AssociationRuleMiningSPMF {
         }
 
         if(loadMapping)
-            rdf2TransactionsConverter.loadMappingFromFile(mappingFilePath);
+            rdf2TransactionsConverter.loadPredicateMappingFromFile(mappingFilePath);
 
         System.out.println("Start Decoding ...");
         for(AssocRuleWithExceptions r:rules.getRules()) {

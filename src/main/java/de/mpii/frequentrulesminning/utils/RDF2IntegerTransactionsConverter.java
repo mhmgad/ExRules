@@ -10,13 +10,14 @@ import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.filehandlers.UTF8Reader;
 import mpi.tools.javatools.util.FileUtils;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -26,13 +27,14 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
-    enum EncodingType{SPMF,PrASP,DLV_SAFE}
+    enum EncodingType{SPMF,PrASP,DLV_SAFE,RDF}
 
     private HashBiMap<Item,Integer> items2Ids;
     private BiMap<Integer,Item> id2Item;
     private SetMultimap<String, Integer> subjects2ItemsIds;
 
     private BiMap<String,Integer> subject2Id;
+    private  BiMap<Integer,String> id2Subject;
 
 
 
@@ -45,6 +47,7 @@ public class RDF2IntegerTransactionsConverter {
         items2Ids = HashBiMap.create();
         subjects2ItemsIds = HashMultimap.create();
         subject2Id=HashBiMap.create();
+        id2Subject=subject2Id.inverse();
         itemsIDs=0;
     }
 
@@ -155,7 +158,7 @@ public class RDF2IntegerTransactionsConverter {
 
     //    public void convertIntegers2Strings(String inputTransactionFilePath, String inputMappingFilePath,String outputTransactionFilePath){
 //
-//        loadMappingFromFile(inputMappingFilePath);
+//        loadPredicateMappingFromFile(inputMappingFilePath);
 //
 //        convertIntegers2Strings(inputTransactionFilePath,outputTransactionFilePath);
 //
@@ -260,7 +263,7 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
-    public void loadMappingFromFile(String inputMappingFilePath) {
+    public void loadPredicateMappingFromFile(String inputMappingFilePath) {
         try {
             System.out.println("Reading Mapping ...");
             BufferedReader br= FileUtils.getBufferedUTF8Reader(inputMappingFilePath);
@@ -278,7 +281,26 @@ public class RDF2IntegerTransactionsConverter {
         }
     }
 
-    private void exportAsPrASP( String PrASPFile) {
+
+    public void loadSubjectMappingFromFile(String inputMappingFilePath) {
+        try {
+            System.out.println("Reading Subject Mapping ...");
+            BufferedReader br= FileUtils.getBufferedUTF8Reader(inputMappingFilePath);
+            for(String line=br.readLine();line!=null;line=br.readLine()){
+                String[] parts=line.split("\t");
+//                Item item=Item.fromString(parts[1]);
+//                item.setId();
+                subject2Id.put(parts[1],Integer.valueOf(parts[0]));
+
+            }
+            id2Item= items2Ids.inverse();
+            System.out.println("Done!");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void exportAsPrASP( String PrASPFile) {
 
 
         try {
@@ -335,6 +357,80 @@ public class RDF2IntegerTransactionsConverter {
     }
 
 
+    Pattern predicatIdPattern = Pattern.compile(Pattern.quote("p") + "(.*?)" + Pattern.quote("o"));
+
+
+    public Item fromDLVToItem(String dlvpredicate){
+        Matcher matcher=predicatIdPattern.matcher(dlvpredicate);
+        if(matcher.find()) {
+            int predicateId = Integer.valueOf(matcher.group(1));
+            return id2Item.get(predicateId);
+
+
+        }
+
+        return null;
+    }
+
+    Pattern subjectIdPattern = Pattern.compile(Pattern.quote("s") + "(.*?)" + Pattern.quote("t"));
+
+
+    public String fromDLVSubject(String dlvpredicate){
+        Matcher subjectMatcher=subjectIdPattern.matcher(dlvpredicate);
+        if(subjectMatcher.find())
+        {
+            int subjectId=Integer.valueOf(subjectMatcher.group(1));
+
+            return id2Subject.get(subjectId);
+        }
+
+        return null;
+
+    }
+    Pattern singleModelPattern = Pattern.compile(Pattern.quote("{") + "(.*?)" + Pattern.quote("}"));
+
+   public void parseDLVOutput(String dlvOutputFile) throws IOException {
+       //TODO only one answer
+       String outputFile=FileUtils.getFileContent(new File(dlvOutputFile));
+       Matcher subjectMatcher=singleModelPattern.matcher(outputFile);
+
+       if(subjectMatcher.find()){
+            String modelString=subjectMatcher.group(1);
+
+            String []modelPredicatesString= modelString.split(",");
+
+           Arrays.stream(modelPredicatesString).forEach((predicateString)-> {
+               String subject=fromDLVSubject(predicateString);
+               Item item=fromDLVToItem(predicateString);
+
+               subject2Id.put(subject,item.getId());
+
+           });
+       }
+
+
+   }
+
+    public void exportToRDF(String rdfFile) {
+        try {
+            BufferedWriter bw = FileUtils.getBufferedUTF8Writer(rdfFile);
+
+            for (String subject : subjects2ItemsIds.keySet()) {
+//                final String subjectName=dlvSafeSubject(t);
+                List<String> itemsDLVSafe=subjects2ItemsIds.get(subject).stream().map((i)-> new Fact(subject,id2Item.get(i).getPredicate(),id2Item.get(i).getObject()).toTsvLine()).collect(Collectors.toList());
+                String transactionText = Joiner.on("\n").join(itemsDLVSafe);
+                bw.write(transactionText);
+                bw.newLine();
+            }
+            bw.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     public static void main(String [] args){
 
         RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
@@ -357,13 +453,12 @@ public class RDF2IntegerTransactionsConverter {
         }
 
 
-
-
-
         cv.exportMappings(args[2]+".mapping_predicates",args[2]+".mapping_subjects" );
 
         //cv.convertandSave("data/facts_to_mine.tsv","data/facts_to_mine_integer_transactions.tsv","data/facts_to_mine_mapping.tsv");
     }
+
+
 
 
 

@@ -53,7 +53,7 @@ public class ExceptionMining {
 
     public ExceptionMining(String transactionsFilePath, String rdf2IdMappingFilePath, double exceptionMinSupp) throws IOException {
         this(transactionsFilePath,new RDF2IntegerTransactionsConverter(),exceptionMinSupp);
-        this.converter.loadMappingFromFile(rdf2IdMappingFilePath);
+        this.converter.loadPredicateMappingFromFile(rdf2IdMappingFilePath);
 
     }
 
