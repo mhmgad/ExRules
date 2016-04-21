@@ -374,7 +374,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public String toDLVSafe(int numberOfEceptions) {
         String body = Joiner.on(", ").join(itemsToStringDLV(getbodyItems(),false));
         String negBody= (hasExceptions())? Joiner.on(", ").join(itemsToStringDLV(getTopKExceptionsItem(numberOfEceptions),true)):"";
-        String head = Joiner.on(" ").join(itemsToStringPrASP(getHeadItems(),false));
+        String head = Joiner.on(" ").join(itemsToStringDLV(getHeadItems(),false));
         return head+" :- "+body+ (!negBody.isEmpty()? (", "+negBody):"")+".";
     }
 

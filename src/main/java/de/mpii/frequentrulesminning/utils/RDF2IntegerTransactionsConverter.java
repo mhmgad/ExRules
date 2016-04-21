@@ -266,7 +266,9 @@ public class RDF2IntegerTransactionsConverter {
             BufferedReader br= FileUtils.getBufferedUTF8Reader(inputMappingFilePath);
             for(String line=br.readLine();line!=null;line=br.readLine()){
                 String[] parts=line.split("\t");
-                items2Ids.put(Item.fromString(parts[1]),Integer.valueOf(parts[0]));
+                Item item=Item.fromString(parts[1]);
+                item.setId(Integer.valueOf(parts[0]));
+                items2Ids.put(item,item.getId());
 
             }
             id2Item= items2Ids.inverse();
