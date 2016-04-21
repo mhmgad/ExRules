@@ -592,6 +592,12 @@ public class AssociationRuleMiningSPMF {
         this.showRulesWithExceptionsOnly = showRulesWithExceptionsOnly;
     }
 
+    public void exportRulesForDLV(AssocRulesExtended rules, String dlvOutputFile) throws IOException {
+        BufferedWriter bw=FileUtils.getBufferedUTF8Writer(dlvOutputFile);
+        bw.write(rules.toStringdlvSafe(sortType,1,showRulesWithExceptionsOnly));
+        bw.close();
+    }
+
     //    public static  void main(String [] args) throws IOException {
 //
 //

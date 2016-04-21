@@ -298,34 +298,6 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
-    public static void main(String [] args){
-
-        RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
-
-
-        cv.convert(args[1]);
-
-        switch (EncodingType.valueOf(args[0])){
-            case SPMF:
-                cv.exportTransactions(args[2]);
-                break;
-            case PrASP:
-                cv.exportAsPrASP(args[2]);
-                break;
-            case DLV_SAFE:
-                cv.exportToDLVSafe(args[2]);
-
-        }
-
-
-
-
-
-        cv.exportMappings(args[2]+"_mapping_predicates.tsv",args[2]+"_mapping_subjects.tsv" );
-
-        //cv.convertandSave("data/facts_to_mine.tsv","data/facts_to_mine_integer_transactions.tsv","data/facts_to_mine_mapping.tsv");
-    }
-
     private void exportToDLVSafe(String dlvFile) {
         try {
             BufferedWriter bw = FileUtils.getBufferedUTF8Writer(dlvFile);
@@ -355,10 +327,40 @@ public class RDF2IntegerTransactionsConverter {
         exportSubjects2IdsMapping(subjectsMapping);
     }
 
-
     public synchronized int getNextSubjectID() {
         nextSubjectID++;
         return nextSubjectID;
+    }
+
+
+    public static void main(String [] args){
+
+        RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
+
+
+        cv.convert(args[1]);
+
+        switch (EncodingType.valueOf(args[0])){
+            case SPMF:
+                cv.exportTransactions(args[2]);
+                break;
+            case PrASP:
+                cv.exportAsPrASP(args[2]);
+                break;
+            case DLV_SAFE:
+                cv.exportToDLVSafe(args[2]+".dlv");
+                cv.exportTransactions(args[2]+".transactions");
+                break;
+
+        }
+
+
+
+
+
+        cv.exportMappings(args[2]+"_mapping_predicates.tsv",args[2]+"_mapping_subjects.tsv" );
+
+        //cv.convertandSave("data/facts_to_mine.tsv","data/facts_to_mine_integer_transactions.tsv","data/facts_to_mine_mapping.tsv");
     }
 
 

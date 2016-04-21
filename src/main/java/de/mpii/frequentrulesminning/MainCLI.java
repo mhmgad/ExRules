@@ -35,6 +35,7 @@ public class MainCLI {
     private Option cautiousPartialMaterializationOp;
     private Option exportasPrASPOp;
     private Option statsOp;
+    private Option exportDLVOp;
 
     public MainCLI() {
          options= new Options();
@@ -119,8 +120,11 @@ public class MainCLI {
         options.addOption(exceptionRankingOp);
 
 
-        exportasPrASPOp=Option.builder("oPrASP").longOpt("output_PrASP").hasArg().desc("Export rules as PrASP" ).argName("file").build();
+        exportasPrASPOp=Option.builder("oPrASP").longOpt("output_PrASP").hasArg(false).desc("Export rules as PrASP" ).build();
         options.addOption(exportasPrASPOp);
+
+        exportDLVOp=Option.builder("oDLV").longOpt("output_DLV").hasArg(false).desc("Export rules as PrASP" ).build();
+        options.addOption(exportDLVOp);
 
 
         statsOp=Option.builder("stats").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
@@ -220,8 +224,13 @@ public class MainCLI {
         // Export rules as PrASP
 
         if(cmd.hasOption(exportasPrASPOp.getOpt())){
-            String prASPOutFile=cmd.getOptionValue(exportasPrASPOp.getOpt());
+            String prASPOutFile=outputFilePath+".prasp";//cmd.getOptionValue(exportasPrASPOp.getOpt());
             miner.exportRulesForPrASP(rulesStrings,prASPOutFile/*,outputSorting,showRulesWithExceptionsOnly*/);
+        }
+
+        if(cmd.hasOption(exportDLVOp.getOpt())){
+            String dlvFile=outputFilePath+".dlv_safe";//cmd.getOptionValue(exportasPrASPOp.getOpt());
+            miner.exportRulesForDLV(rulesStrings,dlvFile/*,outputSorting,showRulesWithExceptionsOnly*/);
         }
 
         boolean export=cmd.hasOption(statsOp.getOpt());;

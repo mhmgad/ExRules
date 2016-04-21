@@ -19,6 +19,9 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return getRules().size();
     }
 
+
+
+
     public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, NEW_LIFT}
 
     List<AssocRuleWithExceptions> rules;
