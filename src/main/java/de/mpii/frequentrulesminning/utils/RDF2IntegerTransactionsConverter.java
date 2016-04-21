@@ -358,7 +358,7 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
-        cv.exportMappings(args[2]+"_mapping_predicates.tsv",args[2]+"_mapping_subjects.tsv" );
+        cv.exportMappings(args[2]+".mapping_predicates",args[2]+".mapping_subjects" );
 
         //cv.convertandSave("data/facts_to_mine.tsv","data/facts_to_mine_integer_transactions.tsv","data/facts_to_mine_mapping.tsv");
     }
