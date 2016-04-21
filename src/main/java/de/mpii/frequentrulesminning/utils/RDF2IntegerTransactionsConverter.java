@@ -133,7 +133,7 @@ public class RDF2IntegerTransactionsConverter {
             Collections.sort(keysList);
             // for (String item : keysList) {
             for (String subject : keysList) {
-                String itemText = items2Ids.get(subject) + "\t" + subject;//.toString();
+                String itemText = subject2Id.get(subject) + "\t" + subject;//.toString();
                 bw.write(itemText);
                 bw.newLine();
             }
