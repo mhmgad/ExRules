@@ -90,6 +90,10 @@
                             <mainClass>de.mpii.frequentrulesminning.MainCLI</mainClass>
                             <id>mine_rules</id>
                         </program>
+                        <program>
+                            <mainClass>de.mpii.frequentrulesminning.utils.DLV2Transactions</mainClass>
+                            <id>dlv2kb</id>
+                        </program>
                     </programs>
                 </configuration>
             </plugin>
