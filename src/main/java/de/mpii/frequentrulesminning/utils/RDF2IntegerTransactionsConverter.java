@@ -391,11 +391,13 @@ public class RDF2IntegerTransactionsConverter {
 
    public void parseDLVOutput(String dlvOutputFile) throws IOException {
        //TODO only one answer
-       String outputFile=FileUtils.getFileContent(new File(dlvOutputFile));
-       Matcher subjectMatcher=singleModelPattern.matcher(outputFile);
+       String outputFileContent=FileUtils.getFileContent(new File(dlvOutputFile));
+       Matcher subjectMatcher=singleModelPattern.matcher(outputFileContent);
 
        if(subjectMatcher.find()){
             String modelString=subjectMatcher.group(1);
+
+           System.out.println("Model Fount");
 
             String []modelPredicatesString= modelString.split(",");
 
