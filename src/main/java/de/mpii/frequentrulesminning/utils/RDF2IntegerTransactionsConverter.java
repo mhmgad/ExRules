@@ -405,7 +405,7 @@ public class RDF2IntegerTransactionsConverter {
                String subject=fromDLVSubject(predicateString);
                Item item=fromDLVToItem(predicateString);
 
-               subject2Id.put(subject,item.getId());
+               subjects2ItemsIds.put(subject,item.getId());
 
            });
        }
