@@ -9,20 +9,16 @@ import java.util.Set;
 public class HeadGroup {
 
 
-    private  Item[] headItems;
     int [] headItemsIds;
     private double coverage;
     private double confidence;
 //    private int allTransactionsCount;
     private Set<AssocRuleWithExceptions> rules;
 
-    public HeadGroup(int[] headItemsId) {
-        this(headItemsId,null);
-    }
 
-    public HeadGroup(int[] headItemsIds,Item[] headItems) {
+    public HeadGroup(int[] headItemsIds) {
         this.headItemsIds =headItemsIds;
-        this.headItems=headItems;
+
 
     }
 
@@ -79,7 +75,9 @@ public class HeadGroup {
         return rules;
     }
 
-    public Item[] getHeadItems() {
-        return headItems;
+    public String  asDLVString(String subject){
+       return Item.asDLVIetm(getHeadItemsIds()[0],subject);
     }
+
+
 }

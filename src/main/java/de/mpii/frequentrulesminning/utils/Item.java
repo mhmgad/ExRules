@@ -18,6 +18,7 @@ public class Item implements  Comparable<Item>{
     int id;
 
 
+
     public Item(int id,String predicate, String object) {
         this.predicate = predicate;
         this.object = object;
@@ -140,12 +141,20 @@ public class Item implements  Comparable<Item>{
 //    }
 
 
-    public String todlvSafe(){
-        return "p"+this.id+"o";
-    }
+
 
     public String todlvSafe(String subjectName) {
 
-        return todlvSafe()+"("+subjectName+")";
+        return  asDLVIetm( id,subjectName);
+    }
+
+    public static String asDLVItem(int id) {
+        return "p"+id+"o";
+
+    }
+
+    public static String asDLVIetm(int id,String subject) {
+        return asDLVItem(id)+"("+subject+")";
+
     }
 }

@@ -113,6 +113,7 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Start Rule Mining ...");
         List<AssocRule> rulesGenerated = algoAgrawal.runAlgorithm(frequentItemsets, null, getDatabaseSize(), minconf).getRules();
         AssocRulesExtended rules=new AssocRulesExtended();
+
         rulesGenerated.forEach((r)-> rules.addRule(new AssocRuleWithExceptions(AssocRuleWithExceptions.getNextID(),r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift())));
         algoAgrawal.printStats();
         System.out.println("Done Rule Mining ...");

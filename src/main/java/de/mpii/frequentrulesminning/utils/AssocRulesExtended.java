@@ -46,7 +46,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public void addRule(AssocRuleWithExceptions rule) {
         getRules().add(rule);
-        HeadGroup h = new HeadGroup(rule.getHead(),rule.getHeadItems());
+        HeadGroup h = new HeadGroup(rule.getHead());
         BodyGroup b = new BodyGroup(rule.getItemset1());
 
         if (!head2Rules.containsKey(h))
@@ -85,8 +85,8 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         getRules().removeIf(
                 predicate.and(assocRule -> {
                     // remove from the head2Rules map.
-                    head2Rules.remove(new HeadGroup(assocRule.getHead(),assocRule.getHeadItems()), assocRule);
-                    body2Rules.remove(new BodyGroup(assocRule.getItemset1()), assocRule);
+                    head2Rules.remove(new HeadGroup(assocRule.getHead()), assocRule);
+                    body2Rules.remove(new BodyGroup(assocRule.getBody()), assocRule);
                     return true;
                 }));
 
@@ -288,7 +288,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         StringBuilder buffer = new StringBuilder();
 
         for(HeadGroup head: head2Rules.keySet()){
-            String dlvPredicate=head.getHeadItems()[0].todlvSafe("X");
+            String dlvPredicate=head.asDLVString("X");
             String conflictHead="conflicts_"+dlvPredicate;
             String conflictRule=conflictHead+" :- not "+dlvPredicate+", "+ dlvPredicate+".";
             String numberConflictRule=" number_of_"+conflictHead+" :- #count{X : "+conflictHead+"} = Y.";
