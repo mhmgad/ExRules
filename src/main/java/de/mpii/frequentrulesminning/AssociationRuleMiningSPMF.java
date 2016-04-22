@@ -594,7 +594,23 @@ public class AssociationRuleMiningSPMF {
 
     public void exportRulesForDLV(AssocRulesExtended rules, String dlvOutputFile) throws IOException {
         BufferedWriter bw=FileUtils.getBufferedUTF8Writer(dlvOutputFile);
-        bw.write(rules.toStringdlvSafe(sortType,1,showRulesWithExceptionsOnly));
+
+        bw.write(rules.toStringdlvSafe(sortType,1,showRulesWithExceptionsOnly,true));
+        bw.close();
+
+        //Negated Facts
+        BufferedWriter bwNeg=FileUtils.getBufferedUTF8Writer(dlvOutputFile+".neg");
+        bwNeg.write(rules.toStringdlvSafe(sortType,1,showRulesWithExceptionsOnly,false));
+        bwNeg.close();
+
+
+
+    }
+
+    public void exportDLVConflict(AssocRulesExtended rules, String dlvConflictFile)throws IOException {
+
+        BufferedWriter bw=FileUtils.getBufferedUTF8Writer(dlvConflictFile);
+        bw.write(rules.toStringdlvConflict());
         bw.close();
     }
 

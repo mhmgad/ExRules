@@ -371,11 +371,18 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
 
-    public String toDLVSafe(int numberOfEceptions) {
-        String body = Joiner.on(", ").join(itemsToStringDLV(getbodyItems(),false));
-        String negBody= (hasExceptions())? Joiner.on(", ").join(itemsToStringDLV(getTopKExceptionsItem(numberOfEceptions),true)):"";
-        String head = Joiner.on(" ").join(itemsToStringDLV(getHeadItems(),false));
-        return head+" :- "+body+ (!negBody.isEmpty()? (", "+negBody):"")+".";
+    public String toDLVSafe(int numberOfEceptions, boolean positiveRule) {
+        String body = Joiner.on(", ").join(itemsToStringDLV(getbodyItems(), false));
+        String negBody;
+        if (positiveRule) {// negated part should be the same
+            negBody = (hasExceptions()) ? ", "+Joiner.on(", ").join(itemsToStringDLV(getTopKExceptionsItem(numberOfEceptions), true)) : "";
+        }
+        else
+        {// add exceptions ass positive and
+            negBody = ", "+((hasExceptions()) ? Joiner.on(", ").join(itemsToStringDLV(getTopKExceptionsItem(numberOfEceptions), false)) : " not dummy(X)");
+        }
+        String head = Joiner.on(" ").join(itemsToStringDLV(getHeadItems(),!positiveRule));
+        return head+" :- "+body+negBody+".";
     }
 
     private List<String> itemsToStringDLV(Item[] items, boolean negated) {

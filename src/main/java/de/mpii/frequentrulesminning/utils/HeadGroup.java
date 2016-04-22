@@ -9,20 +9,27 @@ import java.util.Set;
 public class HeadGroup {
 
 
-    int [] headItems;
+    private  Item[] headItems;
+    int [] headItemsIds;
     private double coverage;
     private double confidence;
 //    private int allTransactionsCount;
     private Set<AssocRuleWithExceptions> rules;
 
-    public HeadGroup(int[] itemset2) {
-        this.headItems=itemset2;
+    public HeadGroup(int[] headItemsId) {
+        this(headItemsId,null);
+    }
+
+    public HeadGroup(int[] headItemsIds,Item[] headItems) {
+        this.headItemsIds =headItemsIds;
+        this.headItems=headItems;
+
     }
 
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(headItems);
+        return Arrays.hashCode(headItemsIds);
     }
 
 
@@ -32,7 +39,7 @@ public class HeadGroup {
 
     @Override
     public boolean equals(Object obj) {
-        return Arrays.equals(headItems,((HeadGroup)obj).headItems);
+        return Arrays.equals(headItemsIds,((HeadGroup)obj).headItemsIds);
     }
 
     public double getCoverage() {
@@ -45,11 +52,11 @@ public class HeadGroup {
 
     @Override
     public String toString() {
-        return Arrays.toString(headItems)+" Cov: " + String.format("%.5f", getCoverage())  + " Conf: " + String.format("%.5f",getConfidence());//+" AllTrans: " + getAllTransactionsCount()
+        return Arrays.toString(headItemsIds)+" Cov: " + String.format("%.5f", getCoverage())  + " Conf: " + String.format("%.5f",getConfidence());//+" AllTrans: " + getAllTransactionsCount()
     }
 
-    public int[] getHeadItems() {
-        return headItems;
+    public int[] getHeadItemsIds() {
+        return headItemsIds;
     }
 
 //    public void setAllTransactionsCount(int allTransactionsCount) {
@@ -72,4 +79,7 @@ public class HeadGroup {
         return rules;
     }
 
+    public Item[] getHeadItems() {
+        return headItems;
+    }
 }

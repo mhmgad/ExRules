@@ -265,7 +265,7 @@ public class Evaluator {
 //    public void groupCoverage(HeadGroup head, Collection<AssocRuleWithExceptions> rules, boolean withExceptions) {
 //
 //        //TODO Exception Handling is not yet implemented
-//        Set<Transaction> containsBodyOrHead = transactionsDB.getTransactions(head.getHeadItems(), null, false);
+//        Set<Transaction> containsBodyOrHead = transactionsDB.getTransactions(head.getHeadItemsIds(), null, false);
 //
 //        //ArrayList<Integer> rulesTransactionsCount=new ArrayList<>();
 //        BigDecimal coverageMultiplication = BigDecimal.ONE;
@@ -332,7 +332,7 @@ public class Evaluator {
 //
 //        double bodyTransactionsCount = TransactionsDatabase.getTransactionsCount(containsBody);
 //
-//        double rulesBodyandHeadCount = TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(containsBody, head.getHeadItems(), false));
+//        double rulesBodyandHeadCount = TransactionsDatabase.getTransactionsCount(transactionsDB.filterTransactionsWith(containsBody, head.getHeadItemsIds(), false));
 //
 //        //head.setConfidence((double) rulesBodyandHeadCount / bodyTransactionsCount);
 //        return (double) rulesBodyandHeadCount / bodyTransactionsCount;

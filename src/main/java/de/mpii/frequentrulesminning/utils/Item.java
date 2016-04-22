@@ -125,21 +125,27 @@ public class Item implements  Comparable<Item>{
 
     public static String readableSubject(String subject){
         // currently deal as object
-        return decapitalize(readableObject(subject));
+        //decapitalize(readableObject(subject));
+        return readableObject(subject);
     }
 
 
-    public static String decapitalize(String x){
-    if (x == null || x.length() == 0) {
-        return x;
+//    public static String decapitalize(String x){
+//        if (x == null || x.length() == 0) {
+//            return x;
+//        }
+//        char c[] = x.toCharArray();
+//        c[0] = Character.toLowerCase(c[0]);
+//        return new String(c);
+//    }
+
+
+    public String todlvSafe(){
+        return "p"+this.id+"o";
     }
-    char c[] = x.toCharArray();
-    c[0] = Character.toLowerCase(c[0]);
-    return new String(c);
-}
 
     public String todlvSafe(String subjectName) {
 
-        return "p"+this.id+"o("+subjectName+")";
+        return todlvSafe()+"("+subjectName+")";
     }
 }

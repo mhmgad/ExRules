@@ -46,7 +46,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public void addRule(AssocRuleWithExceptions rule) {
         getRules().add(rule);
-        HeadGroup h = new HeadGroup(rule.getItemset2());
+        HeadGroup h = new HeadGroup(rule.getHead(),rule.getHeadItems());
         BodyGroup b = new BodyGroup(rule.getItemset1());
 
         if (!head2Rules.containsKey(h))
@@ -85,8 +85,8 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         getRules().removeIf(
                 predicate.and(assocRule -> {
                     // remove from the head2Rules map.
-                    head2Rules.remove(new HeadGroup(assocRule.getItemset2()), assocRule);
-                    body2Rules.remove(new HeadGroup(assocRule.getItemset1()), assocRule);
+                    head2Rules.remove(new HeadGroup(assocRule.getHead(),assocRule.getHeadItems()), assocRule);
+                    body2Rules.remove(new BodyGroup(assocRule.getItemset1()), assocRule);
                     return true;
                 }));
 
@@ -265,16 +265,36 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
-    public String toStringdlvSafe(SortingType sortType, int exceptionsNumber,boolean showRulesWithExceptionsOnly) {
+    public String toStringdlvSafe(SortingType sortType, int exceptionsNumber, boolean rulesWithExceptionsOnly, boolean positive) {
 
         sort(this.getRules(), sortType);
 
         StringBuilder buffer = new StringBuilder();
 
         for(AssocRuleWithExceptions r:getRules()){
-            if(showRulesWithExceptionsOnly&&!r.hasExceptions())
+            if(rulesWithExceptionsOnly &&!r.hasExceptions())
                 continue;
-            buffer.append(r.toDLVSafe(exceptionsNumber));
+            buffer.append(r.toDLVSafe(exceptionsNumber,positive));
+            buffer.append('\n');
+        }
+
+        buffer.append('\n');
+        return buffer.toString();
+
+    }
+
+    public String toStringdlvConflict() {
+
+        StringBuilder buffer = new StringBuilder();
+
+        for(HeadGroup head: head2Rules.keySet()){
+            String dlvPredicate=head.getHeadItems()[0].todlvSafe("X");
+            String conflictHead="conflicts_"+dlvPredicate;
+            String conflictRule=conflictHead+" :- not "+dlvPredicate+", "+ dlvPredicate+".";
+            String numberConflictRule=" number_of_"+conflictHead+" :- #count{X : "+conflictHead+"} = Y.";
+            buffer.append(conflictRule);
+            buffer.append('\n');
+            buffer.append(numberConflictRule);
             buffer.append('\n');
         }
 
@@ -306,6 +326,8 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         else
             return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getLift).average().getAsDouble();
     }
+
+
 
 
     //    private void sortByLift(List<AssocRuleWithExceptions> rulesToSort) {

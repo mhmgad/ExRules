@@ -36,6 +36,7 @@ public class MainCLI {
     private Option exportasPrASPOp;
     private Option statsOp;
     private Option exportDLVOp;
+    private Option exportDLVConflictOp;
 
     public MainCLI() {
          options= new Options();
@@ -130,6 +131,8 @@ public class MainCLI {
         statsOp=Option.builder("stats").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
         options.addOption(statsOp);
 
+        exportDLVConflictOp=Option.builder("oDLV_CONFLICT").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
+        options.addOption(exportDLVConflictOp);
     }
 
 
@@ -229,13 +232,24 @@ public class MainCLI {
         }
 
         if(cmd.hasOption(exportDLVOp.getOpt())){
-            String dlvFile=outputFilePath+".dlv_safe";//cmd.getOptionValue(exportasPrASPOp.getOpt());
+            String dlvFile=outputFilePath+".dlv";//cmd.getOptionValue(exportasPrASPOp.getOpt());
             miner.exportRulesForDLV(rulesStrings,dlvFile/*,outputSorting,showRulesWithExceptionsOnly*/);
         }
+
+        if(cmd.hasOption(exportDLVConflictOp.getOpt())){
+
+        }
+
 
         boolean export=cmd.hasOption(statsOp.getOpt());;
         String fileName=outputFilePath+".stat";
         miner.showStatistics( rulesStrings,export, fileName);
+
+
+        if(cmd.hasOption(exportDLVConflictOp.getOpt())){
+            String dlvFile=outputFilePath+".conflict.dlv";//cmd.getOptionValue(exportasPrASPOp.getOpt());
+            miner.exportDLVConflict(rulesStrings,dlvFile/*,outputSorting,showRulesWithExceptionsOnly*/);
+        }
 
     }
 
