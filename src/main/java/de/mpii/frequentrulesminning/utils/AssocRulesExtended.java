@@ -278,13 +278,13 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             buffer.append('\n');
         }
 
-        buffer.append('\n');
+
         return buffer.toString();
 
     }
 
     public String toStringdlvConflict() {
-
+        System.out.println("Number of Heads: "+head2Rules.keySet().size());
         StringBuilder buffer = new StringBuilder();
 
         for(HeadGroup head: head2Rules.keySet()){
@@ -298,7 +298,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             buffer.append('\n');
         }
 
-        buffer.append('\n');
+
         return buffer.toString();
 
     }
