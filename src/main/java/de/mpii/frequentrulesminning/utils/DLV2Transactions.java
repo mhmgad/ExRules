@@ -15,10 +15,12 @@ public class DLV2Transactions {
         RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
 
 
-        cv.parseDLVOutput(args[1]);
-
         cv.loadPredicateMappingFromFile(args[2]);
         cv.loadSubjectMappingFromFile(args[3]);
+
+        cv.parseDLVOutput(args[1]);
+
+
 
         switch (RDF2IntegerTransactionsConverter.EncodingType.valueOf(args[0])){
             case SPMF:
