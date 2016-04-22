@@ -420,9 +420,9 @@ public class RDF2IntegerTransactionsConverter {
             for (String subject : subjects2ItemsIds.keySet()) {
 //                final String subjectName=dlvSafeSubject(t);
                 List<String> itemsDLVSafe=subjects2ItemsIds.get(subject).stream().map((i)-> new Fact(subject,id2Item.get(i).getPredicate(),id2Item.get(i).getObject()).toTsvLine()).collect(Collectors.toList());
-                String transactionText = Joiner.on("\n").join(itemsDLVSafe);
+                String transactionText = Joiner.on("").join(itemsDLVSafe);
                 bw.write(transactionText);
-                bw.newLine();
+                //bw.newLine();
             }
             bw.close();
 
