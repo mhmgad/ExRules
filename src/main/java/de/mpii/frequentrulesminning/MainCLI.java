@@ -131,7 +131,7 @@ public class MainCLI {
         statsOp=Option.builder("stats").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
         options.addOption(statsOp);
 
-        exportDLVConflictOp=Option.builder("oDLV_CONFLICT").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
+        exportDLVConflictOp=Option.builder("oDLV_CONFLICT").longOpt("export_DLVConflict").hasArg(false).desc("Export rules to count conflict to file" ).build();
         options.addOption(exportDLVConflictOp);
     }
 
