@@ -18,7 +18,7 @@ OUTPUT_DIR=$INPUT_DIR/DLV
 
 KB_FILE=/GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.dlv
 
-INPUT_FILE_CONFLICT=$INPUT_FILE.conflict
+INPUT_FILE_CONFLICT=$INPUT_DIR/$INPUT_FILE.conflict
 
 INPUT_FILE_NEG=$INPUT_FILE.neg
 
