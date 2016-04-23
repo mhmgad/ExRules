@@ -290,7 +290,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         for(HeadGroup head: head2Rules.keySet()){
             String dlvPredicate=head.asDLVString("X");
             String conflictHead="conflicts_"+dlvPredicate;
-            String conflictRule=conflictHead+" :- not "+dlvPredicate+", "+ dlvPredicate+".";
+            String conflictRule=conflictHead+" :- not_"+dlvPredicate+", "+ dlvPredicate+".";
             String numberConflictRule=" number_of_"+conflictHead+" :- #count{X : "+conflictHead+"} = Y.";
             buffer.append(conflictRule);
             buffer.append('\n');

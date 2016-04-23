@@ -382,6 +382,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
             negBody = ", "+((hasExceptions()) ? Joiner.on(", ").join(itemsToStringDLV(getTopKExceptionsItem(numberOfEceptions), false)) : " dummy(X)");
         }
         String head = Joiner.on(" ").join(itemsToStringDLV(getHeadItems(),!positiveRule));
+        head=(positiveRule)? head:(head.trim().replace(' ','_'));
         return head+" :- "+body+negBody+".";
     }
 
