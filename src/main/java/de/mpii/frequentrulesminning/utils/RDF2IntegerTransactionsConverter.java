@@ -372,7 +372,7 @@ public class RDF2IntegerTransactionsConverter {
         return null;
     }
 
-    Pattern subjectIdPattern = Pattern.compile(Pattern.quote("s") + "(.*?)" + Pattern.quote("t"));
+     Pattern subjectIdPattern = Pattern.compile(Pattern.quote("s") + "(.*?)" + Pattern.quote("t"));
 
 
     public String fromDLVSubject(String dlvpredicate){
@@ -387,31 +387,31 @@ public class RDF2IntegerTransactionsConverter {
         return null;
 
     }
-    Pattern singleModelPattern = Pattern.compile(Pattern.quote("{") + "(.*?)" + Pattern.quote("}"));
+
+
 
    public void parseDLVOutput(String dlvOutputFile) throws IOException {
-       //TODO only one answer
-       String outputFileContent=FileUtils.getFileContent(new File(dlvOutputFile));
-       Matcher subjectMatcher=singleModelPattern.matcher(outputFileContent);
+       String[] modelPredicatesString = DLV2Transactions.getModelFactsStrings(dlvOutputFile);
 
-       if(subjectMatcher.find()){
-            String modelString=subjectMatcher.group(1);
-
-           System.out.println("Model Fount");
-
-            String []modelPredicatesString= modelString.split(",");
-
-           Arrays.stream(modelPredicatesString).forEach((predicateString)-> {
-               String subject=fromDLVSubject(predicateString);
-               Item item=fromDLVToItem(predicateString);
-
-               subjects2ItemsIds.put(subject,item.getId());
-
-           });
-       }
-
+       parseDLVOutput(modelPredicatesString);
 
    }
+
+    public void parseDLVOutput(String [] modelPredicatesString) throws IOException {
+
+
+        Arrays.stream(modelPredicatesString).filter((s)-> !s.contains("conflict")).forEach((predicateString)-> {
+
+            String subject = fromDLVSubject(predicateString);
+            Item item = fromDLVToItem(predicateString);
+
+            subjects2ItemsIds.put(subject, item.getId());
+
+        });
+
+    }
+
+
 
     public void exportToRDF(String rdfFile) {
         try {
