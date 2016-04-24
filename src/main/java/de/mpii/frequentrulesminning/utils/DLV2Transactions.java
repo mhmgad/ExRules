@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class DLV2Transactions {
 
 
-    HashBiMap<Item,Integer> conflicts2Count=HashBiMap.create();
+    Multimap<Integer,Item> conflicts2Count=HashMultimap.create();
 
     // TODO use CLI
     RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
@@ -120,12 +120,12 @@ public class DLV2Transactions {
 
 
         Arrays.stream(modelStrings).filter(s -> s.contains("number_of_conflicts")).forEach( confString -> {
-                    conflicts2Count.put(cv.fromDLVToItem(confString),DLV2Transactions.extractCount(confString));
+                    conflicts2Count.put(DLV2Transactions.extractCount(confString),cv.fromDLVToItem(confString));
                 }
 
         );
 
-        IntSummaryStatistics conflictsSummary=conflicts2Count.values().stream().mapToInt(Integer::intValue).summaryStatistics();
+        IntSummaryStatistics conflictsSummary=conflicts2Count.keys().stream().mapToInt(Integer::intValue).summaryStatistics();
 
         
 
@@ -161,8 +161,8 @@ public class DLV2Transactions {
 
 
 
-        bf.append("Max_Conflict_Predicate\t"+conflicts2Count.inverse().get(conflictsSummary.getMax()));
-        bf.append("Min_Conflict_Predicate\t"+conflicts2Count.inverse().get(conflictsSummary.getMin()));
+        bf.append("Max_Conflict_Predicate\t"+conflicts2Count.get(conflictsSummary.getMax()));
+        bf.append("Min_Conflict_Predicate\t"+conflicts2Count.get(conflictsSummary.getMin()));
 
         bf.append('\n');
 
