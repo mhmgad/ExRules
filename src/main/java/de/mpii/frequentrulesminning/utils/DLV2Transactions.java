@@ -158,7 +158,7 @@ public class DLV2Transactions {
         bf.append(conflictsSummary.getMin()+"\t");
         bf.append(conflictsSummary.getAverage()+"\t");
         bf.append(conflictsSummary.getCount()+"\t");
-        bf.append(Sets.intersection(items2Subjects.keySet(),negativeItems2Subjects.keySet()).size()+"\t");
+        bf.append(Sets.union(items2Subjects.keySet(),negativeItems2Subjects.keySet()).size()+"\t");
         bf.append(items2Subjects.keySet().size()+"\t");
         bf.append(negativeItems2Subjects.keySet().size()+"\t");
         bf.append('\n');
