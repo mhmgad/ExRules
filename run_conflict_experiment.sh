@@ -10,7 +10,8 @@ for FILE in $IN_DIRECT/*.tsv.dlv; do
 
      for i in `seq 1 10`;
      do
-         awk 'BEGIN { print ($i * 0.1 * $FILE_SIZE ) }'
+         v=$(awk 'BEGIN {  $i * 0.1 * $FILE_SIZE  }')
+         echo $v
               #  echo $(($i * 0.1 * $FILE_SIZE))
      done
 done
