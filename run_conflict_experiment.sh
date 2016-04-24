@@ -5,16 +5,16 @@ OUT_DIRCT=$IN_DIRECT/DLV_ALL
 
 FILES=$(ls $IN_DIRECT/*.tsv.dlv)
 
-for FILE in $IN_DIRECT/*.tsv.dlv; do
+for i in `seq 1 10`;
+    do
 
-     FILE_SIZE=$(wc -l < $FILE)
+    for FILE in $IN_DIRECT/*.tsv.dlv; do
 
-     for i in `seq 1 10`;
-     do
-         TOPK=$(perl -w -e "use POSIX; print ceil($i * 0.1 * $FILE_SIZE), qq{\n}")
-         echo "$i $TOPK $FILE Start"
-         ./predict_dlv.sh $TOPK $FILE $OUT_DIRCT
-         echo "$i $TOPK $FILE Done!"
+        FILE_SIZE=$(wc -l < $FILE)
+        TOPK=$(perl -w -e "use POSIX; print ceil($i * 0.1 * $FILE_SIZE), qq{\n}")
+        echo "$i $TOPK $FILE Start"
+        ./predict_dlv.sh $TOPK $FILE $OUT_DIRCT
+        echo "$i $TOPK $FILE Done!"
                #  echo $(($i * 0.1 * $FILE_SIZE))
      done
 done
