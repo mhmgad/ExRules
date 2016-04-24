@@ -7,7 +7,11 @@ FILES=$(ls $IN_DIRECT/*.tsv.dlv)
 for FILE in $IN_DIRECT/*.tsv.dlv; do
 
      FILE_SIZE=$(wc -l < $FILE)
-     echo $FILE_SIZE
+
+     for i in `seq 1 10`;
+     do
+                echo $(($i *0.1*$FILE_SIZE))
+     done
 done
 
 
