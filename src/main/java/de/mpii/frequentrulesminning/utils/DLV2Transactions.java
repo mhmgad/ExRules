@@ -7,7 +7,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.IntSummaryStatistics;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -18,7 +17,8 @@ import java.util.regex.Pattern;
 public class DLV2Transactions {
 
 
-    Multimap<Integer,Item> conflicts2Count=HashMultimap.create();
+    Multimap<Item,String> conflict2subject=HashMultimap.create();
+    Multimap<Integer,Item> count2Conflict =HashMultimap.create();
 
     // TODO use CLI
     RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
@@ -73,7 +73,7 @@ public class DLV2Transactions {
 
     private void loadNegations(String[] modelStrings) {
         Arrays.stream(modelStrings).filter(s -> s.contains("not_")).forEach( confString -> {
-                    negativeItems2Subjects.put(cv.fromDLVToItemId(confString),cv.fromDLVSubject(confString));
+                    negativeItems2Subjects.put(cv.fromDLV2ItemId(confString),cv.fromDLV2Subject(confString));
                 }
 
         );
@@ -118,16 +118,21 @@ public class DLV2Transactions {
 
         StringBuilder bf=new StringBuilder();
 
+// fill subject to conflict map
+        Arrays.stream(modelStrings).filter(s -> s.trim().startsWith("conflict")).forEach( confString -> {
+//            int count=DLV2Transactions.extractCount(confString);
+//            if(count>0)
+//                count2Conflict.put(count,cv.fromDLV2Item(confString));
+                conflict2subject.put(cv.fromDLV2Item(confString),cv.fromDLV2Subject(confString));
 
-        Arrays.stream(modelStrings).filter(s -> s.contains("number_of_conflicts")).forEach( confString -> {
-            int count=DLV2Transactions.extractCount(confString);
-            if(count>0)
-                conflicts2Count.put(count,cv.fromDLVToItem(confString));
                 }
 
         );
 
-        IntSummaryStatistics conflictsSummary=conflicts2Count.keys().stream().mapToInt(Integer::intValue).summaryStatistics();
+        // add them to conflict count
+        conflict2subject.keySet().stream().forEach((conflict)-> count2Conflict.put(conflict2subject.get(conflict).size(),conflict));
+
+        IntSummaryStatistics conflictsSummary= count2Conflict.keys().stream().mapToInt(Integer::intValue).summaryStatistics();
 
         
 
@@ -165,9 +170,9 @@ public class DLV2Transactions {
 
 
 
-        bf.append("Max_Conflict_Predicate\t"+conflicts2Count.get(conflictsSummary.getMax()));
+        bf.append("Max_Conflict_Predicate\t"+ count2Conflict.get(conflictsSummary.getMax()));
         bf.append('\n');
-        bf.append("Min_Conflict_Predicate\t"+conflicts2Count.get(conflictsSummary.getMin()));
+        bf.append("Min_Conflict_Predicate\t"+ count2Conflict.get(conflictsSummary.getMin()));
 
         bf.append('\n');
 

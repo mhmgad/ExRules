@@ -364,10 +364,10 @@ public class RDF2IntegerTransactionsConverter {
 
 
 
-    public Item fromDLVToItem(String dlvpredicate){
+    public Item fromDLV2Item(String dlvpredicate){
 
 
-        int predicateId=fromDLVToItemId( dlvpredicate);
+        int predicateId= fromDLV2ItemId( dlvpredicate);
 
             return id2Item.get(predicateId);
 
@@ -377,7 +377,7 @@ public class RDF2IntegerTransactionsConverter {
 
     }
 
-    public int fromDLVToItemId(String dlvpredicate) {
+    public int fromDLV2ItemId(String dlvpredicate) {
         Matcher matcher=predicatIdPattern.matcher(dlvpredicate);
         int predicateId=-1;
         if(matcher.find()) {
@@ -389,7 +389,7 @@ public class RDF2IntegerTransactionsConverter {
     Pattern subjectIdPattern = Pattern.compile(Pattern.quote("s") + "(.*?)" + Pattern.quote("t"));
 
 
-    public String fromDLVSubject(String dlvpredicate){
+    public String fromDLV2Subject(String dlvpredicate){
         Matcher subjectMatcher=subjectIdPattern.matcher(dlvpredicate);
         if(subjectMatcher.find())
         {
@@ -416,8 +416,8 @@ public class RDF2IntegerTransactionsConverter {
 
         Arrays.stream(modelPredicatesString).filter((s)-> !(s.contains("conflict")||s.trim().startsWith("not_"))).forEach((predicateString)-> {
 
-            String subject = fromDLVSubject(predicateString);
-            Item item = fromDLVToItem(predicateString);
+            String subject = fromDLV2Subject(predicateString);
+            Item item = fromDLV2Item(predicateString);
 
             subjects2ItemsIds.put(subject, item.getId());
 
