@@ -386,7 +386,7 @@ public class RDF2IntegerTransactionsConverter {
         return predicateId;
     }
 
-    Pattern subjectIdPattern = Pattern.compile(Pattern.quote("s") + "(.*?)" + Pattern.quote("t"));
+    Pattern subjectIdPattern = Pattern.compile(Pattern.quote("(s") + "(.*?)" + Pattern.quote("t)"));
 
 
     public String fromDLV2Subject(String dlvpredicate){
