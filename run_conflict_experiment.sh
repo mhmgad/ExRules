@@ -6,7 +6,7 @@ FILES=$(ls $IN_DIRECT/*.tsv.dlv)
 
 for FILE in $IN_DIRECT/*.tsv.dlv; do
 
-     FILE_SIZE=$(wc -l $FILE)
+     FILE_SIZE=$(wc -l < $FILE)
      echo $FILE_SIZE
 done
 
