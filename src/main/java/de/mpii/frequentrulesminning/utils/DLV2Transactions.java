@@ -120,7 +120,9 @@ public class DLV2Transactions {
 
 
         Arrays.stream(modelStrings).filter(s -> s.contains("number_of_conflicts")).forEach( confString -> {
-                    conflicts2Count.put(DLV2Transactions.extractCount(confString),cv.fromDLVToItem(confString));
+            int count=DLV2Transactions.extractCount(confString);
+            if(count>0)
+                conflicts2Count.put(count,cv.fromDLVToItem(confString));
                 }
 
         );
@@ -129,8 +131,8 @@ public class DLV2Transactions {
 
         
 
-        long positivePredictionsCount=Arrays.stream(modelStrings).filter(s -> !(s.contains("conflict")||s.startsWith("not_"))).count();
-        long negativePredictionsCount=Arrays.stream(modelStrings).filter(s -> s.startsWith("not_")).count();
+        long positivePredictionsCount=Arrays.stream(modelStrings).filter(s -> !(s.contains("conflict")||s.trim().startsWith("not_"))).count();
+        long negativePredictionsCount=Arrays.stream(modelStrings).filter(s -> s.trim().startsWith("not_")).count();
 
         long totalPredictionsCount=positivePredictionsCount+negativePredictionsCount;
 
