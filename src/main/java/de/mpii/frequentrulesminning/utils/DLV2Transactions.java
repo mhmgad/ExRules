@@ -147,21 +147,22 @@ public class DLV2Transactions {
         bf.append("uniq. Neg_Predictions");
 
         bf.append('\n');
-        bf.append(conflictsSummary.getSum()+'\t');
-        bf.append(totalPredictionsCount+'\t');
-        bf.append(positivePredictionsCount+'\t');
-        bf.append(negativePredictionsCount+'\t');
-        bf.append(conflictsSummary.getMax()+'\t');
-        bf.append(conflictsSummary.getMin()+'\t');
-        bf.append(conflictsSummary.getAverage()+'\t');
-        bf.append(conflictsSummary.getCount()+'\t');
-        bf.append(items2Subjects.keySet().size()+'\t');
-        bf.append(negativeItems2Subjects.keySet().size()+'\t');
+        bf.append(conflictsSummary.getSum()+"\t");
+        bf.append(totalPredictionsCount+"\t");
+        bf.append(positivePredictionsCount+"\t");
+        bf.append(negativePredictionsCount+"\t");
+        bf.append(conflictsSummary.getMax()+"\t");
+        bf.append(conflictsSummary.getMin()+"\t");
+        bf.append(conflictsSummary.getAverage()+"\t");
+        bf.append(conflictsSummary.getCount()+"\t");
+        bf.append(items2Subjects.keySet().size()+"\t");
+        bf.append(negativeItems2Subjects.keySet().size()+"\t");
         bf.append('\n');
 
 
 
         bf.append("Max_Conflict_Predicate\t"+conflicts2Count.get(conflictsSummary.getMax()));
+        bf.append('\n');
         bf.append("Min_Conflict_Predicate\t"+conflicts2Count.get(conflictsSummary.getMin()));
 
         bf.append('\n');
