@@ -61,7 +61,7 @@ public class DLV2Transactions {
         converter.loadMappings(args[2],args[3]);
         converter.parseDLVOutput(modelStrings);
 
-        converter.exportResults(RDF2IntegerTransactionsConverter.EncodingType.valueOf(args[0]),args[4]);
+        converter.exportResults(RDF2IntegerTransactionsConverter.EncodingType.valueOf(args[0]),args[1]);
 
         converter.loadNegations(modelStrings);
 
@@ -79,17 +79,17 @@ public class DLV2Transactions {
         );
     }
 
-    private void exportResults(RDF2IntegerTransactionsConverter.EncodingType encodingType,String outputFile) {
+    private void exportResults(RDF2IntegerTransactionsConverter.EncodingType encodingType,String inputFile) {
 
         switch (encodingType){
             case SPMF:
-                cv.exportTransactions(outputFile);
+                cv.exportTransactions(inputFile+".transactions");
                 break;
             case RDF:
-                cv.exportToRDF(outputFile);
+                cv.exportToRDF(inputFile+".tsv");
                 break;
             case PrASP:
-                cv.exportAsPrASP(outputFile);
+                cv.exportAsPrASP(inputFile+".prasp");
                 break;
             case NONE:
                 break;
