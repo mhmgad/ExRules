@@ -28,7 +28,7 @@ public class DLV2Transactions {
 
     static Pattern singleModelPattern = Pattern.compile(Pattern.quote("{") + "(.*?)" + Pattern.quote("}"));
     private HashMultimap<Integer, String> items2Subjects;
-    private HashMultimap<Item,String> negativeItems2Subjects=HashMultimap.create();
+    private HashMultimap<Integer,String> negativeItems2Subjects=HashMultimap.create();
 
     public static String[] getModelFactsStrings(String dlvOutputFile) throws IOException {
 
@@ -73,7 +73,7 @@ public class DLV2Transactions {
 
     private void loadNegations(String[] modelStrings) {
         Arrays.stream(modelStrings).filter(s -> s.contains("not_")).forEach( confString -> {
-                    negativeItems2Subjects.put(cv.fromDLVToItem(confString),cv.fromDLVSubject(confString));
+                    negativeItems2Subjects.put(cv.fromDLVToItemId(confString),cv.fromDLVSubject(confString));
                 }
 
         );

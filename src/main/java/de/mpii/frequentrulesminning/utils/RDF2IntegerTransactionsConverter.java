@@ -363,19 +363,30 @@ public class RDF2IntegerTransactionsConverter {
     Pattern predicatIdPattern = Pattern.compile(Pattern.quote("p") + "(.*?)" + Pattern.quote("o"));
 
 
+
     public Item fromDLVToItem(String dlvpredicate){
-        Matcher matcher=predicatIdPattern.matcher(dlvpredicate);
-        if(matcher.find()) {
-            int predicateId = Integer.valueOf(matcher.group(1));
+
+
+        int predicateId=fromDLVToItemId( dlvpredicate);
+
             return id2Item.get(predicateId);
 
 
-        }
 
-        return null;
+
+
     }
 
-     Pattern subjectIdPattern = Pattern.compile(Pattern.quote("s") + "(.*?)" + Pattern.quote("t"));
+    public int fromDLVToItemId(String dlvpredicate) {
+        Matcher matcher=predicatIdPattern.matcher(dlvpredicate);
+        int predicateId=-1;
+        if(matcher.find()) {
+            predicateId = Integer.valueOf(matcher.group(1));
+        }
+        return predicateId;
+    }
+
+    Pattern subjectIdPattern = Pattern.compile(Pattern.quote("s") + "(.*?)" + Pattern.quote("t"));
 
 
     public String fromDLVSubject(String dlvpredicate){
