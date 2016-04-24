@@ -3,17 +3,17 @@
 
 DLV=~/dlv.i386-linux-elf-static.bin
 
-TOPK="$2"
+TOPK="$1"
 
 
 
 #INPUT_DIR=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT2
 #INPUT_FILE=rules_spmf_supp0001_conf25_100_excep02_PNCONF_f1_f2_LIFT.tsv.dlv
 
-INPUT_DIR=`dirname $1`
-INPUT_FILE=`basename $1`
+INPUT_DIR=`dirname $2`
+INPUT_FILE=`basename $2`
 
-OUTPUT_DIR=$2
+OUTPUT_DIR=$3
 
 mkdir $OUTPUT_DIR
 
