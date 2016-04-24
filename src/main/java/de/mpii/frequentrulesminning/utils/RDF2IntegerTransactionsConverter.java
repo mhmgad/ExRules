@@ -26,8 +26,11 @@ import java.util.stream.Collectors;
 public class RDF2IntegerTransactionsConverter {
 
 
+    public SetMultimap getSubjects2ItemsIds() {
+        return subjects2ItemsIds;
+    }
 
-    enum EncodingType{SPMF,PrASP,DLV_SAFE,RDF}
+    enum EncodingType{SPMF,PrASP,DLV_SAFE,RDF, NONE}
 
     private HashBiMap<Item,Integer> items2Ids;
     private BiMap<Integer,Item> id2Item;
@@ -251,7 +254,7 @@ public class RDF2IntegerTransactionsConverter {
 
 //    }
 
-    private String[] splitLine(String line) {
+    private String[] splitRuleLine(String line) {
     String [] parts=new String[2];
 
 
@@ -400,7 +403,7 @@ public class RDF2IntegerTransactionsConverter {
     public void parseDLVOutput(String [] modelPredicatesString) throws IOException {
 
 
-        Arrays.stream(modelPredicatesString).filter((s)-> !s.contains("conflict")).forEach((predicateString)-> {
+        Arrays.stream(modelPredicatesString).filter((s)-> !(s.contains("conflict")||s.trim().startsWith("not_"))).forEach((predicateString)-> {
 
             String subject = fromDLVSubject(predicateString);
             Item item = fromDLVToItem(predicateString);
