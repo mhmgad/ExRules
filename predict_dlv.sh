@@ -13,7 +13,7 @@ TOPK="$2"
 INPUT_DIR=`dirname $1`
 INPUT_FILE=`basename $1`
 
-OUTPUT_DIR=$INPUT_DIR/DLV2
+OUTPUT_DIR=$2
 
 mkdir $OUTPUT_DIR
 
