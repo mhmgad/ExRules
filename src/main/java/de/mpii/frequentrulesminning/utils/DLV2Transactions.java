@@ -144,9 +144,10 @@ public class DLV2Transactions {
         bf.append("Max Conflict\t");
         bf.append("Min Conflict\t");
         bf.append("Avg Conflict\t");
-        bf.append("uniq. PredicatesWithConflict");
-        bf.append("uniq. Pos_Predictions");
-        bf.append("uniq. Neg_Predictions");
+        bf.append("uniq. PredicatesWithConflict\t");
+        bf.append("uniq. Predictions\t");
+        bf.append("uniq. Pos_Predictions\t");
+        bf.append("uniq. Neg_Predictions\t");
 
         bf.append('\n');
         bf.append(conflictsSummary.getSum()+"\t");
@@ -157,6 +158,7 @@ public class DLV2Transactions {
         bf.append(conflictsSummary.getMin()+"\t");
         bf.append(conflictsSummary.getAverage()+"\t");
         bf.append(conflictsSummary.getCount()+"\t");
+        bf.append(Sets.intersection(items2Subjects.keySet(),negativeItems2Subjects.keySet()).size()+"\t");
         bf.append(items2Subjects.keySet().size()+"\t");
         bf.append(negativeItems2Subjects.keySet().size()+"\t");
         bf.append('\n');
