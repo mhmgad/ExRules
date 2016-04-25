@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 IN_DIRECT=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT2
-OUT_DIRCT=$IN_DIRECT/DLV_ALL
+OUT_DIRCT=$IN_DIRECT/DLV_ALL2
 
 FILES=$(ls $IN_DIRECT/*.tsv.dlv)
 
