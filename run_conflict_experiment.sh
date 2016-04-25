@@ -9,7 +9,7 @@ for i in `seq 1 10`;
     do
 
     TOPK=$(perl -w -e "use POSIX; print ceil($i * 200 ), qq{\n}")
-    SUMMARY_FILE=OUT_DIRCT/summary.top$TOPK
+    SUMMARY_FILE=$OUT_DIRCT/summary.top$TOPK
     for FILE in $IN_DIRECT/*.tsv.dlv; do
         INPUT_FILE_NAME=$(basename $FILE)
         FILE_SIZE=$(wc -l < $FILE)
@@ -19,7 +19,7 @@ for i in `seq 1 10`;
         ./predict_dlv.sh $TOPK $FILE $OUT_DIRCT
         echo "$i $TOPK $FILE Done!"
 
-        STATS=$(sed -n 2p  $OUTPUT_DIR/$INPUT_FILE_NAME.predictions.top$TOPK.stats)
+        STATS=$(sed -n 2p  $OUT_DIRCT/$INPUT_FILE_NAME.predictions.top$TOPK.stats)
         echo $STATS $INPUT_FILE_NAME>>$SUMMARY_FILE
 
 
