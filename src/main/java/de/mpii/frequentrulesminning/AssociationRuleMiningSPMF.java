@@ -451,7 +451,7 @@ public class AssociationRuleMiningSPMF {
         st.append('\n');
 
         StringBuilder stAll=new StringBuilder();
-        stAll.append("TopK\tConfidenceDiff\tConfidenceDiffRO\tLiftDiff\tLiftDiffRO\tJaccardDiff\tJaccardDiffRO\n");
+        stAll.append("TopK\tMeasurement\tNormal\tRevised Only\n");
 
 
 
@@ -506,12 +506,16 @@ public class AssociationRuleMiningSPMF {
             //-------------------
 
             stAll.append(k+"\t");
-            stAll.append(rules.getConfidenceDiffStats(k,false).toString()+"\t");
-            stAll.append(rules.getConfidenceDiffStats(k,true).toString()+"\t");
-            stAll.append(rules.getLiftDiffStats(k,false).toString()+"\t");
-            stAll.append(rules.getLiftDiffStats(k,true).toString()+"\t");
-            stAll.append(rules.getJaccardDiffStats(k,false).toString()+"\t");
-            stAll.append(rules.getJaccardDiffStats(k,true).toString()+"\n");
+            stAll.append("Confidence\t");
+            stAll.append(rules.getConfidenceDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
+            stAll.append(rules.getConfidenceDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+            stAll.append("Lift\t");
+            stAll.append(rules.getLiftDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
+            stAll.append(rules.getLiftDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+            stAll.append("Jaccard\t");
+            stAll.append(rules.getJaccardDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
+            stAll.append(rules.getJaccardDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+            stAll.append("--------------------------------------------------------------------\n");
 
 
 
