@@ -451,6 +451,7 @@ public class AssociationRuleMiningSPMF {
         st.append('\n');
 
         StringBuilder stAll=new StringBuilder();
+        stAll.append("TopK\tConfidenceDiff\tConfidenceDiffRO\tLiftDiff\tLiftDiffRO\tJaccardDiff\tJaccardDiffRO\n");
 
 
 
@@ -503,14 +504,14 @@ public class AssociationRuleMiningSPMF {
 
 
             //-------------------
-            stAll.append("TopK\tConfidenceDiff\tConfidenceDiffRO\tLiftDiff\tLiftDiffRO\tJaccardDiff\tJaccardDiffRO\t");
+
             stAll.append(k+"\t");
             stAll.append(rules.getConfidenceDiffStats(k,false).toString()+"\t");
             stAll.append(rules.getConfidenceDiffStats(k,true).toString()+"\t");
             stAll.append(rules.getLiftDiffStats(k,false).toString()+"\t");
             stAll.append(rules.getLiftDiffStats(k,true).toString()+"\t");
             stAll.append(rules.getJaccardDiffStats(k,false).toString()+"\t");
-            stAll.append(rules.getJaccardDiffStats(k,true).toString()+"\t");
+            stAll.append(rules.getJaccardDiffStats(k,true).toString()+"\n");
 
 
 
