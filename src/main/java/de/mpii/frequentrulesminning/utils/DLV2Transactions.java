@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.IntSummaryStatistics;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,8 +18,8 @@ import java.util.regex.Pattern;
 public class DLV2Transactions {
 
 
-    Multimap<Item,String> conflict2subject=HashMultimap.create();
-    Multimap<Integer,Item> count2Conflict =HashMultimap.create();
+    SetMultimap<Item,String> conflict2subject=HashMultimap.create();
+    SetMultimap<Integer,Item> count2Conflict =HashMultimap.create();
 
     // TODO use CLI
     RDF2IntegerTransactionsConverter cv=new RDF2IntegerTransactionsConverter();
@@ -119,18 +120,30 @@ public class DLV2Transactions {
         StringBuilder bf=new StringBuilder();
 
 // fill subject to conflict map
-        Arrays.stream(modelStrings).filter(s -> s.trim().startsWith("conflict")).forEach( confString -> {
-//            int count=DLV2Transactions.extractCount(confString);
-//            if(count>0)
-//                count2Conflict.put(count,cv.fromDLV2Item(confString));
-                conflict2subject.put(cv.fromDLV2Item(confString),cv.fromDLV2Subject(confString));
-
-                }
-
-        );
+//        Arrays.stream(modelStrings).filter(s -> s.trim().startsWith("conflict")).forEach( confString -> {
+//
+//                conflict2subject.put(cv.fromDLV2Item(confString),cv.fromDLV2Subject(confString));
+//
+//                }
+//
+//        );
 
         // add them to conflict count
-        conflict2subject.keySet().stream().forEach((conflict)-> count2Conflict.put(conflict2subject.get(conflict).size(),conflict));
+//        conflict2subject.keySet().stream().forEach((conflict)-> count2Conflict.put(conflict2subject.get(conflict).size(),conflict));
+
+//        multimapIntersection(items2Subjects,negativeItems2Subjects);
+
+
+        Set<Integer> KeysIntersection=Sets.intersection(items2Subjects.keySet(),negativeItems2Subjects.keySet());
+
+        for (Integer key:KeysIntersection) {
+            Set<String> valueIntersection=Sets.intersection(items2Subjects.get(key),negativeItems2Subjects.get(key));
+            int size=valueIntersection.size();
+            if(size>0){
+                count2Conflict.put(size,cv.convertInteger2Item(key));
+            }
+
+        }
 
         IntSummaryStatistics conflictsSummary= count2Conflict.keys().stream().mapToInt(Integer::intValue).summaryStatistics();
 
@@ -159,8 +172,8 @@ public class DLV2Transactions {
         bf.append(totalPredictionsCount+"\t");
         bf.append(positivePredictionsCount+"\t");
         bf.append(negativePredictionsCount+"\t");
-        bf.append(conflictsSummary.getMax()+"\t");
-        bf.append(conflictsSummary.getMin()+"\t");
+        bf.append(count2Conflict.size()==0? 0:conflictsSummary.getMax()+"\t");
+        bf.append(count2Conflict.size()==0? 0:conflictsSummary.getMin()+"\t");
         bf.append(conflictsSummary.getAverage()+"\t");
         bf.append(conflictsSummary.getCount()+"\t");
         bf.append(Sets.union(items2Subjects.keySet(),negativeItems2Subjects.keySet()).size()+"\t");
@@ -191,7 +204,15 @@ public class DLV2Transactions {
 
 
     }
-
+//
+//    private Multimap<Integer,String> multimapIntersection(SetMultimap<Integer, String> map1, SetMultimap<Integer, String> map2) {
+//
+//
+//
+//
+//
+//
+//    }
 
 
     static Pattern countPattern = Pattern.compile(Pattern.quote("(") + "(.*?)" + Pattern.quote(")"));
