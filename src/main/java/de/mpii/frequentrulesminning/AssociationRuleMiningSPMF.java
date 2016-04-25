@@ -451,7 +451,7 @@ public class AssociationRuleMiningSPMF {
         st.append('\n');
 
         StringBuilder stAll=new StringBuilder();
-        stAll.append("TopK\tMeasurement\tNormal\tRevised Only\n");
+        stAll.append("TopK\tMeasurement\tAll Rules\tRevised Rules Only\n");
 
 
 
@@ -475,8 +475,8 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t__\t");
             st.append('\n');
 
-            double newAvgConfidence = rules.getConfidenceStats(k, false, false).getAverage();
-            double newAvgConfidenceRO = rules.getConfidenceStats(k, false, true).getAverage();
+            double newAvgConfidence = rules.getConfidenceStats(k, true, false).getAverage();
+            double newAvgConfidenceRO = rules.getConfidenceStats(k, true, true).getAverage();
             double newAvgLift = rules.getLiftStats(k, true,false).getAverage();
             double newAvgLiftRO = rules.getLiftStats(k, true,true).getAverage();
 
@@ -509,10 +509,10 @@ public class AssociationRuleMiningSPMF {
             stAll.append("Confidence\t");
             stAll.append(rules.getConfidenceDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
             stAll.append(rules.getConfidenceDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
-            stAll.append("Lift\t");
+            stAll.append("\tLift\t");
             stAll.append(rules.getLiftDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
             stAll.append(rules.getLiftDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
-            stAll.append("Jaccard\t");
+            stAll.append("\tJaccard\t");
             stAll.append(rules.getJaccardDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
             stAll.append(rules.getJaccardDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
             stAll.append("--------------------------------------------------------------------\n");
