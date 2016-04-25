@@ -304,27 +304,46 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public double getAvgConfidence(int k,boolean withException){
-        if(withException)
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).average().getAsDouble();
+    public DoubleSummaryStatistics getConfidenceStats(int k, boolean exception, boolean revisedOnly){
+        if(exception)
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
         else
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getConfidence).average().getAsDouble();
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getConfidence).summaryStatistics();
 
     }
 
 
-    public double getAvgJaccardCoefficient(int k,boolean withException){
-        if(withException)
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedJaccardCoefficient).average().getAsDouble();
-        else
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getJaccardCoefficient).average().getAsDouble();
+    public DoubleSummaryStatistics getConfidenceDiffStats(int k, boolean revisedOnly){
+
+        return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble((r)->r.getRevisedConfidence()-r.getConfidence()).summaryStatistics();
+
     }
 
-    public double getAvgLift(int k,boolean withException){
+
+    public DoubleSummaryStatistics getJaccardCoefficientStats(int k, boolean withException, boolean revisedOnly){
         if(withException)
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedLift).average().getAsDouble();
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedJaccardCoefficient).summaryStatistics();
         else
-            return rules.stream().limit(k).mapToDouble(AssocRuleWithExceptions::getLift).average().getAsDouble();
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getJaccardCoefficient).summaryStatistics();
+    }
+
+    public DoubleSummaryStatistics getJaccardDiffStats(int k, boolean revisedOnly){
+
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble((r)->r.getRevisedJaccardCoefficient()-r.getJaccardCoefficient()).summaryStatistics();
+
+    }
+
+    public DoubleSummaryStatistics getLiftStats(int k, boolean withException, boolean revisedOnly){
+        if(withException)
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedLift).summaryStatistics();
+        else
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getLift).summaryStatistics();
+    }
+
+    public DoubleSummaryStatistics getLiftDiffStats(int k,boolean revisedOnly){
+
+            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble((r)->r.getRevisedLift()-r.getLift()).summaryStatistics();
+
     }
 
 
