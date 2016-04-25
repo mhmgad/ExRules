@@ -496,7 +496,7 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgConf)+"\t");
             st.append('\n');
 
-            st.append("--------------------------------------------------------------------");
+            st.append("--------------------------------------------------------------------\n");
 
             st.append("RO: revised only\n");
             st.append('\n');
@@ -521,6 +521,7 @@ public class AssociationRuleMiningSPMF {
 
 
         System.out.println(st.toString());
+        System.out.println(stAll.toString());
         if(export){
             BufferedWriter bw=FileUtils.getBufferedUTF8Writer(fileName);
             bw.write(st.toString());
