@@ -18,7 +18,9 @@ for i in `seq 1 10`;
         echo "$i $TOPK $FILE Start"
         ./predict_dlv.sh $TOPK $FILE $OUT_DIRCT
         echo "$i $TOPK $FILE Done!"
-        head -2 $OUTPUT_DIR/$INPUT_FILE_NAME.predictions.top$TOPK.stats >$SUMMARY_FILE
+
+        STATS=$(sed -n 2p  $OUTPUT_DIR/$INPUT_FILE_NAME.predictions.top$TOPK.stats)
+        echo $STATS INPUT_FILE_NAME>>$SUMMARY_FILE
 
 
                #  echo $(($i * 0.1 * $FILE_SIZE))
