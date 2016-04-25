@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT2
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT3
 
 mkdir -p $OUT_DIRECTORY
 
