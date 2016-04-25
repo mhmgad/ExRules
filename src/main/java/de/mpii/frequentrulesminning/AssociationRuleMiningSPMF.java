@@ -440,6 +440,9 @@ public class AssociationRuleMiningSPMF {
     }
 
     public void showStatistics(AssocRulesExtended rules,boolean export, String fileName) throws Exception {
+
+        long revisedRulesCount=rules.getRevisedRuleCount();
+
         StringBuilder st=new StringBuilder();
         st.append(toString());
         st.append('\n');

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
-OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT3
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_CONF
 
 mkdir -p $OUT_DIRECTORY
 
 
-SORTING_TYPE=LIFT
+SORTING_TYPE=CONF
 
 #normal horn rules
 

@@ -19,7 +19,10 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return getRules().size();
     }
 
+    public long getRevisedRuleCount() {
 
+        return rules.stream().filter(AssocRuleWithExceptions::hasExceptions).count();
+    }
 
 
     public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, NEW_LIFT}
