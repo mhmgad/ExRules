@@ -39,9 +39,9 @@ public class AssocRuleWithExceptions {// extends AssocRule {
      */
     private double negConfidence;
     private double jaccardCoefficient;
-    private double revisedConfidence;
-    private double revisedLift;
-    private double revisedJaccardCoefficient;
+    private double revisedConfidence=-1;
+    private double revisedLift=-1;
+    private double revisedJaccardCoefficient=-1;
     private int id;
     private static int nextID;
 //    private int[] bodyAndHead;
@@ -350,14 +350,20 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     }
 
     public double getRevisedConfidence() {
+        if (revisedConfidence==-1)
+            return getConfidence();
         return revisedConfidence;
     }
 
     public double getRevisedLift() {
+        if (revisedLift==-1)
+            return getLift();
         return revisedLift;
     }
 
     public double getRevisedJaccardCoefficient() {
+        if (revisedJaccardCoefficient==-1)
+            return getJaccardCoefficient();
         return revisedJaccardCoefficient;
     }
 

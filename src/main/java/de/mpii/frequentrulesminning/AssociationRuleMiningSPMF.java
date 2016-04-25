@@ -444,48 +444,91 @@ public class AssociationRuleMiningSPMF {
         st.append(toString());
         st.append('\n');
 
-        st.append("topK\ttype\tAvgConfidence\tdiff\tAvgLIFT\tdiff\tAvgJaccardCof\tdiff");
+
+
+
+        st.append("topK\ttype\tAvgConf\tdiff\tAvgConfRO\tdiff\tAvgLIFT\tdiff\tAvgLIFTRO\tdiff\tAvgJaccardCof\tdiff");
         st.append('\n');
+
+        StringBuilder stAll=new StringBuilder();
+
+
+
         for(int i=1;i<=10;i++) {
             int k=(int)Math.ceil((i*0.1)*rules.size());
 
 
-            double orgAvgConf= rules.getAvgConfidence(k, false);
-            double orgAvgLift = rules.getAvgLift(k, false);
-            double orgAvgJaccardCoefficient = rules.getAvgJaccardCoefficient(k, false);
+            double orgAvgConf= rules.getConfidenceStats(k, false,false).getAverage();
+            double orgAvgConfRO= rules.getConfidenceStats(k, false,true).getAverage();
+
+            double orgAvgLift = rules.getLiftStats(k, false,false).getAverage();
+            double orgAvgLiftRO = rules.getLiftStats(k, false,true).getAverage();
+            double orgAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, false,false).getAverage();;
 
 
             st.append(k+":\tBefore\t");
-            st.append(String.format("%.5f",orgAvgConf)+"\t\t\t\t\t");
-
-            st.append(String.format("%.6f", orgAvgLift)+"\t\t\t\t\t");
-            st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t\t\t");
+            st.append(String.format("%.5f",orgAvgConf)+"\t__\t");
+            st.append(String.format("%.5f",orgAvgConfRO)+"\t__\t");
+            st.append(String.format("%.6f", orgAvgLift)+"\t__\t");
+            st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
+            st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t__\t");
             st.append('\n');
 
-            double newAvgConfidence = rules.getAvgConfidence(k, true);
-            double newAvgLift = rules.getAvgLift(k, true);
-            double newAvgJaccardCoefficient = rules.getAvgJaccardCoefficient(k, true);
+            double newAvgConfidence = rules.getConfidenceStats(k, false, false).getAverage();
+            double newAvgConfidenceRO = rules.getConfidenceStats(k, false, true).getAverage();
+            double newAvgLift = rules.getLiftStats(k, true,false).getAverage();
+            double newAvgLiftRO = rules.getLiftStats(k, true,true).getAverage();
+
+
+            double newAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, true,false).getAverage();;
 
             st.append(k+":\tAfter\t");
-            st.append(String.format("%.5f", newAvgConfidence)+"\t\t");
-            st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t\t");
-            st.append(String.format("%.6f", newAvgLift)+"\t\t");
+            st.append(String.format("%.5f", newAvgConfidence)+"\t");
+            st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t");
+            st.append(String.format("%.5f", newAvgConfidenceRO)+"\t");
+            st.append(String.format("%.5f", newAvgConfidenceRO-orgAvgConfRO)+"\t");
+
+            st.append(String.format("%.6f", newAvgLift)+"\t");
             st.append(String.format("%.6f", newAvgLift-orgAvgLift)+"\t");
-            st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t\t");
+            st.append(String.format("%.6f", newAvgLiftRO)+"\t");
+            st.append(String.format("%.6f", newAvgLiftRO-orgAvgLiftRO)+"\t");
+            st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t");
             st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgConf)+"\t");
             st.append('\n');
 
             st.append("--------------------------------------------------------------------");
+
+            st.append("RO: revised only\n");
             st.append('\n');
 
 
+            //-------------------
+            stAll.append("TopK\tConfidenceDiff\tConfidenceDiffRO\tLiftDiff\tLiftDiffRO\tJaccardDiff\tJaccardDiffRO\t");
+            stAll.append(k+"\t");
+            stAll.append(rules.getConfidenceDiffStats(k,false).toString()+"\t");
+            stAll.append(rules.getConfidenceDiffStats(k,true).toString()+"\t");
+            stAll.append(rules.getLiftDiffStats(k,false).toString()+"\t");
+            stAll.append(rules.getLiftDiffStats(k,true).toString()+"\t");
+            stAll.append(rules.getJaccardDiffStats(k,false).toString()+"\t");
+            stAll.append(rules.getJaccardDiffStats(k,true).toString()+"\t");
+
+
+
         }
+
+
+
+
 
         System.out.println(st.toString());
         if(export){
             BufferedWriter bw=FileUtils.getBufferedUTF8Writer(fileName);
             bw.write(st.toString());
             bw.close();
+
+            BufferedWriter bw2=FileUtils.getBufferedUTF8Writer(fileName+".all");
+            bw2.write(stAll.toString());
+            bw2.close();
         }
 
 

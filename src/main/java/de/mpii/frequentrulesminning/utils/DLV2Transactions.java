@@ -149,8 +149,8 @@ public class DLV2Transactions {
 
         
 
-        long positivePredictionsCount=Arrays.stream(modelStrings).filter(s -> !(s.contains("conflict")||s.trim().startsWith("not_"))).count();
-        long negativePredictionsCount=Arrays.stream(modelStrings).filter(s -> s.trim().startsWith("not_")).count();
+        long positivePredictionsCount=items2Subjects.size();//Arrays.stream(modelStrings).filter(s -> !(s.contains("conflict")||s.trim().startsWith("not_"))).count();
+        long negativePredictionsCount=negativeItems2Subjects.size();//Arrays.stream(modelStrings).filter(s -> s.trim().startsWith("not_")).count();
 
         long totalPredictionsCount=positivePredictionsCount+negativePredictionsCount;
 

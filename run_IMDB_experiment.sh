@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
-OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT2
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/IMDB
 
 mkdir -p $OUT_DIRECTORY
 
+./assemble/bin/rdf2int.sh SPMF /GW/D5data-5/gadelrab/IMDB/
+
+INPUT_TRANSACTIONS=
 
 SORTING_TYPE=LIFT
 
