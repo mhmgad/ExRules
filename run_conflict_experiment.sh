@@ -11,7 +11,8 @@ for i in `seq 1 10`;
     for FILE in $IN_DIRECT/*.tsv.dlv; do
 
         FILE_SIZE=$(wc -l < $FILE)
-        TOPK=$(perl -w -e "use POSIX; print ceil($i * 0.1 * $FILE_SIZE), qq{\n}")
+#        TOPK=$(perl -w -e "use POSIX; print ceil($i * 0.1 * $FILE_SIZE), qq{\n}")
+        TOPK=$(perl -w -e "use POSIX; print ceil($i * 1000 ), qq{\n}")
         echo "$i $TOPK $FILE Start"
         ./predict_dlv.sh $TOPK $FILE $OUT_DIRCT
         echo "$i $TOPK $FILE Done!"
