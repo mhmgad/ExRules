@@ -10,7 +10,9 @@ import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.filehandlers.UTF8Reader;
 import mpi.tools.javatools.util.FileUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -456,7 +458,7 @@ public class RDF2IntegerTransactionsConverter {
 
         switch (EncodingType.valueOf(args[0])){
             case SPMF:
-                cv.exportTransactions(args[2]);
+                cv.exportTransactions(args[2] + ".transactions");
                 break;
             case PrASP:
                 cv.exportAsPrASP(args[2]);

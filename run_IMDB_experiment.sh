@@ -30,7 +30,7 @@ MIN_EXCEPT_SUPP=0.05
 
 #normal horn rules
 
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE-o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m $MAPPING_FILE -s $SORTING_TYPE -f1 -f2  -oPrASP -oDLV -stats -oDLV_CONFLICT
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m $MAPPING_FILE -s $SORTING_TYPE -f1 -f2  -oPrASP -oDLV -stats -oDLV_CONFLICT
 
 #no materialization (support only)
 sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m $MAPPING_FILE -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE -f1 -f2  -oPrASP -oDLV -stats -oDLV_CONFLICT
