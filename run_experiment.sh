@@ -22,13 +22,19 @@ sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mi
 sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.transactions -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.mapping_predicates -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE -f1 -f2  -oPrASP -oDLV -stats -oDLV_CONFLICT
 
 
-#no weighted count
-sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.transactions -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_cPM05_noWeight_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.mapping_predicates -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE -f1 -f2 -pm -cPM $CPM_MINSUPP -oPrASP -oDLV  -stats -oDLV_CONFLICT
+#no weighted count and order
+sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.transactions -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_cPM05_noWeight_order_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.mapping_predicates -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE -f1 -f2 -pm -cPM $CPM_MINSUPP -oPrASP -oDLV  -stats -oDLV_CONFLICT -PMo
 
 
-#weights
-sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.transactions -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_cPM05_weight_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.mapping_predicates -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE  -w -f1 -f2 -pm -cPM $CPM_MINSUPP -oPrASP -oDLV -stats -oDLV_CONFLICT
+#weights order
+sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.transactions -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_cPM05_weight_order_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.mapping_predicates -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE  -w -f1 -f2 -pm -cPM $CPM_MINSUPP -oPrASP -oDLV -stats -oDLV_CONFLICT -PMo
 
 
+#no weighted and no order
+sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.transactions -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_cPM05_noWeight_noOrder_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.mapping_predicates -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE -f1 -f2 -pm -cPM $CPM_MINSUPP -oPrASP -oDLV  -stats -oDLV_CONFLICT
+
+
+#weights and no order
+sh assemble/bin/mine_rules.sh -i /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.transactions -o $OUT_DIRECTORY/rules_spmf_supp0001_conf25_100_excep02_PNCONF_cPM05_weight_noOrder_f1_f2_$SORTING_TYPE.tsv -minConf 0.25    -de -m /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.mapping_predicates -ex -exMinSup $MIN_EXCEPT_SUPP -exRank PNCONF -s $SORTING_TYPE  -w -f1 -f2 -pm -cPM $CPM_MINSUPP -oPrASP -oDLV -stats -oDLV_CONFLICT
 
 
