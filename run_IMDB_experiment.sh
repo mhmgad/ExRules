@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-OUT_DIRECTORY=$1
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/imdb/out_LIFT
 #/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_ALL
 
 mkdir -p $OUT_DIRECTORY
@@ -9,17 +9,15 @@ IN_DIR=/GW/D5data-5/gadelrab/imdb/in
 
 mkdir -p $IN_DIR
 
-
-
-./assemble/bin/rdf2int.sh SPMF /GW/D5data-5/gadelrab/imdb/ /GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine
-
 DATA_FILE=$IN_DIR/facts_to_mine_imdb
+
+./assemble/bin/rdf2int.sh SPMF /GW/D5data-5/gadelrab/imdb/facts_to_mine_imdb.tsv $DATA_FILE
+
+
 
 INPUT_TRANSACTIONS_FILE=$DATA_FILE.transactions
 
 MAPPING_FILE=$DATA_FILE.mapping_predicates
-
-
 
 
 
