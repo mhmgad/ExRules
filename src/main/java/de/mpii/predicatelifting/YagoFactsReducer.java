@@ -128,7 +128,7 @@ public class YagoFactsReducer {
         String date=orgFact.getObjectAsJavaString();
         //System.out.println(date);
         //String[] dateParts=date.split("-");
-        String reduced=date.substring(0,3);
+        String reduced=date.substring(0,3)+"s";
         reducedFacts.add(new Fact(orgFact.getSubject(),orgFact.getRelation(),reduced));
         return reducedFacts;
     }
