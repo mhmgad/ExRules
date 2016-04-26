@@ -38,6 +38,7 @@ public class MainCLI {
     private Option exportDLVOp;
     private Option exportDLVConflictOp;
     private Option statsRevisedOnlyOp;
+    private Option partialMaterializationOrderOp;
 
     public MainCLI() {
          options= new Options();
@@ -117,6 +118,9 @@ public class MainCLI {
         weightsOp=Option.builder("w").longOpt("weighted_transactions").hasArg(false).desc("Count transactions with weights. Only useful with Materialization" ).build();
         options.addOption(weightsOp);
 
+        partialMaterializationOrderOp =Option.builder("PMo").longOpt("materialization_order").hasArg(false).desc("Materialize with order. Only useful with Materialization" ).build();
+        options.addOption(partialMaterializationOrderOp);
+
 
         exceptionRankingOp=Option.builder("exRank").longOpt("exception_ranking").hasArg().desc("Exception ranking method("+ Joiner.on("|").join(ExceptionRanker.Order.values())+")").argName("order").build();
         options.addOption(exceptionRankingOp);
@@ -131,6 +135,7 @@ public class MainCLI {
 
         statsOp=Option.builder("stats").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
         options.addOption(statsOp);
+
         statsRevisedOnlyOp =Option.builder("stats").longOpt("export_revisedOnly_statistics").hasArg(false).desc("Export statistics to file" ).build();
         options.addOption(statsRevisedOnlyOp);
 
@@ -206,6 +211,9 @@ public class MainCLI {
         ExceptionRanker.Order exceptionOrdering= ExceptionRanker.Order.valueOf(cmd.getOptionValue(exceptionRankingOp.getOpt(),ExceptionRanker.Order.LIFT.toString()));
 
         boolean useWeightedTransactions= cmd.hasOption(weightsOp.getOpt());
+
+        
+        boolean orderMaterialization= cmd.hasOption(partialMaterializationOrderOp.getOpt());
 
 
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_TOPK
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_NO_ORDER
 
 mkdir -p $OUT_DIRECTORY
 
