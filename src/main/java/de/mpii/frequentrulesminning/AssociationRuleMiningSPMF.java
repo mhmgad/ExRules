@@ -497,7 +497,7 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f", newAvgLiftRO)+"\t");
             st.append(String.format("%.6f", newAvgLiftRO-orgAvgLiftRO)+"\t");
             st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t");
-            st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgConf)+"\t");
+            st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgJaccardCoefficient)+"\t");
             st.append('\n');
 
             st.append("--------------------------------------------------------------------\n");
