@@ -125,7 +125,13 @@ public class YagoFactsReducer {
 
     private List<Fact> reduceDateFact(Fact orgFact) {
         List<Fact>  reducedFacts=new ArrayList<>();
-        String date=orgFact.getObjectAsJavaString();
+        String date="0000";
+        try {
+             date = orgFact.getObjectAsJavaString();
+        }
+        catch (Exception e){
+            System.out.println(orgFact.toString());
+        }
         //System.out.println(date);
         //String[] dateParts=date.split("-");
         String reduced=date.substring(0,3)+"s";
