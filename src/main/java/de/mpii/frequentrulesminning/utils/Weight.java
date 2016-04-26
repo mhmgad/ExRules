@@ -82,4 +82,9 @@ public class Weight {
         // Currently only one rule
         return this.getRuleQuality();
     }
+
+    public boolean predictedWithDifferentRules(AssocRuleWithExceptions rule) {
+        return !rulesChainContains(rule);
+
+    }
 }

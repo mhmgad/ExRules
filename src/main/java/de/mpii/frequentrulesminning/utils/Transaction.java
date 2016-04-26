@@ -237,4 +237,9 @@ public class Transaction{
         return Arrays.stream(rule.getBody()).allMatch((i)->getItemWeight(i).predictedWithBetterQualityRules(rule));
 
     }
+
+
+    public boolean allPredicationFromDifferentRules(AssocRuleWithExceptions rule){
+        return Arrays.stream(rule.getBody()).allMatch((i)->getItemWeight(i).predictedWithDifferentRules(rule));
+    }
 }

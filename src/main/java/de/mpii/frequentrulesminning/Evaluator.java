@@ -75,10 +75,13 @@ public class Evaluator {
         Set<Transaction> ruleTransactions = transactionsDB.getTransactions(rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
         Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getBody(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
 
-        if (this.useOrder) {
-            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
-        }
+//        if (this.useOrder) {
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
+//            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
+//        }
+
+        ruleTransactions = filterTransactions(ruleTransactions, rule);
+        bodyTransactions = filterTransactions(bodyTransactions, rule);
 
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
@@ -102,10 +105,14 @@ public class Evaluator {
         Set<Transaction> ruleTransactions = transactionsDB.getTransactions(rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
         Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
 
-        if (this.useOrder) {
-            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
-        }
+//        if (this.useOrder) {
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
+//            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+//        }
+
+            ruleTransactions = filterTransactions(ruleTransactions, rule);
+            headTransactions = filterTransactions(headTransactions, rule);
+
 
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
@@ -131,11 +138,17 @@ public class Evaluator {
         Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getBody(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
         Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
 
-        if (this.useOrder) {
-            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
-            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
-        }
+//        if (this.useOrder) {
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
+//            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
+//            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+//        }
+
+
+            ruleTransactions = filterTransactions(ruleTransactions, rule);
+            bodyTransactions = filterTransactions(bodyTransactions, rule);
+            headTransactions = filterTransactions(headTransactions, rule);
+
 
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
@@ -167,16 +180,29 @@ public class Evaluator {
         Set<Transaction> ruleTransactions = transactionsDB.getTransactions(ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), rule.getHead(), this.countPrediction);
 
 
-        if (this.useOrder) {
-            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-            bodyWithExceptionTransactions = TransactionsDatabase.filterBetterQualityRules(bodyWithExceptionTransactions, rule);
-        }
+//        if (this.useOrder) {
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
+//            bodyWithExceptionTransactions = TransactionsDatabase.filterBetterQualityRules(bodyWithExceptionTransactions, rule);
+//        }
+            ruleTransactions =  filterTransactions(ruleTransactions, rule);
+            bodyWithExceptionTransactions = filterTransactions(bodyWithExceptionTransactions, rule);
+
 
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), rule.getHead(), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyWithExceptionTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), null, this.useWeights);
 
         return computeConfidence(ruleSupport, bodySupport);
 
+    }
+
+    private Set<Transaction> filterTransactions(Set<Transaction> transactions, AssocRuleWithExceptions rule) {
+        if(useOrder){
+            transactions=TransactionsDatabase.filterBetterQualityRules(transactions, rule);
+        }
+        else{
+            transactions= TransactionsDatabase.filterOtherRulesPredictions(transactions, rule);
+        }
+        return transactions;
     }
 
 
@@ -227,11 +253,15 @@ public class Evaluator {
         Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getBody(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
         Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
 
-        if (this.useOrder) {
-            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
-            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
-        }
+//        if (this.useOrder) {
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
+//            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
+//            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+//        }
+
+        ruleTransactions = filterTransactions(ruleTransactions, rule);
+        bodyTransactions = filterTransactions(bodyTransactions, rule);
+        headTransactions =filterTransactions(headTransactions, rule);
 
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);

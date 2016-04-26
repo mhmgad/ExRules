@@ -62,6 +62,17 @@ public class TransactionsDatabase {
     }
 
     /**
+     * Keep the transactions to only those generated with other rules
+     * @param transactions
+     * @param rule
+     * @return
+     */
+    public static Set<Transaction> filterOtherRulesPredictions(Collection<Transaction> transactions,AssocRuleWithExceptions rule){
+        // Restrict on transactions of higher quality
+        return  transactions.stream().filter((t)-> t.allPredicationFromDifferentRules(rule)).collect(Collectors.toSet());
+    }
+
+    /**
      * Return the transactions total count either nor weighted or weighted with respect to set of Items positive and negatives
      * @param transactions
      * @param positiveItems
