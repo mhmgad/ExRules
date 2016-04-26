@@ -219,7 +219,7 @@ public class MainCLI {
         AssociationRuleMiningSPMF miner=new AssociationRuleMiningSPMF(minsupp,minconf,maxconf);
         miner.setDebugMaterialization(debugMaterializationFile!=null,debugMaterializationFile);
 
-        SystemConfig sConf=new SystemConfig(materialize,useWeightedTransactions,true);
+        SystemConfig sConf=new SystemConfig(materialize,useWeightedTransactions,orderMaterialization);
         miner.setConfiguration(sConf);
         miner.setExceptionRanking(exceptionOrdering);
         miner.setCautiousMatrializationThreshold(cautionMaterializationValue);

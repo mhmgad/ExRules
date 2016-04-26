@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_NO_ORDER
+OUT_DIRECTORY=$1
+#/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_ALL
 
 mkdir -p $OUT_DIRECTORY
 
