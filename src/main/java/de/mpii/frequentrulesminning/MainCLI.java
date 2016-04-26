@@ -249,6 +249,7 @@ public class MainCLI {
 
         String fileName=outputFilePath+".stat";
         miner.showStatistics( rulesStrings,export, fileName);
+        miner.showStatisticsRevisedRules( rulesStrings,export, fileName+".ro");
 
 
         if(cmd.hasOption(exportDLVConflictOp.getOpt())){

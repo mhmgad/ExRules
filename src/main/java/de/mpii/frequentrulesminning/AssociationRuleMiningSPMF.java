@@ -545,6 +545,112 @@ public class AssociationRuleMiningSPMF {
     }
 
 
+    public void showStatisticsRevisedRules(AssocRulesExtended rules,boolean export, String fileName) throws Exception {
+
+        long revisedRulesCount=rules.getRevisedRuleCount();
+
+        StringBuilder st=new StringBuilder();
+        st.append(toString());
+        st.append('\n');
+
+
+
+
+        st.append("topK\ttype\tAvgConf\tdiff\tAvgConfRO\tdiff\tAvgLIFT\tdiff\tAvgLIFTRO\tdiff");
+        st.append('\n');
+
+        StringBuilder stAll=new StringBuilder();
+        stAll.append("TopK\tMeasurement\tAll Rules\tRevised Rules Only\n");
+
+
+
+        for(int i=1;i<=10;i++) {
+            int k=(int)Math.ceil((i*0.1)*revisedRulesCount);
+
+
+            double orgAvgConf= rules.getRevisedRulesConfidenceStats(k, false,false).getAverage();
+            double orgAvgConfRO= rules.getRevisedRulesConfidenceStats(k, false,true).getAverage();
+
+            double orgAvgLift = rules.getRevisedRulesLiftStats(k, false,false).getAverage();
+            double orgAvgLiftRO = rules.getRevisedRulesLiftStats(k, false,true).getAverage();
+//            double orgAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, false,false).getAverage();;
+
+
+            st.append(k+":\tBefore\t");
+            st.append(String.format("%.5f",orgAvgConf)+"\t__\t");
+            st.append(String.format("%.5f",orgAvgConfRO)+"\t__\t");
+            st.append(String.format("%.6f", orgAvgLift)+"\t__\t");
+            st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
+//            st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t__\t");
+            st.append('\n');
+
+            double newAvgConfidence = rules.getRevisedRulesConfidenceStats(k, true, false).getAverage();
+            double newAvgConfidenceRO = rules.getRevisedRulesConfidenceStats(k, true, true).getAverage();
+            double newAvgLift = rules.getRevisedRulesLiftStats(k, true,false).getAverage();
+            double newAvgLiftRO = rules.getRevisedRulesLiftStats(k, true,true).getAverage();
+
+
+//            double newAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, true,false).getAverage();;
+
+            st.append(k+":\tAfter\t");
+            st.append(String.format("%.5f", newAvgConfidence)+"\t");
+            st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t");
+            st.append(String.format("%.5f", newAvgConfidenceRO)+"\t");
+            st.append(String.format("%.5f", newAvgConfidenceRO-orgAvgConfRO)+"\t");
+
+            st.append(String.format("%.6f", newAvgLift)+"\t");
+            st.append(String.format("%.6f", newAvgLift-orgAvgLift)+"\t");
+            st.append(String.format("%.6f", newAvgLiftRO)+"\t");
+            st.append(String.format("%.6f", newAvgLiftRO-orgAvgLiftRO)+"\t");
+//            st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t");
+//            st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgConf)+"\t");
+            st.append('\n');
+
+            st.append("--------------------------------------------------------------------\n");
+
+
+            st.append('\n');
+
+
+            //-------------------
+
+            stAll.append(k+"\t");
+            stAll.append("Confidence\t");
+            stAll.append(rules.getConfidenceDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
+            stAll.append(rules.getConfidenceDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+            stAll.append("\tLift\t");
+            stAll.append(rules.getLiftDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
+            stAll.append(rules.getLiftDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+//            stAll.append("\tJaccard\t");
+//            stAll.append(rules.getJaccardDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
+//            stAll.append(rules.getJaccardDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+            stAll.append("--------------------------------------------------------------------\n");
+
+
+
+        }
+
+        st.append("RO: revised only\n");
+
+
+
+        System.out.println(st.toString());
+        System.out.println(stAll.toString());
+        if(export){
+            BufferedWriter bw=FileUtils.getBufferedUTF8Writer(fileName);
+            bw.write(st.toString());
+            bw.close();
+
+            BufferedWriter bw2=FileUtils.getBufferedUTF8Writer(fileName+".all");
+            bw2.write(stAll.toString());
+            bw2.close();
+        }
+
+
+
+    }
+
+
     public double getMinsupp() {
         return minsupp;
     }

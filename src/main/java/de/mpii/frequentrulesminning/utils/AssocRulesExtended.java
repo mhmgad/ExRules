@@ -307,7 +307,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public DoubleSummaryStatistics getConfidenceStats(int k, boolean exception, boolean revisedOnly){
+    public DoubleSummaryStatistics getRevisedRulesConfidenceStats(int k, boolean exception, boolean revisedOnly){
         if(exception)
             return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
         else
@@ -315,7 +315,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
-    public DoubleSummaryStatistics getConfidenceStats2(int k, boolean exception, boolean revisedOnly){
+    public DoubleSummaryStatistics getConfidenceStats(int k, boolean exception, boolean revisedOnly){
         if(exception)
             return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
         else
@@ -323,6 +323,11 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
+    public DoubleSummaryStatistics getRevisedRulesConfidenceDiffStats(int k, boolean revisedOnly){
+
+        return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedConfidence()-r.getConfidence()).summaryStatistics();
+
+    }
 
     public DoubleSummaryStatistics getConfidenceDiffStats(int k, boolean revisedOnly){
 
@@ -344,6 +349,14 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
+
+    public DoubleSummaryStatistics getRevisedRulesLiftStats(int k, boolean withException, boolean revisedOnly){
+        if(withException)
+            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedLift).summaryStatistics();
+        else
+            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getLift).summaryStatistics();
+    }
+
     public DoubleSummaryStatistics getLiftStats(int k, boolean withException, boolean revisedOnly){
         if(withException)
             return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedLift).summaryStatistics();
@@ -357,7 +370,11 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
+    public DoubleSummaryStatistics getRevisedRulesLiftDiffStats(int k,boolean revisedOnly){
 
+        return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedLift()-r.getLift()).summaryStatistics();
+
+    }
 
 
     //    private void sortByLift(List<AssocRuleWithExceptions> rulesToSort) {
