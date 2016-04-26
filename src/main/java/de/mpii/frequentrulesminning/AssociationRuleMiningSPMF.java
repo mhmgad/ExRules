@@ -502,7 +502,7 @@ public class AssociationRuleMiningSPMF {
 
             st.append("--------------------------------------------------------------------\n");
 
-            st.append("RO: revised only\n");
+
             st.append('\n');
 
 
@@ -524,7 +524,7 @@ public class AssociationRuleMiningSPMF {
 
         }
 
-
+        st.append("RO: revised only\n");
 
 
 

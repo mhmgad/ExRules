@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_CONF
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_TOPK
 
 mkdir -p $OUT_DIRECTORY
 
 
 
 
-SORTING_TYPE=CONF
+SORTING_TYPE=LIFT
 
 
 CPM_MINSUPP=0.0

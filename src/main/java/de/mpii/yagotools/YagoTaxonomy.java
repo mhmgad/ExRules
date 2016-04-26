@@ -84,6 +84,8 @@ public class YagoTaxonomy {
 
     public static void main (String [] args){
         YagoTaxonomy yt= YagoTaxonomy.getInstance();
+
+        System.out.println(yt.getParents("<wikicat_Short_films>"));
         System.out.println(yt.getParents("<wikicategory_K._Lierse_S.K._players>"));
         System.out.println(yt.getParents("<wordnet_hearer_110165448>"));
         System.out.println(yt.getParents("<wikicat_English_fantasy_writers>"));

@@ -13,7 +13,7 @@ import java.util.HashSet;
  */
 public class YagoTypes {
 
-    String TAXONOMY_FILE_PATH="data/yagoTypes.tsv";
+    String TAXONOMY_FILE_PATH="data/yagoSimpleTypes.tsv";
 
     private static YagoTypes instance;
 
@@ -44,6 +44,8 @@ public class YagoTypes {
 
     public static void main (String [] args){
         YagoTypes yt= YagoTypes.getInstance();
+        System.out.println();
+        System.out.println(yt.getType("<Aaron_Sorkin>"));
     }
 
 

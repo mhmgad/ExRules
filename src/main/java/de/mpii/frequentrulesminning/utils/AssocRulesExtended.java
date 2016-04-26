@@ -309,6 +309,14 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     public DoubleSummaryStatistics getConfidenceStats(int k, boolean exception, boolean revisedOnly){
         if(exception)
+            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
+        else
+            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getConfidence).summaryStatistics();
+
+    }
+
+    public DoubleSummaryStatistics getConfidenceStats2(int k, boolean exception, boolean revisedOnly){
+        if(exception)
             return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
         else
             return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getConfidence).summaryStatistics();
