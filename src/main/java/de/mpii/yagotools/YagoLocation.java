@@ -55,21 +55,24 @@ public class YagoLocation {
     }
 
 
-    public  String getParentCountry(String entity){
+    public Set<String> getParentCountries(String entity) {
 
-        String parentCountry;
+        Set<String> o = new HashSet<>();
+        o.add(entity);
         if (countriesSet.contains(entity))
-            return entity;
+            return o;
 
         Collection<String> parents=typesParents.get(entity);
         //System.out.println(parents);
         Set<String> countryParents=Sets.intersection(ImmutableSet.copyOf(parents), countriesSet);
         //System.out.println(countryParents);
 
-        if(countryParents==null||countryParents.isEmpty())
-            return entity;
+        if (countryParents == null || countryParents.isEmpty()) {
+
+            return o;
+        }
         else
-            return (String) countryParents.toArray()[0];
+            return countryParents;
     }
 
     public Collection<String> getParents(String entity){
