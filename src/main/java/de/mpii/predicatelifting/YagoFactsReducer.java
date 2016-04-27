@@ -118,9 +118,12 @@ public class YagoFactsReducer {
         String entity=orgFact.getObject();
 //        Collection<String> parents=yTax.getParents(yTypes.getType(entity));
         Collection<String> parents = yTypes.getType(entity);
+        parents.remove("<wordnet_person_100007846>");
+        parents.remove("<wikicat_Languages>");
 
         parents.forEach((p)-> reducedFacts.add(new Fact(orgFact.getSubject(),orgFact.getRelation(),p)));
-
+        if (reducedFacts.isEmpty())
+            reducedFacts.add(orgFact);
         return reducedFacts;
     }
 
