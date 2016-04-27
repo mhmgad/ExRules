@@ -95,8 +95,8 @@ public class AssociationRuleMiningSPMF {
     }
 
     public Itemsets getFrequentItemsets(String inputIntegerTransactionsFilePath) throws IOException {
-        System.out.println("Start Mining Items...");
-        Itemsets patterns = fpgrowth.runAlgorithm(inputIntegerTransactionsFilePath, (String)null, minsupp);
+        System.out.println("Start Mining Items... minSupport=" + minsupp);
+        Itemsets patterns = fpgrowth.runAlgorithm(inputIntegerTransactionsFilePath, null, minsupp);
         System.out.println("Start Rule Mining ...");
         fpgrowth.printStats();
         return patterns;
