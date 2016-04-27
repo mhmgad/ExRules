@@ -307,25 +307,25 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public DoubleSummaryStatistics getRevisedRulesConfidenceStats(int k, boolean exception, boolean revisedOnly){
+    public DoubleSummaryStatistics getRevisedRulesConfidenceStats(int k, boolean exception){
         if(exception)
-            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
         else
-            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getConfidence).summaryStatistics();
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getConfidence).summaryStatistics();
 
     }
 
     public DoubleSummaryStatistics getConfidenceStats(int k, boolean exception, boolean revisedOnly){
         if(exception)
-            return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
+            return rules.stream().limit(k).filter((r)->(!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
         else
             return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getConfidence).summaryStatistics();
 
     }
 
-    public DoubleSummaryStatistics getRevisedRulesConfidenceDiffStats(int k, boolean revisedOnly){
+    public DoubleSummaryStatistics getRevisedRulesConfidenceDiffStats(int k){
 
-        return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedConfidence()-r.getConfidence()).summaryStatistics();
+        return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedConfidence()-r.getConfidence()).summaryStatistics();
 
     }
 
@@ -350,14 +350,14 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public DoubleSummaryStatistics getRevisedRulesLiftStats(int k, boolean withException, boolean revisedOnly){
+    public DoubleSummaryStatistics getRevisedRulesLiftStats(int k, boolean withException){
         if(withException)
-            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedLift).summaryStatistics();
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedLift).summaryStatistics();
         else
-            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getLift).summaryStatistics();
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getLift).summaryStatistics();
     }
 
-    public DoubleSummaryStatistics getLiftStats(int k, boolean withException, boolean revisedOnly){
+    public DoubleSummaryStatistics getLiftStats(int k, boolean withException,boolean revisedOnly){
         if(withException)
             return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedLift).summaryStatistics();
         else
@@ -370,9 +370,9 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
-    public DoubleSummaryStatistics getRevisedRulesLiftDiffStats(int k,boolean revisedOnly){
+    public DoubleSummaryStatistics getRevisedRulesLiftDiffStats(int k){
 
-        return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedLift()-r.getLift()).summaryStatistics();
+        return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedLift()-r.getLift()).summaryStatistics();
 
     }
 

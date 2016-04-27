@@ -556,54 +556,38 @@ public class AssociationRuleMiningSPMF {
 
 
 
-        st.append("topK\ttype\tAvgConf\tdiff\tAvgConfRO\tdiff\tAvgLIFT\tdiff\tAvgLIFTRO\tdiff");
+        st.append("topK\ttype\tAvgConfRO\tdiff\tAvgLIFTRO\tdiff");
         st.append('\n');
 
         StringBuilder stAll=new StringBuilder();
-        stAll.append("TopK\tMeasurement\tAll Rules\tRevised Rules Only\n");
+        stAll.append("TopK\tMeasurement\tRevised Rules Only\n");
 
 
 
         for(int i=1;i<=10;i++) {
             int k=(int)Math.ceil((i*0.1)*revisedRulesCount);
 
+            double orgAvgConfRO= rules.getRevisedRulesConfidenceStats(k, false).getAverage();
+            double orgAvgLiftRO = rules.getRevisedRulesLiftStats(k, false).getAverage();
 
-            double orgAvgConf= rules.getRevisedRulesConfidenceStats(k, false,false).getAverage();
-            double orgAvgConfRO= rules.getRevisedRulesConfidenceStats(k, false,true).getAverage();
-
-            double orgAvgLift = rules.getRevisedRulesLiftStats(k, false,false).getAverage();
-            double orgAvgLiftRO = rules.getRevisedRulesLiftStats(k, false,true).getAverage();
-//            double orgAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, false,false).getAverage();;
 
 
             st.append(k+":\tBefore\t");
-            st.append(String.format("%.5f",orgAvgConf)+"\t__\t");
             st.append(String.format("%.5f",orgAvgConfRO)+"\t__\t");
-            st.append(String.format("%.6f", orgAvgLift)+"\t__\t");
             st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
-//            st.append(String.format("%.5f", orgAvgJaccardCoefficient)+"\t__\t");
             st.append('\n');
 
-            double newAvgConfidence = rules.getRevisedRulesConfidenceStats(k, true, false).getAverage();
-            double newAvgConfidenceRO = rules.getRevisedRulesConfidenceStats(k, true, true).getAverage();
-            double newAvgLift = rules.getRevisedRulesLiftStats(k, true,false).getAverage();
-            double newAvgLiftRO = rules.getRevisedRulesLiftStats(k, true,true).getAverage();
 
+            double newAvgConfidenceRO = rules.getRevisedRulesConfidenceStats(k, true).getAverage();
 
-//            double newAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, true,false).getAverage();;
+            double newAvgLiftRO = rules.getRevisedRulesLiftStats(k, true).getAverage();
 
             st.append(k+":\tAfter\t");
-            st.append(String.format("%.5f", newAvgConfidence)+"\t");
-            st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t");
             st.append(String.format("%.5f", newAvgConfidenceRO)+"\t");
             st.append(String.format("%.5f", newAvgConfidenceRO-orgAvgConfRO)+"\t");
-
-            st.append(String.format("%.6f", newAvgLift)+"\t");
-            st.append(String.format("%.6f", newAvgLift-orgAvgLift)+"\t");
             st.append(String.format("%.6f", newAvgLiftRO)+"\t");
             st.append(String.format("%.6f", newAvgLiftRO-orgAvgLiftRO)+"\t");
-//            st.append(String.format("%.5f", newAvgJaccardCoefficient)+"\t");
-//            st.append(String.format("%.5f", newAvgJaccardCoefficient-orgAvgConf)+"\t");
+
             st.append('\n');
 
             st.append("--------------------------------------------------------------------\n");
@@ -616,14 +600,11 @@ public class AssociationRuleMiningSPMF {
 
             stAll.append(k+"\t");
             stAll.append("Confidence\t");
-            stAll.append(rules.getConfidenceDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
-            stAll.append(rules.getConfidenceDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+            stAll.append(rules.getRevisedRulesConfidenceDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
             stAll.append("\tLift\t");
-            stAll.append(rules.getLiftDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
-            stAll.append(rules.getLiftDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
-//            stAll.append("\tJaccard\t");
-//            stAll.append(rules.getJaccardDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
-//            stAll.append(rules.getJaccardDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+
+            stAll.append(rules.getRevisedRulesLiftDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+
             stAll.append("--------------------------------------------------------------------\n");
 
 
