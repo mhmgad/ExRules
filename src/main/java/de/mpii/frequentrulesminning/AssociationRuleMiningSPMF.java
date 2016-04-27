@@ -470,7 +470,7 @@ public class AssociationRuleMiningSPMF {
             double orgAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, false,false).getAverage();;
 
 
-            st.append(k+":\tBefore\t");
+            st.append(k+"\tBefore\t");
             st.append(String.format("%.5f",orgAvgConf)+"\t__\t");
             st.append(String.format("%.5f",orgAvgConfRO)+"\t__\t");
             st.append(String.format("%.6f", orgAvgLift)+"\t__\t");
@@ -486,7 +486,7 @@ public class AssociationRuleMiningSPMF {
 
             double newAvgJaccardCoefficient = rules.getJaccardCoefficientStats(k, true,false).getAverage();;
 
-            st.append(k+":\tAfter\t");
+            st.append(k+"\tAfter\t");
             st.append(String.format("%.5f", newAvgConfidence)+"\t");
             st.append(String.format("%.5f", newAvgConfidence-orgAvgConf)+"\t");
             st.append(String.format("%.5f", newAvgConfidenceRO)+"\t");
@@ -572,7 +572,7 @@ public class AssociationRuleMiningSPMF {
 
 
 
-            st.append(k+":\tBefore\t");
+            st.append(k+"\tBefore\t");
             st.append(String.format("%.5f",orgAvgConfRO)+"\t__\t");
             st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
             st.append('\n');
@@ -582,7 +582,7 @@ public class AssociationRuleMiningSPMF {
 
             double newAvgLiftRO = rules.getRevisedRulesLiftStats(k, true).getAverage();
 
-            st.append(k+":\tAfter\t");
+            st.append(k+"\tAfter\t");
             st.append(String.format("%.5f", newAvgConfidenceRO)+"\t");
             st.append(String.format("%.5f", newAvgConfidenceRO-orgAvgConfRO)+"\t");
             st.append(String.format("%.6f", newAvgLiftRO)+"\t");
