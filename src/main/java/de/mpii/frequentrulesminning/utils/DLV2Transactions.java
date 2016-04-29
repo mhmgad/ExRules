@@ -62,12 +62,34 @@ public class DLV2Transactions {
         converter.loadMappings(args[2],args[3]);
         converter.parseDLVOutput(modelStrings);
 
-        converter.exportResults(RDF2IntegerTransactionsConverter.EncodingType.valueOf(args[0]),args[1]);
-
         converter.loadNegations(modelStrings);
 
+        if(args.length>4){
+            if(args[4].equals("cautious")){
+                converter.removeConflicts();
+            }
+        }
+
+        converter.exportResults(RDF2IntegerTransactionsConverter.EncodingType.valueOf(args[0]),args[1]);
+
+
+
         String exportStatsFile = args[1] + ".stats";
-        converter.computeConflictsStats(modelStrings,exportStatsFile);
+        converter.computeConflictsStats(exportStatsFile);
+
+
+
+
+    }
+
+    private void removeConflicts() {
+        Set<Integer> KeysIntersection=Sets.intersection(items2Subjects.keySet(),negativeItems2Subjects.keySet());
+
+        for (Integer key:KeysIntersection) {
+            for (String s:negativeItems2Subjects.get(key))
+                items2Subjects.remove(key,s);
+
+        }
 
 
     }
@@ -114,25 +136,10 @@ public class DLV2Transactions {
 
     }
 
-    private  void computeConflictsStats( String[] modelStrings,String exportFile) throws  IOException{
+    private  void computeConflictsStats(String exportFile) throws  IOException{
 
 
         StringBuilder bf=new StringBuilder();
-
-// fill subject to conflict map
-//        Arrays.stream(modelStrings).filter(s -> s.trim().startsWith("conflict")).forEach( confString -> {
-//
-//                conflict2subject.put(cv.fromDLV2Item(confString),cv.fromDLV2Subject(confString));
-//
-//                }
-//
-//        );
-
-        // add them to conflict count
-//        conflict2subject.keySet().stream().forEach((conflict)-> count2Conflict.put(conflict2subject.get(conflict).size(),conflict));
-
-//        multimapIntersection(items2Subjects,negativeItems2Subjects);
-
 
         Set<Integer> KeysIntersection=Sets.intersection(items2Subjects.keySet(),negativeItems2Subjects.keySet());
 

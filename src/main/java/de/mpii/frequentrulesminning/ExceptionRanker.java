@@ -35,7 +35,6 @@ public class ExceptionRanker {
 
         rulesList.parallelStream().forEach( (rule) ->  rankExceptions(rule));
 
-
     }
 
     public void rankExceptions(AssocRuleWithExceptions rule) {
@@ -60,7 +59,7 @@ public class ExceptionRanker {
 
     public void computeScores(AssocRuleWithExceptions rule) {
         rule.getExceptionCandidates().forEach((exc)-> {
-            exc.setCoverage(evaluator.coverage(rule, exc));
+//            exc.setCoverage(evaluator.coverage(rule, exc));
             exc.setConfidence(evaluator.confidence(rule, exc));
             exc.setLift(evaluator.lift(rule,exc));
             exc.setNegConfidence(evaluator.negativeRuleConfidence(rule,exc));

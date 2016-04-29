@@ -232,6 +232,7 @@ public class MainCLI {
         miner.setLevel2Filter(level2Filter);
         miner.setShowRulesWithExceptionsOnly(showRulesWithExceptionsOnly);
         miner.setSortType(outputSorting);
+
         AssocRulesExtended rulesStrings = miner.getFrequentAssociationRules(inputFile, rdf2idsMappingFile/*, encode, decode, filter, withExceptions, excepminSupp, materialize, level2Filter*/);
         miner.exportRules(rulesStrings, outputFilePath/*,outputSorting,showRulesWithExceptionsOnly*/);
 

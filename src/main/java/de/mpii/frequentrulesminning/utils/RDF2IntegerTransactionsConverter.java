@@ -416,7 +416,7 @@ public class RDF2IntegerTransactionsConverter {
     public void parseDLVOutput(String [] modelPredicatesString) throws IOException {
 
 
-        Arrays.stream(modelPredicatesString).filter((s)-> !(s.contains("conflict")||s.trim().startsWith("not_"))).forEach((predicateString)-> {
+        Arrays.stream(modelPredicatesString).filter((s)-> s.trim().startsWith("p")).forEach((predicateString)-> {
 
             String subject = fromDLV2Subject(predicateString);
             Item item = fromDLV2Item(predicateString);

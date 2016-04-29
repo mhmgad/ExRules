@@ -64,7 +64,11 @@ public class Evaluator {
 //    }
 
     public double computeCoverage(double ruleSupport, double headSupport) {
-        return ((double) ruleSupport) / headSupport;
+        return ruleSupport / headSupport;
+    }
+
+    public double confidence(AssocRuleWithExceptions rule){
+        return confidence( rule, rule.getHornRuleTransactions(), rule.getBodyTransactions(), null);
     }
 
     public double confidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
@@ -83,10 +87,7 @@ public class Evaluator {
         ruleTransactions = filterTransactions(ruleTransactions, rule);
         bodyTransactions = filterTransactions(bodyTransactions, rule);
 
-        double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
-        double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
-
-        return computeConfidence(ruleSupport, bodySupport);
+        return confidence(rule, ruleTransactions, bodyTransactions, exceptionItem);
 
 
 //      return computeConfidence(ruleTransactions, bodyTransactions);
@@ -94,8 +95,15 @@ public class Evaluator {
 
     }
 
+    public double confidence(AssocRuleWithExceptions rule, Set<Transaction> ruleTransactions, Set<Transaction> bodyTransactions, ExceptionItem exceptionItem) {
+        double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+
+        return computeConfidence(ruleSupport, bodySupport);
+    }
+
     public double coverage(AssocRuleWithExceptions rule) {
-        return coverage(rule, null);
+        return coverage( rule,  rule.getHornRuleTransactions(), rule.getHeadTransactions(),  null);
     }
 
     public double coverage(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
@@ -114,17 +122,21 @@ public class Evaluator {
             headTransactions = filterTransactions(headTransactions, rule);
 
 
-        double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
-        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
-
-        return computeCoverage(ruleSupport, headSupport);
+        return coverage(rule, ruleTransactions, headTransactions, exceptionItem);
 
 //        return computeCoverage(ruleTransactions, headTransactions);
 
     }
 
+    public double coverage(AssocRuleWithExceptions rule, Set<Transaction> ruleTransactions, Set<Transaction> headTransactions, ExceptionItem exceptionItem) {
+        double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+
+        return computeCoverage(ruleSupport, headSupport);
+    }
+
     public double lift(AssocRuleWithExceptions rule) {
-        return lift(rule, null);
+        return lift( rule,rule.getHornRuleTransactions(), rule.getBodyTransactions(), rule.getHeadTransactions(),null);
     }
 
     public double lift(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
@@ -150,17 +162,20 @@ public class Evaluator {
             headTransactions = filterTransactions(headTransactions, rule);
 
 
+        return lift(rule, ruleTransactions, bodyTransactions, headTransactions, exceptionItem);
+
+//        return computeLift(ruleTransactions, bodyTransactions, headTransactions);
+
+    }
+
+    public double lift(AssocRuleWithExceptions rule, Set<Transaction> ruleTransactions, Set<Transaction> bodyTransactions, Set<Transaction> headTransactions, ExceptionItem exceptionItem) {
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
 
 
         return computeLift(ruleSupport, bodySupport, headSupport);
-
-//        return computeLift(ruleTransactions, bodyTransactions, headTransactions);
-
     }
-
 
 
     /**
@@ -188,11 +203,15 @@ public class Evaluator {
             bodyWithExceptionTransactions = filterTransactions(bodyWithExceptionTransactions, rule);
 
 
+        return negativeRuleConfidence(rule, bodyWithExceptionTransactions, ruleTransactions, exceptionItem);
+
+    }
+
+    public double negativeRuleConfidence(AssocRuleWithExceptions rule, Set<Transaction> bodyWithExceptionTransactions, Set<Transaction> ruleTransactions, ExceptionItem exceptionItem) {
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), rule.getHead(), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyWithExceptionTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), null, this.useWeights);
 
         return computeConfidence(ruleSupport, bodySupport);
-
     }
 
     private Set<Transaction> filterTransactions(Set<Transaction> transactions, AssocRuleWithExceptions rule) {
@@ -263,6 +282,11 @@ public class Evaluator {
         bodyTransactions = filterTransactions(bodyTransactions, rule);
         headTransactions =filterTransactions(headTransactions, rule);
 
+        return JaccardCoefficient(rule, ruleTransactions, bodyTransactions, headTransactions, exceptionItem);
+
+    }
+
+    public double JaccardCoefficient(AssocRuleWithExceptions rule, Set<Transaction> ruleTransactions, Set<Transaction> bodyTransactions, Set<Transaction> headTransactions, ExceptionItem exceptionItem) {
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
@@ -271,7 +295,6 @@ public class Evaluator {
         double bodyAndHeadUnionSupport=bodySupport+headSupport-ruleSupport;
 
         return computeJaccardCoefficient(ruleSupport, bodyAndHeadUnionSupport);
-
     }
 
     private double computeJaccardCoefficient(double ruleSupport, double bodyAndHeadUnionSupport) {
@@ -279,7 +302,7 @@ public class Evaluator {
     }
 
     public double JaccardCoefficient(AssocRuleWithExceptions rule) {
-        return JaccardCoefficient(rule,null);
+        return JaccardCoefficient( rule, rule.getHornRuleTransactions(), rule.getBodyTransactions(),rule.getHeadTransactions(), null);
     }
 
 

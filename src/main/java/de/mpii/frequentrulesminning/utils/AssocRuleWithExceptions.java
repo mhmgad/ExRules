@@ -32,7 +32,7 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     Set<Transaction> bodyTransactions;
     Set<Transaction> headTransactions;
     Set<Transaction> hornRuleTransactions;
-    Set<Transaction> safePredictableTransactions;
+//    Set<Transaction> safePredictableTransactions;
     private Set<Transaction> predictableTransactions;
     /**
      * This is the confidence of not head <- body
@@ -175,9 +175,9 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return Arrays.equals(itemset2,casted.itemset2)&&Arrays.equals(itemset1,casted.itemset1);
     }
 
-    public Set<Transaction> getPredicatableTransactions(){
-        return predictableTransactions;
-    }
+//    public Set<Transaction> getPredicatableTransactions(){
+//        return predictableTransactions;
+//    }
 
 
     /**
@@ -229,9 +229,9 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         return hornRuleTransactions;
     }
 
-    public void setSafePredictableTransactions(Set<Transaction> safePredictableTransactions) {
-        this.safePredictableTransactions = safePredictableTransactions;
-    }
+//    public void setSafePredictableTransactions(Set<Transaction> safePredictableTransactions) {
+//        this.safePredictableTransactions = safePredictableTransactions;
+//    }
 
     public Set<Transaction> getHeadTransactions() {
         return headTransactions;
@@ -249,8 +249,12 @@ public class AssocRuleWithExceptions {// extends AssocRule {
         this.predictableTransactions = predictableTransactions;
     }
 
-    public Set<Transaction> getSafePredictableTransactions() {
-        return safePredictableTransactions;
+//    public Set<Transaction> getSafePredictableTransactions() {
+//        return safePredictableTransactions;
+//    }
+
+    public Set<Transaction> getPredictableTransactions() {
+        return predictableTransactions;
     }
 
 

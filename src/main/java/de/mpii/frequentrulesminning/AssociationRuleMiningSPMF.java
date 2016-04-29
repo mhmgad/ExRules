@@ -89,6 +89,7 @@ public class AssociationRuleMiningSPMF {
         this.maxconf=maxconf;
         this.algoAgrawal = new AlgoAgrawalFaster94();
         this.rdf2TransactionsConverter=new RDF2IntegerTransactionsConverter();
+        this.yagoTaxonomy=YagoTaxonomy.getInstance();
 
 
 
@@ -96,9 +97,11 @@ public class AssociationRuleMiningSPMF {
 
     public Itemsets getFrequentItemsets(String inputIntegerTransactionsFilePath) throws IOException {
         System.out.println("Start Mining Items... minSupport=" + minsupp);
+        long startTime = System.nanoTime();
         Itemsets patterns = fpgrowth.runAlgorithm(inputIntegerTransactionsFilePath, null, minsupp);
-        System.out.println("Start Rule Mining ...");
+        long estimatedTime = System.nanoTime() - startTime;
         fpgrowth.printStats();
+        System.out.println("Start Rule Mining ... estimatedTime= "+estimatedTime);
         return patterns;
 
     }
@@ -111,19 +114,27 @@ public class AssociationRuleMiningSPMF {
 
     public AssocRulesExtended getFrequentAssociationRules(Itemsets frequentItemsets) throws IOException {
         System.out.println("Start Rule Mining ...");
+        long startTime = System.nanoTime();
         List<AssocRule> rulesGenerated = algoAgrawal.runAlgorithm(frequentItemsets, null, getDatabaseSize(), minconf).getRules();
         AssocRulesExtended rules=new AssocRulesExtended();
 
         rulesGenerated.forEach((r)-> rules.addRule(new AssocRuleWithExceptions(AssocRuleWithExceptions.getNextID(),r.getItemset1(),r.getItemset2(),r.getCoverage(),r.getAbsoluteSupport(),r.getConfidence(),r.getLift())));
         algoAgrawal.printStats();
-        System.out.println("Done Rule Mining ...");
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Rule Mining ... estimatedTime= "+estimatedTime);
         return rules;
     }
 
 
     public AssocRulesExtended getFrequentAssociationRules(String inputRDFFile, String mappingFilePath/*, boolean encode, boolean decode, boolean filter, boolean withExceptions, double exceptionMinSupp, boolean materialize, boolean level2Filter*/) throws Exception {
+        System.out.println("-----------------------------------------------------");
+        System.out.println("Start: "+toString());
+        long startTime = System.nanoTime();
+        System.out.println("-----------------------------------------------------");
         // encode if required and get data file path
         String transactionsFilePath=encodeData(inputRDFFile,encode);
+
+        TransactionsDatabase transactionsDB=new TransactionsDatabase(transactionsFilePath);
 
         // mine Frequent patterns
         Itemsets frequentPatterns=getFrequentItemsets(transactionsFilePath);
@@ -133,27 +144,18 @@ public class AssociationRuleMiningSPMF {
 
         if(filter) {
             filterRules(rules);
-            System.out.println("Rules after filtering1: "+rules.getRulesCount());
+
         }
-
-
-        TransactionsDatabase transactionsDB=new TransactionsDatabase(transactionsFilePath);
-
-
 
         // decode
         decodeRules( rules, mappingFilePath,decode,!encode);
 
         if(decode&&level2Filter){
-            filterAfterDecoding(rules);
-            System.out.println("Rules after filtering2: "+rules.getRulesCount());
+            filterRulesMimickingHierarchy(rules);
+
         }
 
-
-
-
-
-        // distribute Transactions
+       // distribute Transactions
 
         computeSupportingTransactions(rules,transactionsDB);
 
@@ -171,11 +173,14 @@ public class AssociationRuleMiningSPMF {
 
         if(withExceptions) {
             // predictable transactions
-            computeSafePredictableTransactions(rules,transactionsDB);
+//            computeSafePredictableTransactions(rules,transactionsDB);
             rankException(rules,transactionsDB);
         }
 
         revisetedRuleQuality(rules,transactionsDB);
+
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done! -----------------------------------------------------  estimatedTime= "+estimatedTime);
         return rules;
     }
 
@@ -192,45 +197,53 @@ public class AssociationRuleMiningSPMF {
 
     public void materialize(AssocRulesExtended rules,TransactionsDatabase transactionsDB) throws Exception {
         System.out.println("Materialization ... ");
+        long startTime = System.nanoTime();
         Materializer materializer=new Materializer(transactionsDB,cautiousMatrializationThreshold,debugMatherialization,debugMaterializationFile);
         materializer.materialize(rules.getRules(),true,true);
-        System.out.println("Done Materialization !");
+        long estimatedTime = System.nanoTime() - startTime;
+
+
+        System.out.println("Done Materialization ! estimatedTime= "+estimatedTime);
 
     }
 
-    private void computeSafePredictableTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
-        rules.getRules().parallelStream().forEach(r -> {
-            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts(),false));
-
-        });
-
-    }
+//    private void computeSafePredictableTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
+//        rules.getRules().parallelStream().forEach(r -> {
+//            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts(),false));
+//
+//        });
+//
+//    }
 
     private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
         System.out.println("Resolving Transactions.. ");
+        long startTime = System.nanoTime();
+
         Evaluator eval=new Evaluator(transactionsDB);
         rules.getRules().parallelStream().forEach(r -> {
             r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null,false));
             r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null,false));
             r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead(),false));
             r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead(),false));
-//            r.setSafePredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getPredicatableTransactions(), r.getExceptionsCandidatesInts()));
-            // set quality meaurements
-//            r.setLift(eval.computeLift(r.getHornRuleTransactions(),r.getBodyTransactions(),r.getHeadTransactions()));
-//            r.setCoverage(eval.computeCoverage(r.getHornRuleTransactions(),r.getHeadTransactions()));
+
             r.setLift(eval.lift(r));
-            r.setCoverage(eval.coverage(r));
+//            r.setCoverage(eval.coverage(r));
             r.setNegConfidence(eval.negativeRuleConfidence(r));
             r.setJaccardCoefficient(eval.JaccardCoefficient(r));
 
         });
-        System.out.println("Done Resolving Transactions!");
+
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Resolving Transactions! .... estimatedTime= "+estimatedTime);
 
     }
+
+
 
     private void rankException(AssocRulesExtended rules, TransactionsDatabase transactionsDB)
     {
         System.out.println("Re-rank Exceptions.. ");
+        long startTime = System.nanoTime();
 
         Evaluator evaluator=new Evaluator(transactionsDB);
         evaluator.setCountPrediction(configuration.isMaterialization());
@@ -242,7 +255,8 @@ public class AssociationRuleMiningSPMF {
 
         ranker.rankExceptions(rules);
 
-        System.out.println("Done Re-rank Exceptions!");
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Re-rank Exceptions! ... estimatedTime= "+estimatedTime);
 
     }
 
@@ -266,23 +280,29 @@ public class AssociationRuleMiningSPMF {
 
 
 
-    private void filterAfterDecoding(AssocRulesExtended rules) {
+    private void filterRulesMimickingHierarchy(AssocRulesExtended rules) {
         System.out.println("Start Filtering 2...");
-        this.yagoTaxonomy=YagoTaxonomy.getInstance();
+        long startTime = System.nanoTime();
         //rules.getRules().removeIf(rule -> isMimickingHierarchy((AssocRuleWithExceptions) rule));
         rules.removeRulesIf((AssocRuleWithExceptions rule) -> isMimickingHierarchy(rule));
-        System.out.println("Done Filtering 2!");
+
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Rules after filtering2: "+rules.getRulesCount());
+
+        System.out.println("Done Filtering 2! ... estimatedTime= "+estimatedTime);
     }
 
     private void filterRules(AssocRulesExtended rules) {
 
         System.out.println("Start Filtering...");
-
+        long startTime = System.nanoTime();
 //        rules.getRules().removeIf(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
         rules.removeRulesIf(rule -> (rule.getConfidence() >= maxconf || rule.getItemset2().length>1||rule.getItemset1().length>4));
         removeContainingRules(rules);
+        long estimatedTime = System.nanoTime() - startTime;
 
-        System.out.println("Done Filtering!");
+        System.out.println("Rules after filtering1: "+rules.getRulesCount());
+        System.out.println("Done Filtering! ... estimatedTime= "+estimatedTime);
 
     }
 
@@ -362,12 +382,19 @@ public class AssociationRuleMiningSPMF {
             rdf2TransactionsConverter.loadPredicateMappingFromFile(mappingFilePath);
 
         System.out.println("Start Decoding ...");
-        for(AssocRuleWithExceptions r:rules.getRules()) {
-            r.setBodyItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()));
-            r.setHeadItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()));
+        long startTime = System.nanoTime();
 
-        }
-        System.out.println("Done Decoding!");
+        rules.getRules().parallelStream().forEach((r)->{
+            r.setBodyItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getBody()));
+            r.setHeadItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getHead()));
+        });
+//        for(AssocRuleWithExceptions r:rules.getRules()) {
+//            r.setBodyItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset1()));
+//            r.setHeadItems(rdf2TransactionsConverter.convertIntegers2Strings(r.getItemset2()));
+//
+//        }
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Decoding! ... estimatedTime= "+estimatedTime);
     }
 
 
@@ -528,8 +555,8 @@ public class AssociationRuleMiningSPMF {
 
 
 
-        System.out.println(st.toString());
-        System.out.println(stAll.toString());
+//        System.out.println(st.toString());
+//        System.out.println(stAll.toString());
         if(export){
             BufferedWriter bw=FileUtils.getBufferedUTF8Writer(fileName);
             bw.write(st.toString());
@@ -615,8 +642,8 @@ public class AssociationRuleMiningSPMF {
 
 
 
-        System.out.println(st.toString());
-        System.out.println(stAll.toString());
+//        System.out.println(st.toString());
+//        System.out.println(stAll.toString());
         if(export){
             BufferedWriter bw=FileUtils.getBufferedUTF8Writer(fileName);
             bw.write(st.toString());
