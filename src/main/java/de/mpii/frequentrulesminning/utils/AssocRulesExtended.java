@@ -24,6 +24,12 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
         return rules.stream().filter(AssocRuleWithExceptions::hasExceptions).count();
     }
 
+    public IntSummaryStatistics getExceptionsStats(int k,boolean revisedOnly) {
+
+            return rules.stream().filter((r)-> (!revisedOnly)||r.hasExceptions()).limit(k).mapToInt(AssocRuleWithExceptions::getExceptionCandidatesSize).summaryStatistics();
+
+    }
+
 
     public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, NEW_LIFT}
 

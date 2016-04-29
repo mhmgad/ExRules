@@ -545,6 +545,9 @@ public class AssociationRuleMiningSPMF {
             stAll.append("\tJaccard\t");
             stAll.append(rules.getJaccardDiffStats(k,false).toString().replaceAll("DoubleSummaryStatistics","")+"\t");
             stAll.append(rules.getJaccardDiffStats(k,true).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+
+
+
             stAll.append("--------------------------------------------------------------------\n");
 
 
@@ -552,6 +555,7 @@ public class AssociationRuleMiningSPMF {
         }
 
         st.append("RO: revised only\n");
+
 
 
 
@@ -632,6 +636,12 @@ public class AssociationRuleMiningSPMF {
 
             stAll.append(rules.getRevisedRulesLiftDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
 
+            stAll.append("\tExceptions RO\t");
+            stAll.append(rules.getExceptionsStats(k,true).toString().replaceAll("DoubleSummaryStatistics","Exceptions RO Statistics"));
+
+
+            stAll.append("\tExceptions all\t");
+            stAll.append(rules.getExceptionsStats((int)Math.ceil((i*0.1)*rules.size()),true).toString().replaceAll("DoubleSummaryStatistics","Exceptions Statistics"));
             stAll.append("--------------------------------------------------------------------\n");
 
 
@@ -639,6 +649,9 @@ public class AssociationRuleMiningSPMF {
         }
 
         st.append("RO: revised only\n");
+
+
+
 
 
 

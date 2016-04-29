@@ -401,4 +401,10 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 
     }
 
+    public  int getExceptionCandidatesSize() {
+       if( getExceptionCandidates()==null)
+           return 0;
+        else
+           return getExceptionCandidates().size();
+    }
 }
