@@ -158,6 +158,7 @@ public class AssociationRuleMiningSPMF {
        // distribute Transactions
 
         computeSupportingTransactions(rules,transactionsDB);
+        rulesQuality(rules,transactionsDB);
 
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions){
