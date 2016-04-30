@@ -7,6 +7,7 @@ import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 import de.mpii.frequentrulesminning.utils.*;
 import de.mpii.yagotools.YagoTaxonomy;
 import mpi.tools.javatools.util.FileUtils;
+import org.apache.commons.math3.stat.descriptive.rank.Median;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -215,21 +216,39 @@ public class AssociationRuleMiningSPMF {
 //
 //    }
 
-    private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
-        System.out.println("Resolving Transactions.. ");
+    private void rulesQuality(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
+        System.out.println("Rules Quality.. ");
         long startTime = System.nanoTime();
 
         Evaluator eval=new Evaluator(transactionsDB);
         rules.getRules().parallelStream().forEach(r -> {
-            r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null,false));
-            r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null,false));
-            r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead(),false));
-            r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead(),false));
-
-            r.setLift(eval.lift(r));
+                  r.setLift(eval.lift(r));
 //            r.setCoverage(eval.coverage(r));
             r.setNegConfidence(eval.negativeRuleConfidence(r));
             r.setJaccardCoefficient(eval.JaccardCoefficient(r));
+
+        });
+
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Rules  Quality! .... estimatedTime= "+estimatedTime);
+
+    }
+
+    private void computeSupportingTransactions(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
+        System.out.println("Resolving Transactions.. ");
+        long startTime = System.nanoTime();
+
+//        Evaluator eval=new Evaluator(transactionsDB);
+        rules.getRules().parallelStream().forEach(r -> {
+            r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null,false));
+            r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null,false));
+            r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead(),false));
+//            r.setPredictableTransactions(transactionsDB.filterOutTransactionsWith(r.getHornRuleTransactions(), r.getHead(),false));
+
+//            r.setLift(eval.lift(r));
+////            r.setCoverage(eval.coverage(r));
+//            r.setNegConfidence(eval.negativeRuleConfidence(r));
+//            r.setJaccardCoefficient(eval.JaccardCoefficient(r));
 
         });
 
@@ -262,6 +281,7 @@ public class AssociationRuleMiningSPMF {
 
     private void mineExceptions( AssocRulesExtended rules,  TransactionsDatabase transactionsDB,double exceptionMinSupp) throws IOException {
         System.out.println("Start Mining Exception Candidates ...");
+        long startTime = System.nanoTime();
         ExceptionMining em=new ExceptionMining(transactionsDB,rdf2TransactionsConverter,exceptionMinSupp);
 
         rules.getRules().stream().parallel().forEach((rule)-> {
@@ -274,7 +294,8 @@ public class AssociationRuleMiningSPMF {
             }
 
             });
-        System.out.println("Done Mining Exception Candidates!");
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Mining Exception Candidates! ..  estimatedTime= "+estimatedTime);
     }
 
 
@@ -637,11 +658,19 @@ public class AssociationRuleMiningSPMF {
             stAll.append(rules.getRevisedRulesLiftDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
 
             stAll.append("\tExceptions RO\t");
-            stAll.append(rules.getExceptionsStats(k,true).toString().replaceAll("DoubleSummaryStatistics","Exceptions RO Statistics"));
+            stAll.append(rules.getExceptionsStats(k,true).toString().replaceAll("IntSummaryStatistics","")+"\n");
 
-
+            int[] numArray=rules.getRules().stream().filter(AssocRuleWithExceptions::hasExceptions).mapToInt(AssocRuleWithExceptions::getExceptionCandidatesSize).toArray();
+            Arrays.sort(numArray);
+            double median;
+            if (numArray.length % 2 == 0)
+                median = ((double)numArray[numArray.length/2] + (double)numArray[numArray.length/2 - 1])/2;
+            else
+                median = (double) numArray[numArray.length/2];
+//            double medianValue = median.evaluate(//?????);
+            stAll.append("\tMedian\t"+median+"\n");
             stAll.append("\tExceptions all\t");
-            stAll.append(rules.getExceptionsStats((int)Math.ceil((i*0.1)*rules.size()),true).toString().replaceAll("DoubleSummaryStatistics","Exceptions Statistics"));
+            stAll.append(rules.getExceptionsStats((int)Math.ceil((i*0.1)*rules.size()),false).toString().replaceAll("IntSummaryStatistics","")+"\n");
             stAll.append("--------------------------------------------------------------------\n");
 
 

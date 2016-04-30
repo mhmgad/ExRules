@@ -245,17 +245,17 @@ public class AssocRuleWithExceptions {// extends AssocRule {
 //        setLift(evaluator.lift(this));
 //    }
 
-    public void setPredictableTransactions(Set<Transaction> predictableTransactions) {
-        this.predictableTransactions = predictableTransactions;
-    }
+//    public void setPredictableTransactions(Set<Transaction> predictableTransactions) {
+//        this.predictableTransactions = predictableTransactions;
+//    }
 
 //    public Set<Transaction> getSafePredictableTransactions() {
 //        return safePredictableTransactions;
 //    }
 
-    public Set<Transaction> getPredictableTransactions() {
-        return predictableTransactions;
-    }
+//    public Set<Transaction> getPredictableTransactions() {
+//        return predictableTransactions;
+//    }
 
 
     public double getOrderingQuality() {
