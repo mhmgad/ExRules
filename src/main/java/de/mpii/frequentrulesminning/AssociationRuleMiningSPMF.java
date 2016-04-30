@@ -660,15 +660,15 @@ public class AssociationRuleMiningSPMF {
             stAll.append("\tExceptions RO\t");
             stAll.append(rules.getExceptionsStats(k,true).toString().replaceAll("IntSummaryStatistics","")+"\n");
 
-            int[] numArray=rules.getRules().stream().filter(AssocRuleWithExceptions::hasExceptions).mapToInt(AssocRuleWithExceptions::getExceptionCandidatesSize).toArray();
-            Arrays.sort(numArray);
-            double median;
-            if (numArray.length % 2 == 0)
-                median = ((double)numArray[numArray.length/2] + (double)numArray[numArray.length/2 - 1])/2;
-            else
-                median = (double) numArray[numArray.length/2];
-//            double medianValue = median.evaluate(//?????);
-            stAll.append("\tMedian\t"+median+"\n");
+//            int[] numArray=rules.getRules().stream().filter(AssocRuleWithExceptions::hasExceptions).mapToInt(AssocRuleWithExceptions::getExceptionCandidatesSize).toArray();
+//            Arrays.sort(numArray);
+//            double median;
+//            if (numArray.length % 2 == 0)
+//                median = ((double)numArray[numArray.length/2] + (double)numArray[numArray.length/2 - 1])/2;
+//            else
+//                median = (double) numArray[numArray.length/2];
+////            double medianValue = median.evaluate(//?????);
+//            stAll.append("\tMedian\t"+median+"\n");
             stAll.append("\tExceptions all\t");
             stAll.append(rules.getExceptionsStats((int)Math.ceil((i*0.1)*rules.size()),false).toString().replaceAll("IntSummaryStatistics","")+"\n");
             stAll.append("--------------------------------------------------------------------\n");
