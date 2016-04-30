@@ -221,7 +221,7 @@ public class AssociationRuleMiningSPMF {
         long startTime = System.nanoTime();
 
         Evaluator eval=new Evaluator(transactionsDB);
-        rules.getRules().stream().forEach(r -> {
+        rules.getRules().parallelStream().forEach(r -> {
                   r.setLift(eval.lift(r));
 //            r.setCoverage(eval.coverage(r));
             r.setNegConfidence(eval.negativeRuleConfidence(r));
