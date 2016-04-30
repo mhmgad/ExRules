@@ -7,7 +7,6 @@ import ca.pfv.spmf.patterns.itemset_array_integers_with_count.Itemsets;
 import de.mpii.frequentrulesminning.utils.*;
 import de.mpii.yagotools.YagoTaxonomy;
 import mpi.tools.javatools.util.FileUtils;
-import org.apache.commons.math3.stat.descriptive.rank.Median;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -221,7 +220,7 @@ public class AssociationRuleMiningSPMF {
         long startTime = System.nanoTime();
 
         Evaluator eval=new Evaluator(transactionsDB);
-        rules.getRules().parallelStream().forEach(r -> {
+        rules.getRules().stream().forEach(r -> {
                   r.setLift(eval.lift(r));
 //            r.setCoverage(eval.coverage(r));
             r.setNegConfidence(eval.negativeRuleConfidence(r));
