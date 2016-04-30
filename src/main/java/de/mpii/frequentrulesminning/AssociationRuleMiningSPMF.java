@@ -220,7 +220,7 @@ public class AssociationRuleMiningSPMF {
         long startTime = System.nanoTime();
 
         Evaluator eval=new Evaluator(transactionsDB);
-        rules.getRules().parallelStream().forEach(r -> {
+        rules.getRules().stream().forEach(r -> {
             r.setBodyTransactions(transactionsDB.getTransactions(r.getBody(),null,false));
             r.setHeadTransactions(transactionsDB.getTransactions(r.getHead(),null,false));
             r.setHornRuleTransactions(transactionsDB.filterTransactionsWith(r.getBodyTransactions(),r.getHead(),false));
