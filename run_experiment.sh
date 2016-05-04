@@ -12,7 +12,7 @@ RM_FUNC=CONF
 
 FILTERS="-f1 -f2"
 
-OUTPUT_TYPES="-oPrASP -oDLV -stats"# -oDLV_CONFLICT"
+OUTPUT_TYPES="-oPrASP -oDLV -stats" # -oDLV_CONFLICT"
 
 
 FACTS_FILE=/GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.tsv
@@ -83,5 +83,3 @@ sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rule
 #weights and no order
 echo "Mining Revised Rules: WPM"
 #sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_WPM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -minS $RULE_MIN_SUPP
-
-
