@@ -27,8 +27,16 @@ Running
 
   mvn install
 
- 1. Then check
+ 2. Then run
 
+    `sh run_experiment.sh` for yago experiments
+
+    `sh run_IMDB_experiment.sh` fo IMDB experiments
+
+    Note: fix the directories inside the scripst to point to facts_to_mine.tsv file
+
+
+for running examples
  running_scripts_sample.txt for examples running the main rule mining script mine_rules.sh
 
 
