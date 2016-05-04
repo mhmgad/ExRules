@@ -17,8 +17,9 @@ OUTPUT_TYPES="-oPrASP -oDLV -stats"# -oDLV_CONFLICT"
 
 FACTS_FILE=/GW/D5data-5/gadelrab/imdb/facts_to_mine_imdb.tsv
 
+DATE=$(date +"%Y%m%d%H%M")
 
-OUT_DIRECTORY=/GW/D5data-5/gadelrab/imdb/out_RM-${RM_FUNC}_s-${OUTPUT_SORTING_TYPE}
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/imdb/out_RM-${RM_FUNC}_s-${OUTPUT_SORTING_TYPE}_${DATE}
 #/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_ALL
 
 mkdir -p $OUT_DIRECTORY
@@ -65,13 +66,13 @@ sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rule
 
 
 #no weighted count and order
-echo "Mining Revised Rules: PMO"
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_PMO.tsv -minConf $RULE_MIN_CONF   -maxConf $RULE_MAX_CONF -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
+echo "Mining Revised Rules: OPM"
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_OPM.tsv -minConf $RULE_MIN_CONF   -maxConf $RULE_MAX_CONF -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
 
 
 #weights order
-echo "Mining Revised Rules: PMOW"
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_PMOW.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
+echo "Mining Revised Rules: OWPM"
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_OWPM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
 
 
 #no weighted and no order
@@ -80,7 +81,7 @@ sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rule
 
 
 #weights and no order
-echo "Mining Revised Rules: PMW"
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_PMW.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -minS $RULE_MIN_SUPP
+echo "Mining Revised Rules: WPM"
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_WPM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -minS $RULE_MIN_SUPP
 
 
