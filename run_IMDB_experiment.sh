@@ -12,7 +12,7 @@ RM_FUNC=CONF
 
 FILTERS="-f1 -f2"
 
-OUTPUT_TYPES="-oPrASP -oDLV -stats"# -oDLV_CONFLICT"
+OUTPUT_TYPES="-oPrASP -oDLV -stats" # -oDLV_CONFLICT"
 
 
 FACTS_FILE=/GW/D5data-5/gadelrab/imdb/facts_to_mine_imdb.tsv
