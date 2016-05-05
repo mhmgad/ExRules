@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
-IN_DIRECT=/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_PM
-OUT_DIRCT=$IN_DIRECT/DLV_1200
+IN_DIRECT=$1
+#/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_PM
+OUT_DIRCT=$IN_DIRECT/DLV_1000
 
 FILES=$(ls $IN_DIRECT/*.tsv.dlv)
 
-for i in `seq 1 6`;
+for i in `seq 1 5`;
     do
 
     TOPK=$(perl -w -e "use POSIX; print ceil($i * 200 ), qq{\n}")
