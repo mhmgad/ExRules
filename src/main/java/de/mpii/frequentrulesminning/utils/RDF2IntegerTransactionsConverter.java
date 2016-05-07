@@ -280,7 +280,8 @@ public class RDF2IntegerTransactionsConverter {
 
             }
             id2Item= items2Ids.inverse();
-            System.out.println("Done!");
+
+            System.out.println("Done! items="+id2Item.keySet().size());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -299,7 +300,7 @@ public class RDF2IntegerTransactionsConverter {
 
             }
             id2Item= items2Ids.inverse();
-            System.out.println("Done!");
+            System.out.println("Done! items="+id2Item.keySet().size());
         } catch (IOException e) {
             e.printStackTrace();
         }
