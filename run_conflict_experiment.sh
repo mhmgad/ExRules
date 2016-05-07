@@ -3,6 +3,7 @@
 IN_DIRECT=$1
 #/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_PM
 OUT_DIRCT=$IN_DIRECT/DLV_1000
+MAPPING_DIRCT=$2
 
 FILES=$(ls $IN_DIRECT/*.tsv.dlv)
 
@@ -17,7 +18,7 @@ for i in `seq 1 5`;
 #        TOPK=$(perl -w -e "use POSIX; print ceil($i * 0.1 * $FILE_SIZE), qq{\n}")
 
         echo "$i $TOPK $FILE Start"
-        ./predict_dlv.sh $TOPK $FILE $OUT_DIRCT
+        ./predict_dlv.sh $TOPK $FILE $OUT_DIRCT $MAPPING_DIRCT
         echo "$i $TOPK $FILE Done!"
 
         STATS=$(sed -n 2p  $OUT_DIRCT/$INPUT_FILE_NAME.predictions.top$TOPK.stats)

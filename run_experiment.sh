@@ -24,13 +24,13 @@ OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_RM-${RM_FUNC}_s-${OUTPUT_SORT
 
 mkdir -p $OUT_DIRECTORY
 
-IN_DIR=//GW/D5data-5/gadelrab/yago3/spmf/in
+IN_DIR=/GW/D5data-5/gadelrab/yago3/spmf/in
 
 mkdir -p $IN_DIR
 
 DATA_FILE=$IN_DIR/facts_to_mine
 
-./assemble/bin/rdf2int.sh SPMF $FACTS_FILE $DATA_FILE
+./assemble/bin/rdf2int.sh DLV_SAFE $FACTS_FILE $DATA_FILE
 
 
 

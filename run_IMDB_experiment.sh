@@ -30,7 +30,7 @@ mkdir -p $IN_DIR
 
 DATA_FILE=$IN_DIR/facts_to_mine_imdb
 
-./assemble/bin/rdf2int.sh SPMF $FACTS_FILE $DATA_FILE
+./assemble/bin/rdf2int.sh DLV_SAFE $FACTS_FILE $DATA_FILE
 
 
 
