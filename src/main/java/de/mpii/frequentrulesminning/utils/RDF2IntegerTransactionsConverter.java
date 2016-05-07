@@ -299,8 +299,8 @@ public class RDF2IntegerTransactionsConverter {
                 subject2Id.put(parts[1],Integer.valueOf(parts[0]));
 
             }
-            id2Item= items2Ids.inverse();
-            System.out.println("Done! items="+id2Item.keySet().size());
+            id2Subject= subject2Id.inverse();
+            System.out.println("Done! items="+id2Subject.keySet().size());
         } catch (IOException e) {
             e.printStackTrace();
         }
