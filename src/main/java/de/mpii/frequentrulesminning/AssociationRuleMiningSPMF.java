@@ -165,7 +165,7 @@ public class AssociationRuleMiningSPMF {
             FindExceptionCandidateSets(rules,transactionsDB,exceptionMinSupp);
 
             if(configuration.isOrder())
-                oneAtTimeExceptionRanking(transactionsDB, rules);
+                ruleAtTimeExceptionRanking(transactionsDB, rules);
             else
                 batchExceptionRanking(transactionsDB, rules);
 
@@ -189,7 +189,7 @@ public class AssociationRuleMiningSPMF {
         rankException(rules,transactionsDB);
     }
 
-    public void oneAtTimeExceptionRanking(TransactionsDatabase transactionsDB, AssocRulesExtended rules) throws Exception {
+    public void ruleAtTimeExceptionRanking(TransactionsDatabase transactionsDB, AssocRulesExtended rules) throws Exception {
         // materialize predictions of the rules
 
 
