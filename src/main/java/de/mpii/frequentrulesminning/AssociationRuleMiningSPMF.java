@@ -181,17 +181,23 @@ public class AssociationRuleMiningSPMF {
     }
 
     public void batchExceptionRanking(TransactionsDatabase transactionsDB, AssocRulesExtended rules) throws Exception {
+        System.out.println("Start Batch Exception Ranking.. " );
+        long startTime = System.nanoTime();
         // materialize predictions of the rules
         if(materialize) {
             materialize(rules, transactionsDB);
         }
 
         rankException(rules,transactionsDB);
+
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Rule Batch Exception Ranking! ... estimatedTime= "+estimatedTime);
     }
 
     public void ruleAtTimeExceptionRanking(TransactionsDatabase transactionsDB, AssocRulesExtended rules) throws Exception {
         // materialize predictions of the rules
-
+        System.out.println("Start Rule At time Exception Ranking.. " );
+        long startTime = System.nanoTime();
 
         Materializer materializer=new Materializer(transactionsDB,cautiousMatrializationThreshold,debugMatherialization,debugMaterializationFile);
 
@@ -213,7 +219,8 @@ public class AssociationRuleMiningSPMF {
             materializer.materialize(rule);
 
         }
-
+        long estimatedTime = System.nanoTime() - startTime;
+        System.out.println("Done Rule At time Exception Ranking! ... estimatedTime= "+estimatedTime);
 
     }
 
