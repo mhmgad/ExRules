@@ -162,27 +162,59 @@ public class AssociationRuleMiningSPMF {
 
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions){
-            mineExceptions(rules,transactionsDB,exceptionMinSupp);
+            FindExceptionCandidateSets(rules,transactionsDB,exceptionMinSupp);
+
+            if(configuration.isOrder())
+                oneAtTimeExceptionRanking(transactionsDB, rules);
+            else
+                batchExceptionRanking(transactionsDB, rules);
+
+
         }
 
-
-        // materialize predictions of the rules
-        if(materialize) {
-            materialize(rules, transactionsDB);
-        }
-
-
-        if(withExceptions) {
-            // predictable transactions
-//            computeSafePredictableTransactions(rules,transactionsDB);
-            rankException(rules,transactionsDB);
-        }
 
         revisetedRuleQuality(rules,transactionsDB);
 
         long estimatedTime = System.nanoTime() - startTime;
         System.out.println("Done! -----------------------------------------------------  estimatedTime= "+estimatedTime);
         return rules;
+    }
+
+    public void batchExceptionRanking(TransactionsDatabase transactionsDB, AssocRulesExtended rules) throws Exception {
+        // materialize predictions of the rules
+        if(materialize) {
+            materialize(rules, transactionsDB);
+        }
+
+        rankException(rules,transactionsDB);
+    }
+
+    public void oneAtTimeExceptionRanking(TransactionsDatabase transactionsDB, AssocRulesExtended rules) throws Exception {
+        // materialize predictions of the rules
+
+
+        Materializer materializer=new Materializer(transactionsDB,cautiousMatrializationThreshold,debugMatherialization,debugMaterializationFile);
+
+
+        Evaluator evaluator=new Evaluator(transactionsDB);
+        evaluator.setCountPrediction(configuration.isMaterialization());
+        evaluator.setUseWeights(configuration.isWeight());
+
+        ExceptionRanker ranker=new ExceptionRanker(evaluator,this.exceptionRanking);
+
+
+        // Sort rules for processing
+        rules.sort(rules.getRules(),configuration.getProcessingOrder());
+
+        for (AssocRuleWithExceptions rule:rules.getRules()) {
+            // Rank exceptions
+            ranker.rankExceptions(rule);
+            // Materialize the rule if required
+            materializer.materialize(rule);
+
+        }
+
+
     }
 
     private void revisetedRuleQuality(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
@@ -200,7 +232,7 @@ public class AssociationRuleMiningSPMF {
         System.out.println("Materialization ... ");
         long startTime = System.nanoTime();
         Materializer materializer=new Materializer(transactionsDB,cautiousMatrializationThreshold,debugMatherialization,debugMaterializationFile);
-        materializer.materialize(rules.getRules(),true,true);
+        materializer.materialize(rules.getRules());
         long estimatedTime = System.nanoTime() - startTime;
 
 
@@ -267,7 +299,8 @@ public class AssociationRuleMiningSPMF {
         Evaluator evaluator=new Evaluator(transactionsDB);
         evaluator.setCountPrediction(configuration.isMaterialization());
         evaluator.setUseWeights(configuration.isWeight());
-        evaluator.setUseOrder(configuration.isOrder());
+//        evaluator.setUseOrder(configuration.isOrder());
+
 
 
         ExceptionRanker ranker=new ExceptionRanker(evaluator,this.exceptionRanking);
@@ -279,7 +312,7 @@ public class AssociationRuleMiningSPMF {
 
     }
 
-    private void mineExceptions( AssocRulesExtended rules,  TransactionsDatabase transactionsDB,double exceptionMinSupp) throws IOException {
+    private void FindExceptionCandidateSets(AssocRulesExtended rules, TransactionsDatabase transactionsDB, double exceptionMinSupp) throws IOException {
         System.out.println("Start Mining Exception Candidates ...");
         long startTime = System.nanoTime();
         ExceptionMining em=new ExceptionMining(transactionsDB,rdf2TransactionsConverter,exceptionMinSupp);

@@ -1,5 +1,7 @@
 package de.mpii.frequentrulesminning;
 
+import de.mpii.frequentrulesminning.utils.AssocRulesExtended;
+
 /**
  * Created by gadelrab on 4/13/16.
  */
@@ -9,6 +11,7 @@ public class SystemConfig {
     boolean materialization;
     boolean weight;
     boolean order;
+    private AssocRulesExtended.SortingType processingOrder= AssocRulesExtended.SortingType.LIFT;
 
     public SystemConfig(boolean materialization, boolean weight, boolean order) {
         this.materialization = materialization;
@@ -42,12 +45,8 @@ public class SystemConfig {
         this.order = order;
     }
 
-    @Override
-    public String toString() {
-        return "SystemConfig{" +
-                "materialization=" + materialization +
-                ", weight=" + weight +
-                ", order=" + order +
-                '}';
+
+    public AssocRulesExtended.SortingType getProcessingOrder() {
+        return processingOrder;
     }
 }

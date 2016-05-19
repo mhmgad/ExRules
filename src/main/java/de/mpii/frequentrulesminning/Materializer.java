@@ -21,6 +21,8 @@ public class Materializer {
     TransactionsDatabase transDB;
 
     boolean debugMaterialization;
+    private boolean cautious=true;
+    private boolean withPredictions=false;
 
     public Materializer(TransactionsDatabase transDB) throws Exception {
         this(transDB,0.01,false,null);
@@ -36,11 +38,11 @@ public class Materializer {
         }
     }
 
-    public void materialize(List<AssocRuleWithExceptions> rules, boolean cautious, boolean withPredictions) throws IOException {
+    public void materialize(List<AssocRuleWithExceptions> rules) throws IOException {
 
         rules.stream().sorted(Comparator.comparing(AssocRuleWithExceptions::getLift).reversed()).forEach((r) -> {
             try {
-                materialize(r, cautious, withPredictions);
+                materialize(r );
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -51,12 +53,15 @@ public class Materializer {
     }
 
 
-    public void materialize(AssocRuleWithExceptions rule,boolean cautious,boolean withPredictions) throws IOException {
+//    public void materialize(AssocRuleWithExceptions rule,boolean cautious,boolean withPredictions) throws IOException {
+    public void materialize(AssocRuleWithExceptions rule) throws IOException {
 
         int [] exceptions=new int[0];
         if(cautious)
             exceptions=rule.getExceptionsCandidatesInts(this.cautiousMaterializationThreshold);
+
         Set<Transaction> transactionSet=transDB.getTransactions(rule.getBody(),ArrayUtils.addAll(rule.getHead(),exceptions),withPredictions);
+
         materialize(rule,transactionSet,exceptions);
 
     }

@@ -1,6 +1,5 @@
 package de.mpii.frequentrulesminning;
 
-import com.google.common.collect.Sets;
 import de.mpii.frequentrulesminning.utils.AssocRuleWithExceptions;
 import de.mpii.frequentrulesminning.utils.ExceptionItem;
 import de.mpii.frequentrulesminning.utils.Transaction;
@@ -19,7 +18,7 @@ public class Evaluator {
     TransactionsDatabase transactionsDB;
     private boolean countPrediction;
     private boolean useWeights;
-    private boolean useOrder;
+//    private boolean useOrder;
 
 
     public Evaluator(String transactionsFilePath) throws IOException {
@@ -32,7 +31,7 @@ public class Evaluator {
         this.transactionsDB = transactionsDatabase;
         this.countPrediction = false;
         this.useWeights = false;
-        this.useOrder = false;
+//        this.useOrder = false;
     }
 
 //    public  double computeConfidence(Set<Transaction> ruleTransactions, Set<Transaction> bodyTransactions) {
@@ -80,8 +79,8 @@ public class Evaluator {
         Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getBody(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
 
 //        if (this.useOrder) {
-//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-//            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(ruleTransactions, rule);
+//            bodyTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(bodyTransactions, rule);
 //        }
 
         ruleTransactions = filterTransactions(ruleTransactions, rule);
@@ -114,8 +113,8 @@ public class Evaluator {
         Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
 
 //        if (this.useOrder) {
-//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-//            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(ruleTransactions, rule);
+//            headTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(headTransactions, rule);
 //        }
 
             ruleTransactions = filterTransactions(ruleTransactions, rule);
@@ -151,9 +150,9 @@ public class Evaluator {
         Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
 
 //        if (this.useOrder) {
-//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-//            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
-//            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(ruleTransactions, rule);
+//            bodyTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(bodyTransactions, rule);
+//            headTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(headTransactions, rule);
 //        }
 
 
@@ -196,8 +195,8 @@ public class Evaluator {
 
 
 //        if (this.useOrder) {
-//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-//            bodyWithExceptionTransactions = TransactionsDatabase.filterBetterQualityRules(bodyWithExceptionTransactions, rule);
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(ruleTransactions, rule);
+//            bodyWithExceptionTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(bodyWithExceptionTransactions, rule);
 //        }
             ruleTransactions =  filterTransactions(ruleTransactions, rule);
             bodyWithExceptionTransactions = filterTransactions(bodyWithExceptionTransactions, rule);
@@ -207,20 +206,60 @@ public class Evaluator {
 
     }
 
+
+    public double negativeRuleJaccardCoefficient(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
+        // negativeConf (not head <- body, exceptionItem)
+
+//        Set<Transaction> ruleTrnasactions = Sets.difference(rule.getBodyTransactions(), rule.getHeadTransactions());
+//        Set<Transaction> bodyWithExceptionTransactions = transactionsDB.filterTransactionsWith(rule.getBodyTransactions(), exceptionItem == null ? null : exceptionItem.getItems(), false);
+
+        Set<Transaction> bodyWithExceptionTransactions = transactionsDB.getTransactions(ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), null, this.countPrediction);
+        Set<Transaction> ruleTransactions = transactionsDB.getTransactions(ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), rule.getHead(), this.countPrediction);
+        //TODO check again this.countPrediction can cause problems in case of switching it on in filterOutTransactionsWith(transactions, withoutItems, 0, false/*!withPredictions*/);
+        Set<Transaction> notHeadTransactions= transactionsDB.getTransactions(null, rule.getHead(), this.countPrediction);
+
+//        if (this.useOrder) {
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(ruleTransactions, rule);
+//            bodyWithExceptionTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(bodyWithExceptionTransactions, rule);
+//        }
+        ruleTransactions =  filterTransactions(ruleTransactions, rule);
+        bodyWithExceptionTransactions = filterTransactions(bodyWithExceptionTransactions, rule);
+        //TODO error: when removing less quality rules predictions we will loose some transactions
+        notHeadTransactions= filterTransactions(notHeadTransactions, rule);
+
+        return negativeRuleJaccardCoefficient(rule, bodyWithExceptionTransactions, notHeadTransactions,ruleTransactions, exceptionItem);
+
+    }
+
+    private double negativeRuleJaccardCoefficient(AssocRuleWithExceptions rule, Set<Transaction> bodyWithExceptionTransactions, Set<Transaction> NotHeadBody,Set<Transaction> ruleTransactions, ExceptionItem exceptionItem) {
+        double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), rule.getHead(), this.useWeights);
+        double bodySupport = TransactionsDatabase.getTransactionsCount(bodyWithExceptionTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), null, this.useWeights);
+        double headSupport = TransactionsDatabase.getTransactionsCount(NotHeadBody,null,rule.getHead() , this.useWeights);
+
+        double bodyAndHeadUnionSupport=bodySupport+headSupport-ruleSupport;
+        return computeJaccardCoefficient(ruleSupport,bodyAndHeadUnionSupport);
+
+    }
+
     public double negativeRuleConfidence(AssocRuleWithExceptions rule, Set<Transaction> bodyWithExceptionTransactions, Set<Transaction> ruleTransactions, ExceptionItem exceptionItem) {
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), rule.getHead(), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyWithExceptionTransactions, ArrayUtils.addAll(rule.getBody(), ExceptionItem.toArray(exceptionItem)), null, this.useWeights);
 
+
+
         return computeConfidence(ruleSupport, bodySupport);
     }
 
+
+
     private Set<Transaction> filterTransactions(Set<Transaction> transactions, AssocRuleWithExceptions rule) {
-        if(useOrder){
-            transactions=TransactionsDatabase.filterBetterQualityRules(transactions, rule);
-        }
-        else{
+//        if(useOrder){
+//            transactions=TransactionsDatabase.filterBetterQualityRulesPredictions(transactions, rule, negated);
+//        }
+//        else{
+        if(this.countPrediction)
             transactions= TransactionsDatabase.filterOtherRulesPredictions(transactions, rule);
-        }
+//        }
         return transactions;
     }
 
@@ -234,9 +273,9 @@ public class Evaluator {
         this.useWeights = useWeights;
     }
 
-    public void setUseOrder(boolean useOrder) {
-        this.useOrder = useOrder;
-    }
+//    public void setUseOrder(boolean useOrder) {
+//        this.useOrder = useOrder;
+//    }
 
     /**
      * Computes the average confidence of (head <-body, not exceptionItem) and (not head <- body, exceptionItem)
@@ -273,9 +312,9 @@ public class Evaluator {
         Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
 
 //        if (this.useOrder) {
-//            ruleTransactions = TransactionsDatabase.filterBetterQualityRules(ruleTransactions, rule);
-//            bodyTransactions = TransactionsDatabase.filterBetterQualityRules(bodyTransactions, rule);
-//            headTransactions = TransactionsDatabase.filterBetterQualityRules(headTransactions, rule);
+//            ruleTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(ruleTransactions, rule);
+//            bodyTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(bodyTransactions, rule);
+//            headTransactions = TransactionsDatabase.filterBetterQualityRulesPredictions(headTransactions, rule);
 //        }
 
         ruleTransactions = filterTransactions(ruleTransactions, rule);
@@ -289,8 +328,8 @@ public class Evaluator {
     public double JaccardCoefficient(AssocRuleWithExceptions rule, Set<Transaction> ruleTransactions, Set<Transaction> bodyTransactions, Set<Transaction> headTransactions, ExceptionItem exceptionItem) {
         double ruleSupport = TransactionsDatabase.getTransactionsCount(ruleTransactions, rule.getBodyAndHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
         double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
-        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
-
+//        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), null, this.useWeights);
 
         double bodyAndHeadUnionSupport=bodySupport+headSupport-ruleSupport;
 

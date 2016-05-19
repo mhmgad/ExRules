@@ -56,7 +56,7 @@ public class TransactionsDatabase {
         //return transactions.stream().mapToInt(Transaction::getCount).sum();
     }
 
-    public static Set<Transaction> filterBetterQualityRules(Collection<Transaction> transactions,AssocRuleWithExceptions rule){
+    public static Set<Transaction> filterBetterQualityRulesPredictions(Collection<Transaction> transactions, AssocRuleWithExceptions rule,boolean negated){
         // Restrict on transactions of higher quality
         return  transactions.stream().filter((t)-> t.allPredictionsFromBetterQualityRules(rule)).collect(Collectors.toSet());
     }
@@ -134,7 +134,16 @@ public class TransactionsDatabase {
     }
 
 
-
+    /**
+     * Collects the transactions that contain items in withItems array and do not contain items from withoutItems.  For example to get transactions of (h <- b, not e). The input should be
+     *
+     * @param withItems contains the positive items {b,h}
+     * @param withoutItems contains negated items {e}
+     * @param withPredictions if we should consider predictions from other rules. We do not check predictions while find negated items transactions. Therefore, if a transaction has predicted e it will remain. Only, transactions with original e are excluded.
+     *
+     *
+     * @return
+     */
     public Set<Transaction> getTransactions(int[] withItems, int[] withoutItems, boolean withPredictions) {
 
         Set<Transaction> transactions = getTransactionsWithItem(withItems[0], withPredictions);
@@ -183,22 +192,18 @@ public class TransactionsDatabase {
 
         if (excludedItems != null) {
             for (int i = startIndex; i < excludedItems.length && transactions.size() > 0; i++) {
-                //transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i],withPredictions));
+
 
                 // TODO (Recheck) currently, we say if evenInPrediction is set remove the transaction
                 transactions = Sets.difference(transactions, getTransactionsWithItem(excludedItems[i], evenInPrediction));
 
             }
-            //transactions=new HashSet<>(transactions);
+
         }
         return transactions;
     }
 
 
-//    public int getTransactionsCount(int[] withItems,int [] withoutItems) {
-//        return TransactionsDatabase.getTransactionsCount(getTransactions(withItems,withoutItems));//.stream().mapToInt(Transaction::getCount).sum();
-//
-//    }
 
     public void addPrediction(int item, Transaction transactionWithPrediction) {
         predictedItems2transactions.put(item, transactionWithPrediction);
