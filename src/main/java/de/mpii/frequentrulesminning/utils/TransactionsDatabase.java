@@ -146,8 +146,14 @@ public class TransactionsDatabase {
      */
     public Set<Transaction> getTransactions(int[] withItems, int[] withoutItems, boolean withPredictions) {
 
-        Set<Transaction> transactions = getTransactionsWithItem(withItems[0], withPredictions);
-        transactions = filterTransactionsWith(transactions, withItems, 1, withPredictions);
+
+        Set<Transaction> transactions=new HashSet<>();
+
+        if(withItems!=null&&withItems.length>0){
+            transactions = getTransactionsWithItem(withItems[0], withPredictions);
+            transactions = filterTransactionsWith(transactions, withItems, 1, withPredictions);
+        }
+
 
         //TODO if withPredictions is set, that means we need to KEEP the predictions.. so do not remove transactions if without Item exists in predictions
         // It is safer to fix it to false here
