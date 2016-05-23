@@ -66,7 +66,7 @@ public class ExceptionItem extends ItemsetString{
 
     @Override
     public String toString() {
-        return "not "+super.toString()+"\tlift: "+String.format("%.5f",getLift())+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+ 	"\tNegConf: "+String.format("%.5f",getNegConfidence())+"\tPosNegConf: "+String.format("%.5f",getPosNegConfidence());
+        return "not "+super.toString()+"\tlift: "+String.format("%.5f",getLift())+"\tcov: "+String.format("%.5f",getCoverage())+"\tconf: "+String.format("%.5f",getConfidence())+ 	"\tNegConf: "+String.format("%.5f",getNegConfidence())+"\tPosNegConf: "+String.format("%.5f",getPosNegConfidence())+"\tPosNegJacc: "+String.format("%.5f",getPosNegJaccardCoefficient());
                 //"\tgConflict: "+String.format("%.5f",getConflictScore())+	"\tinvConflict: "+String.format("%.5f",getInvertedConflictScore()) +	"\ttotalConflict: "+String.format("%.5f",getCombinedConflict());
     }
 

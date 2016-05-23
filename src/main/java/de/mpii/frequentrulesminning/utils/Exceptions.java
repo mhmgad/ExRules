@@ -58,17 +58,17 @@ public class Exceptions implements Iterable<ExceptionItem>{
         return exceptions.size();
     }
 
-    public void sortOnSupport(){
-        Collections.sort(this.exceptions,(ExceptionItem x,ExceptionItem  y)-> y.getAbsoluteSupport()-x.getAbsoluteSupport());
-    }
+//    public void sortOnSupport(){
+//        Collections.sort(this.exceptions,(ExceptionItem x,ExceptionItem  y)-> y.getAbsoluteSupport()-x.getAbsoluteSupport());
+//    }
 
-    public void sortOnLift(){
-        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getLift).reversed());
-    }
+//    public void sortOnLift(){
+//        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getLift).reversed());
+//    }
 
-    public void sortOnLiftThenInvConflict(){
-        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getLift).reversed().thenComparing(ExceptionItem::getInvertedConflictScore));
-    }
+//    public void sortOnLiftThenInvConflict(){
+//        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getLift).reversed().thenComparing(ExceptionItem::getInvertedConflictScore));
+//    }
 
     @Override
     public String toString() {
@@ -83,13 +83,13 @@ public class Exceptions implements Iterable<ExceptionItem>{
     }
 
 
-    public void sortOnPosNegConfidence() {
-        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getPosNegConfidence).reversed());
-    }
-
-    public void sortOnConfidence() {
-        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getConfidence).reversed());
-    }
+//    public void sortOnPosNegConfidence() {
+//        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getPosNegConfidence).reversed());
+//    }
+//
+//    public void sortOnConfidence() {
+//        Collections.sort(this.exceptions,Comparator.comparing(ExceptionItem::getConfidence).reversed());
+//    }
 
     public List<ExceptionItem> getExceptions(double minimumSupport) {
         return exceptions.stream().filter((e)->e.getRelativeSupport()>=minimumSupport).collect(Collectors.toList());
@@ -134,4 +134,8 @@ public class Exceptions implements Iterable<ExceptionItem>{
     }
 
 
+    public void sort(Comparator<ExceptionItem> comparator) {
+        if(exceptions!=null)
+            exceptions.sort(comparator);
+    }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 public class ExceptionRanker {
 
 
-    public enum Order{LIFT,PNCONF,SUPP,CONF};
+    public enum Order{LIFT,PNCONF,SUPP,CONF,PNJACC};
 
     private  Evaluator evaluator;
     private Order orderingType;
@@ -41,20 +41,27 @@ public class ExceptionRanker {
 
         computeScores(rule);
         Exceptions exceptionCandidates=rule.getExceptionCandidates();
+        Comparator<ExceptionItem> comparator=Comparator.comparing(ExceptionItem::getAbsoluteSupport).reversed();
         switch (orderingType) {
             case LIFT:
-                exceptionCandidates.sortOnLift();
+                comparator=Comparator.comparing(ExceptionItem::getAbsoluteSupport).reversed();
                 break;
             case CONF:
-                exceptionCandidates.sortOnConfidence();
+                comparator=Comparator.comparing(ExceptionItem::getConfidence).reversed();
                 break;
             case PNCONF:
-                exceptionCandidates.sortOnPosNegConfidence();
+                comparator=Comparator.comparing(ExceptionItem::getPosNegConfidence).reversed();
+                break;
+            case PNJACC:
+                comparator=Comparator.comparing(ExceptionItem::getPosNegJaccardCoefficient).reversed();
                 break;
             case SUPP:
-                exceptionCandidates.sortOnSupport();
+                comparator=Comparator.comparing(ExceptionItem::getAbsoluteSupport).reversed();
                 break;
         }
+
+        exceptionCandidates.sort(comparator);
+
     }
 
     public void computeScores(AssocRuleWithExceptions rule) {

@@ -37,7 +37,7 @@ public class MainCLI {
     private Option statsOp;
     private Option exportDLVOp;
     private Option exportDLVConflictOp;
-    private Option statsRevisedOnlyOp;
+//    private Option statsRevisedOnlyOp;
     private Option partialMaterializationOrderOp;
 
     public MainCLI() {
@@ -136,8 +136,8 @@ public class MainCLI {
         statsOp=Option.builder("stats").longOpt("export_statistics").hasArg(false).desc("Export statistics to file" ).build();
         options.addOption(statsOp);
 
-        statsRevisedOnlyOp =Option.builder("stats").longOpt("export_revisedOnly_statistics").hasArg(false).desc("Export statistics to file" ).build();
-        options.addOption(statsRevisedOnlyOp);
+//        statsRevisedOnlyOp =Option.builder("stats").longOpt("export_revisedOnly_statistics").hasArg(false).desc("Export statistics to file" ).build();
+//        options.addOption(statsRevisedOnlyOp);
 
         exportDLVConflictOp=Option.builder("oDLV_CONFLICT").longOpt("export_DLVConflict").hasArg(false).desc("Export rules to count conflict to file" ).build();
         options.addOption(exportDLVConflictOp);
@@ -254,7 +254,7 @@ public class MainCLI {
 
 
         boolean export=cmd.hasOption(statsOp.getOpt());
-        boolean exportRevisedOnly=cmd.hasOption(statsRevisedOnlyOp.getOpt());
+//        boolean exportRevisedOnly=cmd.hasOption(statsRevisedOnlyOp.getOpt());
 
         String fileName=outputFilePath+".stat";
         miner.showStatistics( rulesStrings,export, fileName);

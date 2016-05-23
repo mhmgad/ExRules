@@ -7,7 +7,9 @@ RULE_MIN_SUPP=0.0001
 RULE_MIN_CONF=0.25
 RULE_MAX_CONF=1
 PM_MINSUPP=0.0
-RM_FUNC=CONF
+RM_FUNC=JACC
+
+EX_RANKING="PN${RM_FUNC}"
 
 
 FILTERS="-f1 -f2"
@@ -62,24 +64,25 @@ sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rule
 
 #no materialization (support only)
 echo "Mining Revised Rules: Naive"
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_Naive.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE $FILTERS  $OUTPUT_TYPES -minS $RULE_MIN_SUPP
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_Naive.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank $EX_RANKING -s $OUTPUT_SORTING_TYPE $FILTERS  $OUTPUT_TYPES -minS $RULE_MIN_SUPP
 
 #no weighted and no order
 echo "Mining Revised Rules: PM"
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_PM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -minS $RULE_MIN_SUPP
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_PM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank $EX_RANKING -s $OUTPUT_SORTING_TYPE $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -minS $RULE_MIN_SUPP
 
 #no weighted count and order
 echo "Mining Revised Rules: OPM"
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_OPM.tsv -minConf $RULE_MIN_CONF   -maxConf $RULE_MAX_CONF -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_OPM.tsv -minConf $RULE_MIN_CONF   -maxConf $RULE_MAX_CONF -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank $EX_RANKING -s $OUTPUT_SORTING_TYPE $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
 
 
 #weights order
 echo "Mining Revised Rules: OWPM"
-sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_OWPM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
+sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_OWPM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank $EX_RANKING -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -PMo -minS $RULE_MIN_SUPP
 
 
-
+echo "Summary and Plot"
+sh summary_plot_confidence.sh $OUT_DIRECTORY
 
 #weights and no order
-echo "Mining Revised Rules: WPM"
-#sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_WPM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank PNCONF -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -minS $RULE_MIN_SUPP
+#echo "Mining Revised Rules: WPM"
+#sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rules_WPM.tsv -minConf $RULE_MIN_CONF  -maxConf $RULE_MAX_CONF  -de -m $PREDICATE_MAPPING_FILE -ex -exMinSup $EXCEPTION_MIN_SUPP -exRank $EX_RANKING -s $OUTPUT_SORTING_TYPE  -w $FILTERS -pm -cPM $PM_MINSUPP $OUTPUT_TYPES -minS $RULE_MIN_SUPP
