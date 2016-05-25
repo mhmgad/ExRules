@@ -52,7 +52,7 @@ public class Evaluator {
 //    }
 
     public double computeConfidence(double ruleSupport, double bodySupport) {
-        return ruleSupport / bodySupport;
+        return (bodySupport==0)? 0:(ruleSupport / bodySupport);
     }
 
 //    public double computeLift(Set<Transaction> ruleTransactions, Set<Transaction> bodyTransactions, Set<Transaction> headTransactions) {
@@ -277,26 +277,26 @@ public class Evaluator {
 //        this.useOrder = useOrder;
 //    }
 
-    /**
-     * Computes the average confidence of (head <-body, not exceptionItem) and (not head <- body, exceptionItem)
-     *
-     * @param rule
-     * @param exceptionItem
-     */
-    public double computePosNegConfidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
-
-        double positiveConf = this.confidence(rule, exceptionItem);
-
-        double negConf = negativeRuleConfidence(rule, exceptionItem);
-
-        return computePosNegConfidence(positiveConf,negConf);
-
-
-    }
-
-    public static double computePosNegConfidence(double positiveConf,double negConf){
-        return (positiveConf + negConf) / 2;
-    }
+//    /**
+//     * Computes the average confidence of (head <-body, not exceptionItem) and (not head <- body, exceptionItem)
+//     *
+//     * @param rule
+//     * @param exceptionItem
+//     */
+//    public double computePosNegConfidence(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
+//
+//        double positiveConf = this.confidence(rule, exceptionItem);
+//
+//        double negConf = negativeRuleConfidence(rule, exceptionItem);
+//
+//        return computePosNegConfidence(positiveConf,negConf);
+//
+//
+//    }
+//
+//    public static double computePosNegConfidence(double positiveConf,double negConf){
+//        return (positiveConf + negConf) / 2;
+//    }
 
 
     public double negativeRuleConfidence(AssocRuleWithExceptions rule) {
@@ -337,7 +337,7 @@ public class Evaluator {
     }
 
     private double computeJaccardCoefficient(double ruleSupport, double bodyAndHeadUnionSupport) {
-        return ruleSupport/bodyAndHeadUnionSupport;
+        return (bodyAndHeadUnionSupport==0)? 0:(ruleSupport/bodyAndHeadUnionSupport);
     }
 
     public double JaccardCoefficient(AssocRuleWithExceptions rule) {
