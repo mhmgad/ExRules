@@ -1,6 +1,6 @@
-Development:
+**Development:**
 
-Requirements
+**Requirements:**
 
 1. maven
 2. Java 8
@@ -17,24 +17,41 @@ Requirements
 
 
 
-Running
+**Installation:**
 
- 1. run scripts
+To install the project run scripts
 
-  mvn compile
+`mvn compile`
 
-  mvn package
+`mvn package`
 
-  mvn install
+`mvn install`
 
- 2. Then run
 
-    `sh run_experiment.sh` for yago experiments
+**Running Experiments:**
 
-    `sh run_IMDB_experiment.sh` fo IMDB experiments
+`sh run_experiment.sh` for yago experiments
 
-    Note: fix the directories inside the scripst to point to facts_to_mine.tsv file
+`sh run_IMDB_experiment.sh` fo IMDB experiments
 
+Note: fix the directories inside the scripst to point to facts_to_mine.tsv file
+
+
+
+**Important Scripts:**
+
+To convert the KB from RDF to different formats
+`rdf2int.sh <required conversion [SPMF|DLV_SAFE|PrASP]> <input file path> <output prefix>`
+
+Ex: `sh assemble/bin/rdf2int.sh DLV_SAFE /GW/D5data-5/gadelrab/imdb/facts_to_mine_imdb.tsv /GW/D5data-5/gadelrab/imdb/in/facts_to_mine_imdb`
+
+SPMF : outputs transactional KB in numbers 1,2,3 for projected predicates
+DLV_SAFE : outputs unary Encoding in format p1234t(s1234o) for projected predicates.
+PrASP : outputs in PrASP format without encoding for example isMarriedToScientist(X). (Good fro viewing but causes problems with PrASP)
+
+A mapping will be generated in case of encoding
+
+<Other scripts to come>
 
 for running examples
  running_scripts_sample.txt for examples running the main rule mining script mine_rules.sh
