@@ -12,9 +12,10 @@ for i in `seq 1 5`;
 
     TOPK=$(perl -w -e "use POSIX; print ceil($i * 200 ), qq{\n}")
     SUMMARY_FILE=$OUT_DIRCT/summary.top$TOPK
+    > $SUMMARY_FILE
     for FILE in $IN_DIRECT/*.tsv.dlv; do
         INPUT_FILE_NAME=$(basename $FILE)
-        FILE_SIZE=$(wc -l < $FILE)
+        #FILE_SIZE=$(wc -l < $FILE)
 #        TOPK=$(perl -w -e "use POSIX; print ceil($i * 0.1 * $FILE_SIZE), qq{\n}")
 
         echo "$i $TOPK $FILE Start"
