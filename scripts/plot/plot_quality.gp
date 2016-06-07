@@ -14,7 +14,7 @@ set key invert samplen 2 spacing 1 width 0 height 0
 set auto x
 #set yrange [ 0.60000 : 0.80 ] 
 
-set ylabel 'Avg. Confidence' offset 2
+set ylabel y_label offset 2
 set xlabel 'Top-K Rules' offset 5
 
 set style data histogram

@@ -3,37 +3,36 @@
 OUTPUT_SORTING_TYPE=LIFT
 
 EXCEPTION_MIN_SUPP=0.05
-RULE_MIN_SUPP=0.005
-RULE_MIN_CONF=0.6
+RULE_MIN_SUPP=0.0001
+RULE_MIN_CONF=0.25
 RULE_MAX_CONF=1
 PM_MINSUPP=0.0
-RM_FUNC=CONF
+RM_FUNC=JACC
 
 EX_RANKING="PN${RM_FUNC}"
+
 
 FILTERS="-f1 -f2"
 
 OUTPUT_TYPES="-oPrASP -oDLV -stats" # -oDLV_CONFLICT"
 
-WORKING_DIRCT=/GW/D5data-5/gadelrab/imdb/
 
-FACTS_FILE=$WORKING_DIRCT/facts_to_mine_imdb.tsv
+FACTS_FILE=/GW/D5data-5/gadelrab/yago3/spmf/in/facts_to_mine.tsv
 
 DATE=$(date +"%Y%m%d%H%M")
 
-OUT_DIRECTORY=$WORKING_DIRCT/out_RM-${RM_FUNC}_s-${OUTPUT_SORTING_TYPE}_${DATE}
+OUT_DIRECTORY=/GW/D5data-5/gadelrab/yago3/spmf/out_RM-${RM_FUNC}_s-${OUTPUT_SORTING_TYPE}_${DATE}
 #/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_ALL
 
 mkdir -p $OUT_DIRECTORY
 
-IN_DIR=$WORKING_DIRCT/in
+IN_DIR=/GW/D5data-5/gadelrab/yago3/spmf/in
 
 mkdir -p $IN_DIR
 
-DATA_FILE=$IN_DIR/facts_to_mine_imdb
+DATA_FILE=$IN_DIR/facts_to_mine
 
 ./assemble/bin/rdf2int.sh DLV_SAFE $FACTS_FILE $DATA_FILE
-
 
 
 
@@ -85,7 +84,7 @@ sh assemble/bin/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/rule
 
 
 echo "Summary and Plot"
-sh summary_plot_confidence.sh $OUT_DIRECTORY
+sh summary_plot_quality.sh $OUT_DIRECTORY
 
 #weights and no order
 #echo "Mining Revised Rules: WPM"
