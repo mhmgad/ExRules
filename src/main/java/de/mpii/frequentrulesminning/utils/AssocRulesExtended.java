@@ -363,6 +363,14 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getLift).summaryStatistics();
     }
 
+    public DoubleSummaryStatistics getRevisedRulesJaccardCoefficientStats(int k, boolean withException){
+        if(withException)
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedJaccardCoefficient).summaryStatistics();
+        else
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getJaccardCoefficient).summaryStatistics();
+    }
+
+
     public DoubleSummaryStatistics getLiftStats(int k, boolean withException,boolean revisedOnly){
         if(withException)
             return rules.stream().limit(k).filter((r)-> (!revisedOnly)||r.hasExceptions()).mapToDouble(AssocRuleWithExceptions::getRevisedLift).summaryStatistics();
