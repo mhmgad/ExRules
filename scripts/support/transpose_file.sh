@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 
-$IN_FILE=$1
+IN_FILE=$1
 
-$OUT_FILE=$2
+OUT_FILE=$2
 
 
 awk '
