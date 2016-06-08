@@ -32,7 +32,7 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 
 #trabspose for plotting
 
-./support/transpose_file.sh $CONF_SUMMARY_FILE $CONf_SUMMARY_FILE_TRANS
+sh ./support/transpose_file.sh $CONF_SUMMARY_FILE $CONf_SUMMARY_FILE_TRANS
 gnuplot -e "dataFile='$CONf_SUMMARY_FILE_TRANS'; outputPlot='$CONF_SUMMARY_PLOT'; y_label='Avg. Confidence'" ./plot/plot_quality.gp
 
 ##################################################################################################################33
