@@ -56,4 +56,4 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 #trabspose for plotting
 
 sh ./support/transpose_file.sh $JACC_SUMMARY_FILE $JACC_SUMMARY_FILE_TRANS
-gnuplot -e "dataFile='$JACC_SUMMARY_FILE'; outputPlot='$JACC_SUMMARY_PLOT'; y_label='Avg. Jaccard'" ./plot/plot_quality.gp
+gnuplot -e "dataFile='$JACC_SUMMARY_FILE_TRANS'; outputPlot='$JACC_SUMMARY_PLOT'; y_label='Avg. Jaccard'" ./plot/plot_quality.gp
