@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+ASSEMBLE_DIRECT=../assemble/bin
 
 DLV=~/dlv.i386-linux-elf-static.bin
 
@@ -53,6 +54,6 @@ rm $INPUT_FILE_NEG_TOPK
 
 
 #run conflicts stats
-sh assemble/bin/dlv2kb.sh RDF $OUTPUT_FILE $PREDICTS_MAPPING $SUBJECT_MAPPING
+sh $ASSEMBLE_DIRECT/dlv2kb.sh RDF $OUTPUT_FILE $PREDICTS_MAPPING $SUBJECT_MAPPING
 
 
