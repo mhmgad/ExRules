@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-ASSEMBLE_DIRECT=../assemble/bin
+ASSEMBLE_DIRECT=./assemble/bin
 
 DLV=~/dlv.i386-linux-elf-static.bin
 

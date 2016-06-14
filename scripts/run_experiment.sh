@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-ASSEMBLE_DIRECT=../assemble/bin
+ASSEMBLE_DIRECT=./assemble/bin
 
 OUTPUT_SORTING_TYPE=LIFT
 
