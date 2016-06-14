@@ -38,7 +38,7 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
     public DoubleSummaryStatistics getRevisedRulesBodyCoverageDiffStats(int k) {
-        return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedBodyCoverage()-r.getBodyCoverage()).summaryStatistics();
+        return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedBodyCoverage()/r.getBodyCoverage()).summaryStatistics();
     }
 
     public DoubleSummaryStatistics getRevisedRulesJaccardCoefficientDiffStats(int k) {
