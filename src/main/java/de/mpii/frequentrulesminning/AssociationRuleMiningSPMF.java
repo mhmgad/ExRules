@@ -231,6 +231,7 @@ public class AssociationRuleMiningSPMF {
             r.setRevisedConfidence(e==null? r.getConfidence():eval.confidence(r,e));
             r.setRevisedLift(e==null? r.getLift():eval.lift(r,e));
             r.setRevisedJaccardCoefficient(e==null? r.getJaccardCoefficient():eval.JaccardCoefficient(r,e));
+            r.setRevisedBodyCoverage(e==null? r.getBodyCoverage():eval.bodyCoverage(r,e));
         });
 
     }
@@ -265,6 +266,7 @@ public class AssociationRuleMiningSPMF {
 //            r.setCoverage(eval.coverage(r));
             r.setNegConfidence(eval.negativeRuleConfidence(r));
             r.setJaccardCoefficient(eval.JaccardCoefficient(r));
+            r.setBodyCoverage(eval.bodyCoverage(r));
 
         });
 
@@ -648,7 +650,7 @@ public class AssociationRuleMiningSPMF {
 
 
 
-        st.append("topK\ttype\tAvgConfRO\tdiff\tAvgLIFTRO\tdiff\tAvgJaccardCofRO\tdiff");
+        st.append("topK\ttype\tAvgConfRO\tdiff\tAvgLIFTRO\tdiff\tAvgJaccardCofRO\tdiff\tBodyCoverageRO\tdiff");
         st.append('\n');
 
         StringBuilder stAll=new StringBuilder();
@@ -661,7 +663,8 @@ public class AssociationRuleMiningSPMF {
 
             double orgAvgConfRO= rules.getRevisedRulesConfidenceStats(k, false).getAverage();
             double orgAvgLiftRO = rules.getRevisedRulesLiftStats(k, false).getAverage();
-            double orgAvgJaccardCoefficientRO = rules.getRevisedRulesJaccardCoefficientStats(k, false).getAverage();;
+            double orgAvgJaccardCoefficientRO = rules.getRevisedRulesJaccardCoefficientStats(k, false).getAverage();
+            double orgAvgBodyCoverageRO = rules.getRevisedRulesBodyCoverageStats(k, false).getAverage();
 
 
             st.append(k+"\tBefore\t");
@@ -676,6 +679,7 @@ public class AssociationRuleMiningSPMF {
             double newAvgConfidenceRO = rules.getRevisedRulesConfidenceStats(k, true).getAverage();
             double newAvgJaccardCoefficientRO = rules.getRevisedRulesJaccardCoefficientStats(k, true).getAverage();;
             double newAvgLiftRO = rules.getRevisedRulesLiftStats(k, true).getAverage();
+            double newAvgBodyCoverageRO = rules.getRevisedRulesBodyCoverageStats(k, false).getAverage();;
 
             st.append(k+"\tAfter\t");
             st.append(String.format("%.6f", newAvgConfidenceRO)+"\t");
@@ -684,6 +688,9 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f", newAvgLiftRO-orgAvgLiftRO)+"\t");
             st.append(String.format("%.6f", newAvgJaccardCoefficientRO)+"\t");
             st.append(String.format("%.6f", newAvgJaccardCoefficientRO-orgAvgJaccardCoefficientRO)+"\t");
+            st.append(String.format("%.6f", orgAvgBodyCoverageRO)+"\t");
+            st.append(String.format("%.6f", orgAvgBodyCoverageRO-newAvgBodyCoverageRO)+"\t");
+
             st.append('\n');
 
             st.append("--------------------------------------------------------------------\n");
@@ -697,12 +704,19 @@ public class AssociationRuleMiningSPMF {
             stAll.append(k+"\t");
             stAll.append("Confidence\t");
             stAll.append(rules.getRevisedRulesConfidenceDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
-            stAll.append("\tLift\t");
 
+            stAll.append("\tLift\t");
             stAll.append(rules.getRevisedRulesLiftDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+
 
             stAll.append("\tExceptions RO\t");
             stAll.append(rules.getExceptionsStats(k,true).toString().replaceAll("IntSummaryStatistics","")+"\n");
+
+            stAll.append("\tJacc\t");
+            stAll.append(rules.getRevisedRulesJaccardCoefficientDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+
+            stAll.append("\tBodyCov\t");
+            stAll.append(rules.getRevisedRulesBodyCoverageDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
 
 //            int[] numArray=rules.getRules().stream().filter(AssocRuleWithExceptions::hasExceptions).mapToInt(AssocRuleWithExceptions::getExceptionCandidatesSize).toArray();
 //            Arrays.sort(numArray);

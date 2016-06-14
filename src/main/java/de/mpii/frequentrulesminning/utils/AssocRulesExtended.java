@@ -30,6 +30,22 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
 
     }
 
+    public DoubleSummaryStatistics getRevisedRulesBodyCoverageStats(int k, boolean exception) {
+        if(exception)
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedBodyCoverage).summaryStatistics();
+        else
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getBodyCoverage).summaryStatistics();
+    }
+
+    public DoubleSummaryStatistics getRevisedRulesBodyCoverageDiffStats(int k) {
+        return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedBodyCoverage()-r.getBodyCoverage()).summaryStatistics();
+    }
+
+    public DoubleSummaryStatistics getRevisedRulesJaccardCoefficientDiffStats(int k) {
+
+        return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble((r)->r.getRevisedJaccardCoefficient()-r.getJaccardCoefficient()).summaryStatistics();
+    }
+
 
     public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, NEW_LIFT}
 

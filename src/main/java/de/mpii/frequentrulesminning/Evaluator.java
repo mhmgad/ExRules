@@ -344,6 +344,34 @@ public class Evaluator {
         return JaccardCoefficient( rule, rule.getHornRuleTransactions(), rule.getBodyTransactions(),rule.getHeadTransactions(), null);
     }
 
+    public double bodyCoverage(AssocRuleWithExceptions rule) {
+        return bodyCoverage(rule,rule.getBodyTransactions(),rule.getHeadTransactions(),null);
+    }
+
+    private double bodyCoverage(AssocRuleWithExceptions rule, Set<Transaction> bodyTransactions, Set<Transaction> headTransactions, ExceptionItem exceptionItem) {
+        double bodySupport = TransactionsDatabase.getTransactionsCount(bodyTransactions, rule.getBody(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+//        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), ExceptionItem.toArray(exceptionItem), this.useWeights);
+        double headSupport = TransactionsDatabase.getTransactionsCount(headTransactions, rule.getHead(), null, this.useWeights);
+
+        return computeBodyCoverage(bodySupport,headSupport);
+
+    }
+
+    private double computeBodyCoverage(double bodySupport, double headSupport) {
+        return bodySupport/headSupport;
+    }
+
+    public double bodyCoverage(AssocRuleWithExceptions rule, ExceptionItem exceptionItem) {
+        Set<Transaction> bodyTransactions = transactionsDB.getTransactions(rule.getBody(), ExceptionItem.toArray(exceptionItem), this.countPrediction);
+        Set<Transaction> headTransactions = transactionsDB.getTransactions(rule.getHead(), null, this.countPrediction);
+
+        bodyTransactions = filterTransactions(bodyTransactions, rule);
+        headTransactions =filterTransactions(headTransactions, rule);
+
+        return bodyCoverage(rule,bodyTransactions,headTransactions,exceptionItem);
+
+    }
+
 
 //TODO Commented as they do not handle weights
 

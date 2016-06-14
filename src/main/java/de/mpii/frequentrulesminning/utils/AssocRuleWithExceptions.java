@@ -44,6 +44,8 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     private double revisedJaccardCoefficient=-1;
     private int id;
     private static int nextID;
+    private double bodyCoverage;
+    private double revisedBodyCoverage;
 //    private int[] bodyAndHead;
 
 
@@ -406,5 +408,21 @@ public class AssocRuleWithExceptions {// extends AssocRule {
            return 0;
         else
            return getExceptionCandidates().size();
+    }
+
+    public void setBodyCoverage(double bodyCoverage) {
+        this.bodyCoverage = bodyCoverage;
+    }
+
+    public double getBodyCoverage() {
+        return bodyCoverage;
+    }
+
+    public void setRevisedBodyCoverage(double revisedBodyCoverage) {
+        this.revisedBodyCoverage = revisedBodyCoverage;
+    }
+
+    public  double getRevisedBodyCoverage() {
+        return revisedBodyCoverage;
     }
 }
