@@ -162,7 +162,7 @@ public class AssociationRuleMiningSPMF {
 
         //rules.sort(AssocRulesExtended.SortingType.HEAD_CONF);
         if(withExceptions){
-            FindExceptionCandidateSets(rules,transactionsDB,exceptionMinSupp);
+            findExceptionCandidateSets(rules,transactionsDB,exceptionMinSupp);
 
             if(configuration.isOrder())
                 ruleAtTimeExceptionRanking(transactionsDB, rules);
@@ -321,7 +321,7 @@ public class AssociationRuleMiningSPMF {
 
     }
 
-    private void FindExceptionCandidateSets(AssocRulesExtended rules, TransactionsDatabase transactionsDB, double exceptionMinSupp) throws IOException {
+    private void findExceptionCandidateSets(AssocRulesExtended rules, TransactionsDatabase transactionsDB, double exceptionMinSupp) throws IOException {
         System.out.println("Start Mining Exception Candidates ...");
         long startTime = System.nanoTime();
         ExceptionMining em=new ExceptionMining(transactionsDB,rdf2TransactionsConverter,exceptionMinSupp);
