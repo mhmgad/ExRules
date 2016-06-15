@@ -566,7 +566,7 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f", orgAvgLift)+"\t__\t");
             st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
             st.append(String.format("%.6f", orgAvgJaccardCoefficient)+"\t__\t");
-            st.append(String.format("%.6f", orgAvgJaccardCoefficient) + "\t__\t");
+
             st.append('\n');
 
             double newAvgConfidence = rules.getConfidenceStats(k, true, false).getAverage();
@@ -672,6 +672,7 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f",orgAvgConfRO)+"\t__\t");
             st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
             st.append(String.format("%.5f", orgAvgJaccardCoefficientRO)+"\t__\t");
+            st.append(String.format("%.6f", orgAvgBodyCoverageRO) + "\t__\t");
             st.append('\n');
 
 
@@ -689,7 +690,7 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f", newAvgLiftRO-orgAvgLiftRO)+"\t");
             st.append(String.format("%.6f", newAvgJaccardCoefficientRO)+"\t");
             st.append(String.format("%.6f", newAvgJaccardCoefficientRO-orgAvgJaccardCoefficientRO)+"\t");
-            st.append(String.format("%.6f", orgAvgBodyCoverageRO)+"\t");
+            st.append(String.format("%.6f", newAvgBodyCoverageRO) + "\t");
             st.append(String.format("%.6f", orgAvgBodyCoverageRO-newAvgBodyCoverageRO)+"\t");
 
             st.append('\n');
