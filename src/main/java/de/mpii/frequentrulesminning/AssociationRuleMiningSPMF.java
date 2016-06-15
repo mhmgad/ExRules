@@ -681,7 +681,8 @@ public class AssociationRuleMiningSPMF {
             double newAvgConfidenceRO = rules.getRevisedRulesConfidenceStats(k, true).getAverage();
             double newAvgJaccardCoefficientRO = rules.getRevisedRulesJaccardCoefficientStats(k, true).getAverage();;
             double newAvgLiftRO = rules.getRevisedRulesLiftStats(k, true).getAverage();
-            double newAvgBodyCoverageRO = rules.getRevisedRulesBodyCoverageStats(k, false).getAverage();;
+            double newAvgBodyCoverageRO = rules.getRevisedRulesBodyCoverageStats(k, true).getAverage();
+            ;
 
             st.append(k+"\tAfter\t");
             st.append(String.format("%.6f", newAvgConfidenceRO)+"\t");
