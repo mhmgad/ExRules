@@ -566,6 +566,7 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f", orgAvgLift)+"\t__\t");
             st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
             st.append(String.format("%.6f", orgAvgJaccardCoefficient)+"\t__\t");
+            st.append(String.format("%.6f", orgAvgJaccardCoefficient) + "\t");
             st.append('\n');
 
             double newAvgConfidence = rules.getConfidenceStats(k, true, false).getAverage();
