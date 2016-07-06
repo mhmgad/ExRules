@@ -141,7 +141,7 @@ public class ExceptionMining {
 
 
 
-    public  List<ItemsetString> mineExceptions(AssocRuleWithExceptions rule) throws IOException {
+    public  List<ItemsetString> mineExceptionsAsFrequentSetMining(AssocRuleWithExceptions rule) throws IOException {
 
         Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
         Collection filteredNegTrans=removeBodyItemsFromTransactions(rule,negativeTransactions);
@@ -158,7 +158,7 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
-    public List<ExceptionItem> mineExceptions2(AssocRuleWithExceptions rule) throws IOException {
+    public List<ExceptionItem> mineExceptionsAsSetManipulation(AssocRuleWithExceptions rule) throws IOException {
 
         // Get negative transactions and remove the body items
         Set<Transaction> negativeTransactions = getNegativeTransactions(rule);

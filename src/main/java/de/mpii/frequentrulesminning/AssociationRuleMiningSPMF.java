@@ -329,7 +329,7 @@ public class AssociationRuleMiningSPMF {
         rules.getRules().stream().parallel().forEach((rule)-> {
             List<ExceptionItem> exceptionCandidates= null;
             try {
-                exceptionCandidates = em.mineExceptions2(rule);
+                exceptionCandidates = em.mineExceptionsAsSetManipulation(rule);
                 rule.setExceptionCandidates(exceptionCandidates);
             } catch (IOException e) {
                 e.printStackTrace();
