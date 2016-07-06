@@ -158,19 +158,50 @@ public class ExceptionMining {
     return patternsFlatItems;
     }
 
+
     public List<ExceptionItem> mineExceptionsAsSetManipulation(AssocRuleWithExceptions rule) throws IOException {
 
         // Get negative transactions and remove the body items
         Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
-        Collection filteredNegTrans=removeBodyItemsFromTransactions(rule, negativeTransactions);
+
 
         // Get positive transactions and remove the body items
         Set<Transaction> PositiveTransactions = getPositiveTransactions(rule);
-        Collection filteredPosTrans=removeBodyItemsFromTransactions(rule, PositiveTransactions);
+
+
+
+        return mineExceptionsAsSetManipulation(PositiveTransactions,negativeTransactions);
+    }
+
+    /**
+     * mine exception candidates starting from positive and negative transactions
+     * @param PositiveTransactions
+     * @param negativeTransactions
+     * @return
+     * @throws IOException
+     */
+    public List<ExceptionItem> mineExceptionsAsSetManipulation(Set<Transaction> PositiveTransactions, Set<Transaction> negativeTransactions) throws IOException {
+
+        // Get negative transactions and remove the body items
+       // Set<Transaction> negativeTransactions = getNegativeTransactions(rule);
+        // Disable filtering .. not required
+        //Collection filteredNegTrans=removeBodyItemsFromTransactions(rule, negativeTransactions);
+
+
+        // Get positive transactions and remove the body items
+
+        //Set<Transaction> PositiveTransactions = getPositiveTransactions(rule);
+        // Disable filtering .. not required
+       // Collection filteredPosTrans=removeBodyItemsFromTransactions(rule, PositiveTransactions);
 
         // count items
-        List<ExceptionItem> negTransItems = getItemsWithCount(filteredNegTrans);
-        List<ExceptionItem> posTransItems = getItemsWithCount(filteredPosTrans);
+        // Disable filtering .. not required
+//        List<ExceptionItem> negTransItems = getItemsWithCount(filteredNegTrans);
+//        List<ExceptionItem> posTransItems = getItemsWithCount(filteredPosTrans);
+
+        // count items
+        List<ExceptionItem> negTransItems = getItemsWithCount(negativeTransactions);
+        List<ExceptionItem> posTransItems = getItemsWithCount(PositiveTransactions);
 
 
         // Get whatever exists in negative but not head
@@ -183,6 +214,9 @@ public class ExceptionMining {
 
         return diffList;
     }
+
+
+
 
     private List<ExceptionItem> getItemsWithCount(Collection<Transaction> transactions) {
         TIntIntHashMap itemsCount=new TIntIntHashMap();
