@@ -57,3 +57,27 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 
 sh ./support/transpose_file.sh $JACC_SUMMARY_FILE $JACC_SUMMARY_FILE_TRANS
 gnuplot -e "dataFile='$JACC_SUMMARY_FILE_TRANS'; outputPlot='$JACC_SUMMARY_PLOT'; y_label='Avg. Jaccard'" ./plot/plot_quality.gp
+
+
+##################################################################################################################33
+#Conviction
+
+CONV_SUMMARY_FILE=$RO_STATS_DIR/conviction_summary_ro.tsv
+CONV_SUMMARY_FILE_TRANS=$CONV_SUMMARY_FILE.trans
+CONV_SUMMARY_PLOT=$RO_STATS_DIR/conviction_ro_plot.pdf
+
+
+
+echo "method\t10\t20\t30\t40\t50\t60\t70\t80\t90\t100" > $CONV_SUMMARY_FILE
+# Get confidence before changes and the Naive methods
+echo "Horn  $(tail -n +2 $RO_STATS_DIR/*Naive*.tsv.stat.ro |head -n-1 | grep 'Before' |cut -f 11 | awk -vRS="\n" -vORS="\t" '1')" >> $CONV_SUMMARY_FILE
+echo "Naive $(tail -n +2 $RO_STATS_DIR/*Naive*.tsv.stat.ro |head -n-1 | grep 'After' |cut -f 11 | awk -vRS="\n" -vORS="\t" '1')" >> $CONV_SUMMARY_FILE
+echo "PM $(tail -n +2 $RO_STATS_DIR/*_PM*.tsv.stat.ro |head -n-1 | grep 'After' |cut -f 11 | awk -vRS="\n" -vORS="\t" '1')" >> $CONV_SUMMARY_FILE
+echo "OPM $(tail -n +2 $RO_STATS_DIR/*_OPM*.tsv.stat.ro |head -n-1 | grep 'After' |cut -f 11 | awk -vRS="\n" -vORS="\t" '1')" >> $CONV_SUMMARY_FILE
+echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'After' |cut -f 11 | awk -vRS="\n" -vORS="\t" '1')" >> $CONV_SUMMARY_FILE
+
+
+#trabspose for plotting
+
+sh ./support/transpose_file.sh $CONV_SUMMARY_FILE $CONV_SUMMARY_FILE_TRANS
+gnuplot -e "dataFile='$CONV_SUMMARY_FILE_TRANS'; outputPlot='$CONV_SUMMARY_PLOT'; y_label='Avg. Conviction'" ./plot/plot_quality.gp
