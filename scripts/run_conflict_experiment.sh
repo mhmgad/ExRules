@@ -8,8 +8,8 @@ IN_DIRECT=$1
 OUT_DIRCT=$IN_DIRECT/DLV_1000
 MAPPING_DIRCT=$2
 
-FILES=$(ls $IN_DIRECT/*.tsv.dlv)
-NUMBER_OF_RULES=$(wc -l ${FILES[1]} | cut -d' ' -f1)
+RULES_FILE=$IN_DIRECT/rules_Horn.tsv.dlv
+NUMBER_OF_RULES=$(wc -l $RULES_FILE | cut -d' ' -f1)
 
 STEP_DEFAULT=200
 STEP_CAL=$(perl -w -e "use POSIX; print $NUMBER_OF_RULES/5, qq{\n}")
