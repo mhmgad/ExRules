@@ -34,7 +34,7 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 
 #trabspose for plotting
 
-sh ./support/transpose_file.sh $CONF_SUMMARY_FILE $CONf_SUMMARY_FILE_TRANS
+sh $SCRIPTPATH/support/transpose_file.sh $CONF_SUMMARY_FILE $CONf_SUMMARY_FILE_TRANS
 gnuplot -e "dataFile='$CONf_SUMMARY_FILE_TRANS'; outputPlot='$CONF_SUMMARY_PLOT'; y_label='Avg. Confidence'" $SCRIPTPATH/plot/plot_quality.gp
 
 ##################################################################################################################33
@@ -57,7 +57,7 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 
 #trabspose for plotting
 
-sh ./support/transpose_file.sh $JACC_SUMMARY_FILE $JACC_SUMMARY_FILE_TRANS
+sh $SCRIPTPATH/support/transpose_file.sh $JACC_SUMMARY_FILE $JACC_SUMMARY_FILE_TRANS
 gnuplot -e "dataFile='$JACC_SUMMARY_FILE_TRANS'; outputPlot='$JACC_SUMMARY_PLOT'; y_label='Avg. Jaccard'" $SCRIPTPATH/plot/plot_quality.gp
 
 
@@ -81,5 +81,5 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 
 #trabspose for plotting
 
-sh ./support/transpose_file.sh $CONV_SUMMARY_FILE $CONV_SUMMARY_FILE_TRANS
+sh $SCRIPTPATH/support/transpose_file.sh $CONV_SUMMARY_FILE $CONV_SUMMARY_FILE_TRANS
 gnuplot -e "dataFile='$CONV_SUMMARY_FILE_TRANS'; outputPlot='$CONV_SUMMARY_PLOT'; y_label='Avg. Conviction'" $SCRIPTPATH/plot/plot_quality.gp
