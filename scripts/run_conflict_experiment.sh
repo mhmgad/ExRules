@@ -10,6 +10,8 @@ MAPPING_DIRCT=$2
 
 FILES=$(ls $IN_DIRECT/*.tsv.dlv)
 
+
+
 for i in `seq 1 5`;
     do
 
