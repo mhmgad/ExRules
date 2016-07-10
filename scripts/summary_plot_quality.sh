@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 
+SCRIPT=`realpath $0`
+SCRIPTPATH=`dirname $SCRIPT`
 
 WORKING_DIR=$1
 #~/mpiRoot/GW/D5data-5/gadelrab/yago3/spmf/out_RM-CONF_s-LIFT_201605210250
@@ -33,7 +35,7 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 #trabspose for plotting
 
 sh ./support/transpose_file.sh $CONF_SUMMARY_FILE $CONf_SUMMARY_FILE_TRANS
-gnuplot -e "dataFile='$CONf_SUMMARY_FILE_TRANS'; outputPlot='$CONF_SUMMARY_PLOT'; y_label='Avg. Confidence'" ./plot/plot_quality.gp
+gnuplot -e "dataFile='$CONf_SUMMARY_FILE_TRANS'; outputPlot='$CONF_SUMMARY_PLOT'; y_label='Avg. Confidence'" $SCRIPTPATH/plot/plot_quality.gp
 
 ##################################################################################################################33
 #Jaccard
@@ -56,7 +58,7 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 #trabspose for plotting
 
 sh ./support/transpose_file.sh $JACC_SUMMARY_FILE $JACC_SUMMARY_FILE_TRANS
-gnuplot -e "dataFile='$JACC_SUMMARY_FILE_TRANS'; outputPlot='$JACC_SUMMARY_PLOT'; y_label='Avg. Jaccard'" ./plot/plot_quality.gp
+gnuplot -e "dataFile='$JACC_SUMMARY_FILE_TRANS'; outputPlot='$JACC_SUMMARY_PLOT'; y_label='Avg. Jaccard'" $SCRIPTPATH/plot/plot_quality.gp
 
 
 ##################################################################################################################33
@@ -80,4 +82,4 @@ echo "OWPM $(tail -n +2 $RO_STATS_DIR/*_OWPM*.tsv.stat.ro |head -n-1 | grep 'Aft
 #trabspose for plotting
 
 sh ./support/transpose_file.sh $CONV_SUMMARY_FILE $CONV_SUMMARY_FILE_TRANS
-gnuplot -e "dataFile='$CONV_SUMMARY_FILE_TRANS'; outputPlot='$CONV_SUMMARY_PLOT'; y_label='Avg. Conviction'" ./plot/plot_quality.gp
+gnuplot -e "dataFile='$CONV_SUMMARY_FILE_TRANS'; outputPlot='$CONV_SUMMARY_PLOT'; y_label='Avg. Conviction'" $SCRIPTPATH/plot/plot_quality.gp
