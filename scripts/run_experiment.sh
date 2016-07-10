@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SCRIPT=`realpath $0`
-SCRIPTPATH=`dirname $SCRIPT`
+SCRIPT=$(realpath $0)
+SCRIPTPATH=$(dirname $SCRIPT)
 
 ASSEMBLE_DIRECT=./assemble/bin
 

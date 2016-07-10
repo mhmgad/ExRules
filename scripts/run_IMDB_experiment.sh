@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+SCRIPT=$(realpath $0)
+SCRIPTPATH=$(dirname $SCRIPT)
+
 ASSEMBLE_DIRECT=./assemble/bin
+
 
 
 OUTPUT_SORTING_TYPE=LIFT
@@ -88,7 +92,7 @@ sh $ASSEMBLE_DIRECT/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/
 
 
 echo "Summary and Plot"
-sh summary_plot_quality.sh $OUT_DIRECTORY
+sh $SCRIPTPATH/summary_plot_quality.sh $OUT_DIRECTORY
 
 #weights and no order
 #echo "Mining Revised Rules: WPM"

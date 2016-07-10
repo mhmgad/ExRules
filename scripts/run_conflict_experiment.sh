@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-SCRIPT=`realpath $0`
-SCRIPTPATH=`dirname $SCRIPT`
+SCRIPT=$(realpath $0)
+SCRIPTPATH=$(dirname $SCRIPT)
 
 IN_DIRECT=$1
 #/GW/D5data-5/gadelrab/yago3/spmf/out_LIFT_PM

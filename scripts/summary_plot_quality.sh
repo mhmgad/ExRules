@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 
-SCRIPT=`realpath $0`
-SCRIPTPATH=`dirname $SCRIPT`
+SCRIPT=$(realpath $0)
+SCRIPTPATH=$(dirname $SCRIPT)
 
 WORKING_DIR=$1
 #~/mpiRoot/GW/D5data-5/gadelrab/yago3/spmf/out_RM-CONF_s-LIFT_201605210250

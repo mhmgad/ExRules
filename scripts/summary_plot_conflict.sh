@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-SCRIPT=`realpath $0`
-SCRIPTPATH=`dirname $SCRIPT`
+
+SCRIPT=$(realpath $0)
+SCRIPTPATH=$(dirname $SCRIPT)
 
 WORKING_DIR=$1
 
@@ -29,8 +30,8 @@ for i in `seq 1 5`;
     PERC=$(perl -w -e "use POSIX; print ceil($i * 20), qq{\n}")
     FILE=$WORKING_DIR/summary.top$TOPK
 
-    echo -n "${TOPK}\t" >> $SUMMARY_FILE_POS
-    echo -n "${TOPK}\t" >> $SUMMARY_FILE_NEG
+    echo -n "${PERC}\t" >> $SUMMARY_FILE_POS
+    echo -n "${PERC}\t" >> $SUMMARY_FILE_NEG
 
     CONFLICTS=$(grep '_Naive.tsv.dlv' $FILE | cut -f1 -d ' ')
     POSITIVES=$(grep '_Naive.tsv.dlv' $FILE | cut -f3 -d ' ')
