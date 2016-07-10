@@ -16,8 +16,8 @@ SUMMARY_PLOT_NEG=$WORKING_DIR/conflict_neg_plot.pdf
 echo "method\tNaive\tPM\tOPM\tOWPM" > $SUMMARY_FILE_POS
 echo "method\tNaive\tPM\tOPM\tOWPM" > $SUMMARY_FILE_NEG
 
-FILES=$(ls $WORKING_DIR/../*.tsv.dlv)
-NUMBER_OF_RULES=$(wc -l ${FILES[1]} | cut -d' ' -f1)
+RULES_FILE=$WORKING_DIR/rules_Horn.tsv.dlv
+NUMBER_OF_RULES=$(wc -l $RULES_FILE | cut -d' ' -f1)
 
 STEP_DEFAULT=200
 STEP_CAL=$(perl -w -e "use POSIX; print $NUMBER_OF_RULES/5, qq{\n}")
