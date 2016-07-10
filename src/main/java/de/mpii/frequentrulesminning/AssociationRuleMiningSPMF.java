@@ -173,7 +173,7 @@ public class AssociationRuleMiningSPMF {
         }
 
 
-        revisetedRuleQuality(rules,transactionsDB);
+        revisedRuleQuality(rules,transactionsDB);
 
         long estimatedTime = System.nanoTime() - startTime;
         System.out.println("Done! -----------------------------------------------------  estimatedTime= "+estimatedTime);
@@ -224,7 +224,7 @@ public class AssociationRuleMiningSPMF {
 
     }
 
-    private void revisetedRuleQuality(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
+    private void revisedRuleQuality(AssocRulesExtended rules, TransactionsDatabase transactionsDB) {
         Evaluator eval=new Evaluator(transactionsDB);
         rules.getRules().parallelStream().forEach((r)->{
             final ExceptionItem e=r.getTopException();
@@ -232,6 +232,8 @@ public class AssociationRuleMiningSPMF {
             r.setRevisedLift(e==null? r.getLift():eval.lift(r,e));
             r.setRevisedJaccardCoefficient(e==null? r.getJaccardCoefficient():eval.JaccardCoefficient(r,e));
             r.setRevisedBodyCoverage(e==null? r.getBodyCoverage():eval.bodyCoverage(r,e));
+            r.setRevisedConviction(e==null? r.getConviction():eval.conviction(r,e));
+
         });
 
     }
@@ -267,6 +269,7 @@ public class AssociationRuleMiningSPMF {
             r.setNegConfidence(eval.negativeRuleConfidence(r));
             r.setJaccardCoefficient(eval.JaccardCoefficient(r));
             r.setBodyCoverage(eval.bodyCoverage(r));
+            r.setConviction(eval.conviction(r));
 
         });
 
@@ -651,7 +654,7 @@ public class AssociationRuleMiningSPMF {
 
 
 
-        st.append("topK\ttype\tAvgConfRO\tdiff\tAvgLIFTRO\tdiff\tAvgJaccardCofRO\tdiff\tBodyCoverageRO\tdiff");
+        st.append("topK\ttype\tAvgConfRO\tdiff\tAvgLIFTRO\tdiff\tAvgJaccardCofRO\tdiff\tBodyCoverageRO\tdiff\tConvictionRO\tdiff");
         st.append('\n');
 
         StringBuilder stAll=new StringBuilder();
@@ -666,6 +669,7 @@ public class AssociationRuleMiningSPMF {
             double orgAvgLiftRO = rules.getRevisedRulesLiftStats(k, false).getAverage();
             double orgAvgJaccardCoefficientRO = rules.getRevisedRulesJaccardCoefficientStats(k, false).getAverage();
             double orgAvgBodyCoverageRO = rules.getRevisedRulesBodyCoverageStats(k, false).getAverage();
+            double orgAvgConvRO= rules.getRevisedRulesConvictionStats(k, false).getAverage();
 
 
             st.append(k+"\tBefore\t");
@@ -673,6 +677,7 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f", orgAvgLiftRO)+"\t__\t");
             st.append(String.format("%.5f", orgAvgJaccardCoefficientRO)+"\t__\t");
             st.append(String.format("%.6f", orgAvgBodyCoverageRO) + "\t__\t");
+            st.append(String.format("%.6f", orgAvgConvRO) + "\t__\t");
             st.append('\n');
 
 
@@ -682,7 +687,7 @@ public class AssociationRuleMiningSPMF {
             double newAvgJaccardCoefficientRO = rules.getRevisedRulesJaccardCoefficientStats(k, true).getAverage();;
             double newAvgLiftRO = rules.getRevisedRulesLiftStats(k, true).getAverage();
             double newAvgBodyCoverageRO = rules.getRevisedRulesBodyCoverageStats(k, true).getAverage();
-            ;
+            double newAvgConvRO = rules.getRevisedRulesConvictionStats(k, true).getAverage();
 
             st.append(k+"\tAfter\t");
             st.append(String.format("%.6f", newAvgConfidenceRO)+"\t");
@@ -693,6 +698,8 @@ public class AssociationRuleMiningSPMF {
             st.append(String.format("%.6f", newAvgJaccardCoefficientRO-orgAvgJaccardCoefficientRO)+"\t");
             st.append(String.format("%.6f", newAvgBodyCoverageRO) + "\t");
             st.append(String.format("%.6f", orgAvgBodyCoverageRO-newAvgBodyCoverageRO)+"\t");
+            st.append(String.format("%.6f", newAvgConvRO)+"\t");
+            st.append(String.format("%.6f", newAvgConvRO-orgAvgConvRO)+"\t");
 
             st.append('\n');
 
@@ -720,6 +727,8 @@ public class AssociationRuleMiningSPMF {
 
             stAll.append("\tBodyCov\t");
             stAll.append(rules.getRevisedRulesBodyCoverageDiffStats(k).toString().replaceAll("DoubleSummaryStatistics","")+"\n");
+
+
 
 //            int[] numArray=rules.getRules().stream().filter(AssocRuleWithExceptions::hasExceptions).mapToInt(AssocRuleWithExceptions::getExceptionCandidatesSize).toArray();
 //            Arrays.sort(numArray);

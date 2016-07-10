@@ -15,7 +15,7 @@ import java.util.List;
 public class ExceptionRanker {
 
 
-    public enum Order{LIFT,PNCONF,SUPP,CONF,PNJACC};
+    public enum Order{LIFT,PNCONF,SUPP,CONF, PNCONV, PNJACC};
 
     private  Evaluator evaluator;
     private Order orderingType;
@@ -58,6 +58,8 @@ public class ExceptionRanker {
             case SUPP:
                 comparator=Comparator.comparing(ExceptionItem::getAbsoluteSupport).reversed();
                 break;
+            case PNCONV:
+                comparator=Comparator.comparing(ExceptionItem::getPosNegConviction).reversed();
         }
 
         exceptionCandidates.sort(comparator);
@@ -72,6 +74,8 @@ public class ExceptionRanker {
             exc.setNegConfidence(evaluator.negativeRuleConfidence(rule,exc));
             exc.setJaccardCoefficient(evaluator.JaccardCoefficient(rule,exc));
             exc.setNegJaccardCoefficient(evaluator.negativeRuleJaccardCoefficient(rule,exc));
+            exc.setConviction(evaluator.conviction(rule,exc));
+            exc.setNegConviction(evaluator.negativeRuleConviction(rule,exc));
         });
     }
 

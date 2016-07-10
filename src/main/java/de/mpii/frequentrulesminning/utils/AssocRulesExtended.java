@@ -47,7 +47,9 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
     }
 
 
-    public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, NEW_LIFT}
+
+
+    public enum SortingType {CONF, HEAD, BODY, LIFT, HEAD_CONF, HEAD_LIFT, NEW_LIFT, CONV}
 
     List<AssocRuleWithExceptions> rules;
     SetMultimap<HeadGroup, AssocRuleWithExceptions> head2Rules;
@@ -158,6 +160,9 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
                 break;
             case NEW_LIFT:
                 comparator=Comparator.comparing(AssocRuleWithExceptions::getRevisedLift).reversed();
+                break;
+            case CONV:
+                comparator=Comparator.comparing(AssocRuleWithExceptions::getConviction).reversed();
                 break;
         }
         return comparator;
@@ -334,6 +339,15 @@ public class AssocRulesExtended implements Iterable<AssocRuleWithExceptions> {
             return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConfidence).summaryStatistics();
         else
             return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getConfidence).summaryStatistics();
+
+    }
+
+
+    public DoubleSummaryStatistics getRevisedRulesConvictionStats(int k, boolean exception){
+        if(exception)
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getRevisedConviction).summaryStatistics();
+        else
+            return rules.stream().filter((r)-> r.hasExceptions()).limit(k).mapToDouble(AssocRuleWithExceptions::getConviction).summaryStatistics();
 
     }
 

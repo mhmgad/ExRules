@@ -17,6 +17,8 @@ public class ExceptionItem extends ItemsetString{
     private double negConfidence;
     private double jaccardCoefficient;
     private double negJaccardCoefficient;
+    private double negConviction;
+    private double conviction;
 
     public double getInvertedConflictScore() {
         return invertedConflictScore;
@@ -146,5 +148,25 @@ public class ExceptionItem extends ItemsetString{
 
     public double getNegJaccardCoefficient() {
         return negJaccardCoefficient;
+    }
+
+    public double getPosNegConviction() {
+        return (getNegConviction() + getConviction()) / 2;
+    }
+
+    public double getNegConviction() {
+        return negConviction;
+    }
+
+    public double getConviction() {
+        return conviction;
+    }
+
+    public void setConviction(double conviction) {
+        this.conviction = conviction;
+    }
+
+    public void setNegConviction(double negConviction) {
+        this.negConviction = negConviction;
     }
 }

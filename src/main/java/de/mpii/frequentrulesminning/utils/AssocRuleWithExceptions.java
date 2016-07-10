@@ -46,6 +46,8 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     private static int nextID;
     private double bodyCoverage;
     private double revisedBodyCoverage;
+    private double conviction;
+    private double revisedConviction;
 //    private int[] bodyAndHead;
 
 
@@ -425,4 +427,22 @@ public class AssocRuleWithExceptions {// extends AssocRule {
     public  double getRevisedBodyCoverage() {
         return revisedBodyCoverage;
     }
+
+    public void setConviction(double conviction) {
+        this.conviction = conviction;
+    }
+
+    public double getConviction() {
+        return conviction;
+    }
+
+    public void setRevisedConviction(double revisedConviction) {
+        this.revisedConviction = revisedConviction;
+    }
+
+    public double getRevisedConviction() {
+        return revisedConviction;
+    }
+
+
 }

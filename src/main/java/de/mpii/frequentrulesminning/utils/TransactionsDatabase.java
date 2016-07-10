@@ -120,7 +120,7 @@ public class TransactionsDatabase {
 
 
         }
-        System.out.println(transactionsSet.values().size());
+        System.out.println(transactionsSet.values().size()+" ("+getSize()+")");
 
 
     }
@@ -229,6 +229,10 @@ public class TransactionsDatabase {
 
         return getTransactions(withItems, withoutItems, true);
 
+    }
+
+    public double getSize() {
+        return transactionsSet.size();
     }
 
     static class ItemsArray {
