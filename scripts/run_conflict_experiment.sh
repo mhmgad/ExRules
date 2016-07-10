@@ -18,7 +18,7 @@ STEP=$(perl -w -e "use POSIX; print $STEP_CAL < $STEP_DEFAULT ? $STEP_CAL : $STE
 for i in `seq 1 5`;
     do
 
-    TOPK=$(perl -w -e "use POSIX; print ceil($i * $STEP ), qq{\n}")
+    TOPK=$(perl -w -e "use POSIX; print ceil($i * $STEP), qq{\n}")
     SUMMARY_FILE=$OUT_DIRCT/summary.top$TOPK
     > $SUMMARY_FILE
     for FILE in $IN_DIRECT/*.tsv.dlv; do
