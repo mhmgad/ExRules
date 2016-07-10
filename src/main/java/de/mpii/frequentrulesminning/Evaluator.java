@@ -354,7 +354,7 @@ public class Evaluator {
 
 
     public double conviction(AssocRuleWithExceptions rule){
-        return conviction(null);
+        return conviction(rule,null);
     }
 
 
