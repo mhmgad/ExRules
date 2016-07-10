@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
+SCRIPT=`realpath $0`
+SCRIPTPATH=`dirname $SCRIPT`
 
 ASSEMBLE_DIRECT=./assemble/bin
 
-OUTPUT_SORTING_TYPE=LIFT
+OUTPUT_SORTING_TYPE=$1#LIFT
 
 EXCEPTION_MIN_SUPP=0.05
 RULE_MIN_SUPP=0.0001
 RULE_MIN_CONF=0.25
 RULE_MAX_CONF=1
 PM_MINSUPP=0.0
-RM_FUNC=JACC
+RM_FUNC=$2 #JACC
 
 EX_RANKING="PN${RM_FUNC}"
 
@@ -87,7 +89,7 @@ sh $ASSEMBLE_DIRECT/mine_rules.sh -i $INPUT_TRANSACTIONS_FILE -o $OUT_DIRECTORY/
 
 
 echo "Summary and Plot"
-sh summary_plot_quality.sh $OUT_DIRECTORY
+sh $SCRIPTPATH/summary_plot_quality.sh $OUT_DIRECTORY
 
 #weights and no order
 #echo "Mining Revised Rules: WPM"
