@@ -16,7 +16,7 @@ set auto x
 #set yrange [ 0.60000 : 0.80 ] 
 
 set ylabel 'Conflict Ratio' offset 2
-set xlabel 'Top-K Rules' offset 5
+set xlabel 'Top-K Rules(%)' offset 5
 
 set style data histogram
 set style histogram cluster gap 1

@@ -14,10 +14,19 @@ SUMMARY_PLOT_NEG=$WORKING_DIR/conflict_neg_plot.pdf
 
 echo "method\tNaive\tPM\tOPM\tOWPM" > $SUMMARY_FILE_POS
 echo "method\tNaive\tPM\tOPM\tOWPM" > $SUMMARY_FILE_NEG
+
+FILES=$(ls $WORKING_DIR/../*.tsv.dlv)
+NUMBER_OF_RULES=$(wc -l ${FILES[1]} | cut -d' ' -f1)
+
+STEP_DEFAULT=200
+STEP_CAL=$(perl -w -e "use POSIX; print $NUMBER_OF_RULES/5, qq{\n}")
+STEP=$(perl -w -e "use POSIX; print $STEP_CAL < $STEP_DEFAULT ? $STEP_CAL : $STEP_DEFAULT, qq{\n}")
+
 for i in `seq 1 5`;
     do
 
-    TOPK=$(perl -w -e "use POSIX; print ceil($i * 200 ), qq{\n}")
+    TOPK=$(perl -w -e "use POSIX; print ceil($i * $STEP), qq{\n}")
+    PERC=$(perl -w -e "use POSIX; print ceil($i * 20), qq{\n}")
     FILE=$WORKING_DIR/summary.top$TOPK
 
     echo -n "${TOPK}\t" >> $SUMMARY_FILE_POS

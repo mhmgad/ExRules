@@ -9,13 +9,16 @@ OUT_DIRCT=$IN_DIRECT/DLV_1000
 MAPPING_DIRCT=$2
 
 FILES=$(ls $IN_DIRECT/*.tsv.dlv)
+NUMBER_OF_RULES=$(wc -l ${FILES[1]} | cut -d' ' -f1)
 
-
+STEP_DEFAULT=200
+STEP_CAL=$(perl -w -e "use POSIX; print $NUMBER_OF_RULES/5, qq{\n}")
+STEP=$(perl -w -e "use POSIX; print $STEP_CAL < $STEP_DEFAULT ? $STEP_CAL : $STEP_DEFAULT, qq{\n}")
 
 for i in `seq 1 5`;
     do
 
-    TOPK=$(perl -w -e "use POSIX; print ceil($i * 200 ), qq{\n}")
+    TOPK=$(perl -w -e "use POSIX; print ceil($i * $STEP ), qq{\n}")
     SUMMARY_FILE=$OUT_DIRCT/summary.top$TOPK
     > $SUMMARY_FILE
     for FILE in $IN_DIRECT/*.tsv.dlv; do
