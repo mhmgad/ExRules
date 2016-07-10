@@ -35,4 +35,4 @@ done
 
 
 echo "Summary and Plot"
-sh summary_plot_conflict.sh $OUT_DIRCT
+sh $SCRIPTPATH/summary_plot_conflict.sh $OUT_DIRCT

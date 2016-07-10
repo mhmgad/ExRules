@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-
+SCRIPT=`realpath $0`
+SCRIPTPATH=`dirname $SCRIPT`
 
 WORKING_DIR=$1
 
@@ -52,5 +53,5 @@ for i in `seq 1 5`;
 
     done
 
-gnuplot -e "dataFile='$SUMMARY_FILE_POS'; outputPlot='$SUMMARY_PLOT_POS'" ./plot/plot_conflict.gp
-gnuplot -e "dataFile='$SUMMARY_FILE_NEG'; outputPlot='$SUMMARY_PLOT_NEG'" ./plot/plot_conflict.gp
+gnuplot -e "dataFile='$SUMMARY_FILE_POS'; outputPlot='$SUMMARY_PLOT_POS'" $SCRIPTPATH/plot/plot_conflict.gp
+gnuplot -e "dataFile='$SUMMARY_FILE_NEG'; outputPlot='$SUMMARY_PLOT_NEG'" $SCRIPTPATH/plot/plot_conflict.gp
