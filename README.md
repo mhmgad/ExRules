@@ -31,14 +31,52 @@ To install the project run scripts
 `mvn install -Dmaven.test.skip=true`
 
 
+**Running**
+
+To mine rules with or without exceptions use `mine_riles.sh` use the following options
+
+```
+usage: mine_rules.sh
+ -cPM,--cautious-materialization <arg>    Use partial materialization cautiously, here the minimum support for exceptions
+ -de                                     Decode the output
+ -dPM,--Debug_materialization <file>     debug Materialization file
+ -en                                     Encode the input
+ -ex                                     Mine the output
+ -exMinSup <EXCEPTION_MIN_SUPP_RATIO>    Exception Minimum support for the rule
+ -expOnly                                Output rules with exceptions only
+ -exRank,--exception_ranking <order>     Exception ranking
+                                         method(LIFT|PNCONF|SUPP|CONF|PNCONV|PNJACC)
+ -f1,--first_filter                      first filter based on size (4 body atoms at most, 1 head and Max conf)
+ -f2,--second_filter                     Second filter based on type hierarchy
+ -i,--input <file>                       Input file inform of RDF or Integer transactions
+ -m,--mapping_file <file>                Mapping RDF to Integer
+ -maxConf <MAX_CONF_RATIO>               Maximum Confidence for the rule (default=1.0)
+ -minConf <MIN_CONF_RATIO>               Minimum Confidence for the rule (default=0.001)
+ -minS <MIN_SUPP_RATIO>                  Minimum support for the rule(default=0.0001)
+ -o,--output <file>                      Input file inform of RDF or Integer transactions
+ -oDLV,--output_DLV                      Export rules as PrASP
+ -oDLV_CONFLICT,--export_DLVConflict     Export rules to count conflict to file
+ -oPrASP,--output_PrASP                  Export rules as PrASP
+ -pm,--materialization                    Use partial materialization
+ -PMo,--materialization_order            Materialize with order. Only useful with Materialization
+ -s,--sorting <order>                    Output sorting(CONF|HEAD|BODY|LIFT|HEAD_CONF|HEAD_LIFT|NEW_LIFT|CONV)
+ -stats,--export_statistics              Export statistics to file
+ -w,--weighted_transactions              Count transactions with weights. Only useful with Materialization
+ ```
+
+
+
 **Running Experiments:**
 
 To Run YAGO experiments
-`sh run_experiment.sh <LIFT|CONF|>` 
 
-`sh run_IMDB_experiment.sh` fo IMDB experiments
+`sh run_experiment.sh <sorting_Type[LIFT|CONF|]> <RM[LIFT|PNCONF|SUPP|CONF|PNCONV|PNJACC]>` 
 
-Note: fix the directories inside the scripst to point to facts_to_mine.tsv file
+to Run IMDB experiments 
+
+`sh run_IMDB_experiment.sh <sorting_Type[LIFT|CONF|]> <RM[LIFT|PNCONF|SUPP|CONF|PNCONV|PNJACC]>` 
+
+Note: fix the directories inside the scripts to point to facts_to_mine.tsv file
 
 
 

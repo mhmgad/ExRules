@@ -270,7 +270,7 @@ public class MainCLI {
 
     public static void main(String [] args) throws Exception {
 
-
+        args=new String[]{"-h"};
         MainCLI instance=new MainCLI();
         instance.defineOptions();
         instance.run(instance.parse(args));
