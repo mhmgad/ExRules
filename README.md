@@ -7,6 +7,8 @@
 3. recommended IntelliJ (not a must)
 
 
+**Prepare Project:**
+
 1. Run scripts:
 
  `sh scripts/local_libs.sh`
