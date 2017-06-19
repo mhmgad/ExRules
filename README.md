@@ -14,6 +14,7 @@
  `sh scripts/local_libs.sh`
 
  `sh scripts/download_large_data.sh`
+ 
 
 2. Import the project as maven project
 
@@ -25,14 +26,15 @@ To install the project run scripts
 
 `mvn compile`
 
-`mvn package`
+`mvn package -Dmaven.test.skip=true`
 
-`mvn install`
+`mvn install -Dmaven.test.skip=true`
 
 
 **Running Experiments:**
 
-`sh run_experiment.sh` for yago experiments
+To Run YAGO experiments
+`sh run_experiment.sh <LIFT|CONF|>` 
 
 `sh run_IMDB_experiment.sh` fo IMDB experiments
 
