@@ -1,0 +1,383 @@
+sh scripts/local_libs.sh
+[INFO] Scanning for projects...
+[INFO] Searching repository for plugin with prefix: 'install'.
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Unnamed - de.mpii.nonmonotonicrules:RulesGenerator:jar:1.0-SNAPSHOT
+[INFO]    task-segment: [install:install-file] (aggregator-style)
+[INFO] ------------------------------------------------------------------------
+[INFO] [install:install-file {execution: default-cli}]
+[INFO] Installing /home/gadelrab/sandbox/RuleGenerator/libs/spmf/spmf.jar to /home/gadelrab/.m2/repository/spmf/spmf/1.0/spmf-1.0.jar
+[INFO] Installing /home/gadelrab/sandbox/RuleGenerator/libs/spmf/spmf.zip to /home/gadelrab/.m2/repository/spmf/spmf/1.0/spmf-1.0-sources.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 1 second
+[INFO] Finished at: Mon Jun 19 19:47:02 CEST 2017
+[INFO] Final Memory: 20M/1963M
+[INFO] ------------------------------------------------------------------------
+
+
+sh scripts/download_large_data.sh
+--2017-06-19 19:48:32--  http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoTaxonomy.tsv.7z
+Resolving resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)... 139.19.86.89
+Connecting to resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)|139.19.86.89|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 9246169 (8.8M) [text/tab-separated-values]
+Saving to: ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoTaxonomy.tsv.7z’
+
+/home/gadelrab/sandbox/RuleGenera 100%[===============================================================>]   8.82M  --.-KB/s   in 0.08s  
+
+2017-06-19 19:48:32 (112 MB/s) - ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoTaxonomy.tsv.7z’ saved [9246169/9246169]
+
+--2017-06-19 19:48:32--  http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoSimpleTypes.tsv.7z
+Resolving resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)... 139.19.86.89
+Connecting to resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)|139.19.86.89|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 205724891 (196M) [text/tab-separated-values]
+Saving to: ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoSimpleTypes.tsv.7z’
+
+/home/gadelrab/sandbox/RuleGenera 100%[===============================================================>] 196.19M  78.4MB/s   in 2.5s   
+
+2017-06-19 19:48:37 (78.4 MB/s) - ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoSimpleTypes.tsv.7z’ saved [205724891/205724891]
+
+--2017-06-19 19:48:37--  http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoGeonamesOnlyData.tsv.7z
+Resolving resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)... 139.19.86.89
+Connecting to resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)|139.19.86.89|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 217935502 (208M) [text/tab-separated-values]
+Saving to: ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesOnlyData.tsv.7z’
+
+/home/gadelrab/sandbox/RuleGenera 100%[===============================================================>] 207.84M  78.1MB/s   in 2.7s   
+
+2017-06-19 19:48:43 (78.1 MB/s) - ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesOnlyData.tsv.7z’ saved [217935502/217935502]
+
+--2017-06-19 19:48:43--  http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoFacts.tsv.7z
+Resolving resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)... 139.19.86.89
+Connecting to resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)|139.19.86.89|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 103497683 (99M) [text/tab-separated-values]
+Saving to: ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoFacts.tsv.7z’
+
+/home/gadelrab/sandbox/RuleGenera 100%[===============================================================>]  98.70M  60.8MB/s   in 1.6s   
+
+2017-06-19 19:48:45 (60.8 MB/s) - ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoFacts.tsv.7z’ saved [103497683/103497683]
+
+--2017-06-19 19:48:45--  http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoGeonamesClasses.tsv.7z
+Resolving resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)... 139.19.86.89
+Connecting to resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)|139.19.86.89|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 12833 (13K) [text/tab-separated-values]
+Saving to: ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesClasses.tsv.7z’
+
+/home/gadelrab/sandbox/RuleGenera 100%[===============================================================>]  12.53K  --.-KB/s   in 0.006s 
+
+2017-06-19 19:48:45 (2.22 MB/s) - ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesClasses.tsv.7z’ saved [12833/12833]
+
+--2017-06-19 19:48:45--  http://resources.mpi-inf.mpg.de/yago-naga/yago/download/yago/yagoTypes.tsv.7z
+Resolving resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)... 139.19.86.89
+Connecting to resources.mpi-inf.mpg.de (resources.mpi-inf.mpg.de)|139.19.86.89|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 241992247 (231M) [text/tab-separated-values]
+Saving to: ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoTypes.tsv.7z’
+
+b/sandbox/RuleGenerator/data/yago  77%[================================================>               ] 177.91M  59.0MB/s   eta 1s    ^sandbox/RuleGenerator/data/yagoTy  90%[========================================================>       ] 209.06M  61.2MB/s   eta 1s    ^/home/gadelrab/sandbox/RuleGenera 100%[===============================================================>] 230.78M  62.9MB/s   in 3.7s   
+
+^[[1;2B^[[1;2B2017-06-19 19:48:53 (62.5 MB/s) - ‘/home/gadelrab/sandbox/RuleGenerator/data/yagoTypes.tsv.7z’ saved [241992247/241992247]
+
+/home/gadelrab/sandbox/RuleGenerator/data/yagoFacts.tsv.7z
+
+7-Zip [64] 9.20  Copyright (c) 1999-2010 Igor Pavlov  2010-11-18
+p7zip Version 9.20 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,80 CPUs)
+
+Processing archive: /home/gadelrab/sandbox/RuleGenerator/data/yagoFacts.tsv.7z
+
+Extracting  yagoFacts.tsv
+
+Everything is Ok
+
+Size:       423438221
+Compressed: 103497683
+/home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesClasses.tsv.7z
+
+7-Zip [64] 9.20  Copyright (c) 1999-2010 Igor Pavlov  2010-11-18
+p7zip Version 9.20 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,80 CPUs)
+
+Processing archive: /home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesClasses.tsv.7z
+
+Extracting  yagoGeonamesClasses.tsv
+
+Everything is Ok
+
+Size:       60591
+Compressed: 12833
+/home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesOnlyData.tsv.7z
+
+7-Zip [64] 9.20  Copyright (c) 1999-2010 Igor Pavlov  2010-11-18
+p7zip Version 9.20 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,80 CPUs)
+
+Processing archive: /home/gadelrab/sandbox/RuleGenerator/data/yagoGeonamesOnlyData.tsv.7z
+
+Extracting  yagoGeonamesOnlyData.tsv
+
+Everything is Ok
+
+Size:       2366740130
+Compressed: 217935502
+/home/gadelrab/sandbox/RuleGenerator/data/yagoSimpleTypes.tsv.7z
+
+7-Zip [64] 9.20  Copyright (c) 1999-2010 Igor Pavlov  2010-11-18
+p7zip Version 9.20 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,80 CPUs)
+
+Processing archive: /home/gadelrab/sandbox/RuleGenerator/data/yagoSimpleTypes.tsv.7z
+
+Extracting  yagoSimpleTypes.tsv
+
+Everything is Ok
+
+Size:       1146127913
+Compressed: 205724891
+/home/gadelrab/sandbox/RuleGenerator/data/yagoTaxonomy.tsv.7z
+
+7-Zip [64] 9.20  Copyright (c) 1999-2010 Igor Pavlov  2010-11-18
+p7zip Version 9.20 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,80 CPUs)
+
+Processing archive: /home/gadelrab/sandbox/RuleGenerator/data/yagoTaxonomy.tsv.7z
+
+Extracting  yagoTaxonomy.tsv
+
+Everything is Ok
+
+Size:       62172381
+Compressed: 9246169
+/home/gadelrab/sandbox/RuleGenerator/data/yagoTypes.tsv.7z
+
+7-Zip [64] 9.20  Copyright (c) 1999-2010 Igor Pavlov  2010-11-18
+p7zip Version 9.20 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,80 CPUs)
+
+Processing archive: /home/gadelrab/sandbox/RuleGenerator/data/yagoTypes.tsv.7z
+
+Extracting  yagoTypes.tsv
+
+Everything is Ok
+
+Size:       1534898298
+Compressed: 241992247
+
+
+mvn compile
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Unnamed - de.mpii.nonmonotonicrules:RulesGenerator:jar:1.0-SNAPSHOT
+[INFO]    task-segment: [compile]
+[INFO] ------------------------------------------------------------------------
+[INFO] [resources:resources {execution: default-resources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/gadelrab/sandbox/RuleGenerator/src/main/resources
+[INFO] [compiler:compile {execution: default-compile}]
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[INFO] Compiling 68 source files to /home/gadelrab/sandbox/RuleGenerator/target/classes
+[WARNING] /home/gadelrab/sandbox/RuleGenerator/src/main/java/mpi/tools/javatools/datatypes/IntHashMap.java: Some input files use unchecked or unsafe operations.
+[WARNING] /home/gadelrab/sandbox/RuleGenerator/src/main/java/mpi/tools/javatools/datatypes/IntHashMap.java: Recompile with -Xlint:unchecked for details.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 8 seconds
+[INFO] Finished at: Mon Jun 19 19:56:07 CEST 2017
+[INFO] Final Memory: 29M/1963M
+[INFO] ------------------------------------------------------------------------
+
+
+mvn package -Dmaven.test.skip=true
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Unnamed - de.mpii.nonmonotonicrules:RulesGenerator:jar:1.0-SNAPSHOT
+[INFO]    task-segment: [package]
+[INFO] ------------------------------------------------------------------------
+[INFO] [resources:resources {execution: default-resources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/gadelrab/sandbox/RuleGenerator/src/main/resources
+[INFO] [compiler:compile {execution: default-compile}]
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[INFO] Compiling 68 source files to /home/gadelrab/sandbox/RuleGenerator/target/classes
+[WARNING] /home/gadelrab/sandbox/RuleGenerator/src/main/java/mpi/tools/javatools/datatypes/IntHashMap.java: Some input files use unchecked or unsafe operations.
+[WARNING] /home/gadelrab/sandbox/RuleGenerator/src/main/java/mpi/tools/javatools/datatypes/IntHashMap.java: Recompile with -Xlint:unchecked for details.
+[INFO] [resources:testResources {execution: default-testResources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/gadelrab/sandbox/RuleGenerator/src/test/resources
+[INFO] [compiler:testCompile {execution: default-testCompile}]
+[INFO] Not compiling test sources
+[INFO] [surefire:test {execution: default-test}]
+[INFO] Tests are skipped.
+[INFO] [jar:jar {execution: default-jar}]
+[INFO] Building jar: /home/gadelrab/sandbox/RuleGenerator/target/rules-generator.jar
+[INFO] [assembly:attached {execution: default}]
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/maven/org.apache.commons/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] Building jar: /home/gadelrab/sandbox/RuleGenerator/target/rules-generator-jar-with-dependencies.jar
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/maven/org.apache.commons/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] [appassembler:assemble {execution: default}]
+[INFO] Installing artifact /home/gadelrab/.m2/repository/commons-cli/commons-cli/1.3.1/commons-cli-1.3.1.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/commons-cli/commons-cli/1.3.1/commons-cli-1.3.1.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/com/google/guava/guava/19.0/guava-19.0.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/com/google/guava/guava/19.0/guava-19.0.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/spmf/spmf/1.0/spmf-1.0.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/spmf/spmf/1.0/spmf-1.0.jar
+[INFO] Installing artifact /home/gadelrab/sandbox/RuleGenerator/target/rules-generator.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/de/mpii/nonmonotonicrules/RulesGenerator/1.0-SNAPSHOT/RulesGenerator-1.0-SNAPSHOT.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 12 seconds
+[INFO] Finished at: Mon Jun 19 19:59:03 CEST 2017
+[INFO] Final Memory: 77M/2475M
+[INFO] ------------------------------------------------------------------------
+
+
+
+mvn install
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Unnamed - de.mpii.nonmonotonicrules:RulesGenerator:jar:1.0-SNAPSHOT
+[INFO]    task-segment: [install]
+[INFO] ------------------------------------------------------------------------
+[INFO] [resources:resources {execution: default-resources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/gadelrab/sandbox/RuleGenerator/src/main/resources
+[INFO] [compiler:compile {execution: default-compile}]
+[INFO] Changes detected - recompiling the module!
+[WARNING] File encoding has not been set, using platform encoding UTF-8, i.e. build is platform dependent!
+[INFO] Compiling 68 source files to /home/gadelrab/sandbox/RuleGenerator/target/classes
+[WARNING] /home/gadelrab/sandbox/RuleGenerator/src/main/java/mpi/tools/javatools/datatypes/IntHashMap.java: Some input files use unchecked or unsafe operations.
+[WARNING] /home/gadelrab/sandbox/RuleGenerator/src/main/java/mpi/tools/javatools/datatypes/IntHashMap.java: Recompile with -Xlint:unchecked for details.
+[INFO] [resources:testResources {execution: default-testResources}]
+[WARNING] Using platform encoding (UTF-8 actually) to copy filtered resources, i.e. build is platform dependent!
+[INFO] skip non existing resourceDirectory /home/gadelrab/sandbox/RuleGenerator/src/test/resources
+[INFO] [compiler:testCompile {execution: default-testCompile}]
+[INFO] No sources to compile
+[INFO] [surefire:test {execution: default-test}]
+[INFO] No tests to run.
+[INFO] Surefire report directory: /home/gadelrab/sandbox/RuleGenerator/target/surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+
+Results :
+
+Tests run: 0, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] [jar:jar {execution: default-jar}]
+[INFO] Building jar: /home/gadelrab/sandbox/RuleGenerator/target/rules-generator.jar
+[INFO] [assembly:attached {execution: default}]
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/maven/org.apache.commons/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] Building jar: /home/gadelrab/sandbox/RuleGenerator/target/rules-generator-jar-with-dependencies.jar
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] org/ already added, skipping
+[INFO] org/apache/ already added, skipping
+[INFO] org/apache/commons/ already added, skipping
+[INFO] META-INF/LICENSE.txt already added, skipping
+[INFO] META-INF/NOTICE.txt already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/maven/org.apache.commons/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/maven/ already added, skipping
+[INFO] META-INF/ already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] META-INF/MANIFEST.MF already added, skipping
+[INFO] [appassembler:assemble {execution: default}]
+[INFO] Installing artifact /home/gadelrab/.m2/repository/commons-cli/commons-cli/1.3.1/commons-cli-1.3.1.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/commons-cli/commons-cli/1.3.1/commons-cli-1.3.1.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/org/apache/commons/commons-lang3/3.4/commons-lang3-3.4.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/com/google/guava/guava/19.0/guava-19.0.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/com/google/guava/guava/19.0/guava-19.0.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/net/sf/trove4j/trove4j/3.0.3/trove4j-3.0.3.jar
+[INFO] Installing artifact /home/gadelrab/.m2/repository/spmf/spmf/1.0/spmf-1.0.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/spmf/spmf/1.0/spmf-1.0.jar
+[INFO] Installing artifact /home/gadelrab/sandbox/RuleGenerator/target/rules-generator.jar to /home/gadelrab/sandbox/RuleGenerator/assemble/repo/de/mpii/nonmonotonicrules/RulesGenerator/1.0-SNAPSHOT/RulesGenerator-1.0-SNAPSHOT.jar
+[INFO] [install:install {execution: default-install}]
+[INFO] Installing /home/gadelrab/sandbox/RuleGenerator/target/rules-generator.jar to /home/gadelrab/.m2/repository/de/mpii/nonmonotonicrules/RulesGenerator/1.0-SNAPSHOT/RulesGenerator-1.0-SNAPSHOT.jar
+[INFO] Installing /home/gadelrab/sandbox/RuleGenerator/target/rules-generator-jar-with-dependencies.jar to /home/gadelrab/.m2/repository/de/mpii/nonmonotonicrules/RulesGenerator/1.0-SNAPSHOT/RulesGenerator-1.0-SNAPSHOT-jar-with-dependencies.jar
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESSFUL
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 13 seconds
+[INFO] Finished at: Mon Jun 19 20:01:50 CEST 2017
+[INFO] Final Memory: 78M/2475M
+[INFO] ------------------------------------------------------------------------
+
+
+
