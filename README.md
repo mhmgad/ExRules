@@ -9,9 +9,9 @@
 
 1. Run scripts:
 
- sh scripts/local_libs.sh
+ `sh scripts/local_libs.sh`
 
- sh scripts/download_large_data.sh
+ `sh scripts/download_large_data.sh`
 
 2. Import the project as maven project
 
