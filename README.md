@@ -1,13 +1,15 @@
-**Development:**
+
 
 **Requirements:**
+=================
 
-1. maven
+1. maven 2
 2. Java 8
-3. recommended IntelliJ (not a must)
+3. For development, IntelliJ (recommended)
 
 
 **Prepare Project:**
+====================
 
 1. Run scripts:
 
@@ -21,6 +23,7 @@
 
 
 **Installation:**
+=================
 
 To install the project run scripts
 
@@ -32,6 +35,7 @@ To install the project run scripts
 
 
 **Running**
+===========
 
 To mine rules with or without exceptions use `mine_riles.sh` use the following options
 
@@ -44,8 +48,7 @@ usage: mine_rules.sh
  -ex                                     Mine the output
  -exMinSup <EXCEPTION_MIN_SUPP_RATIO>    Exception Minimum support for the rule
  -expOnly                                Output rules with exceptions only
- -exRank,--exception_ranking <order>     Exception ranking
-                                         method(LIFT|PNCONF|SUPP|CONF|PNCONV|PNJACC)
+ -exRank,--exception_ranking <order>     Exception ranking method(LIFT|PNCONF|SUPP|CONF|PNCONV|PNJACC)
  -f1,--first_filter                      first filter based on size (4 body atoms at most, 1 head and Max conf)
  -f2,--second_filter                     Second filter based on type hierarchy
  -i,--input <file>                       Input file inform of RDF or Integer transactions
@@ -57,16 +60,49 @@ usage: mine_rules.sh
  -oDLV,--output_DLV                      Export rules as PrASP
  -oDLV_CONFLICT,--export_DLVConflict     Export rules to count conflict to file
  -oPrASP,--output_PrASP                  Export rules as PrASP
- -pm,--materialization                    Use partial materialization
+ -pm,--materialization                   Use partial materialization
  -PMo,--materialization_order            Materialize with order. Only useful with Materialization
  -s,--sorting <order>                    Output sorting(CONF|HEAD|BODY|LIFT|HEAD_CONF|HEAD_LIFT|NEW_LIFT|CONV)
  -stats,--export_statistics              Export statistics to file
  -w,--weighted_transactions              Count transactions with weights. Only useful with Materialization
  ```
 
+****
+
+**Output sorting Methods**
+
+_HEAD_: Sort according to the head predicates (useful for grouping)
+
+_BODY_: According to the rules body
+
+_CONF_: Association Rules [Confidence](https://en.wikipedia.org/wiki/Association_rule_learning#Confidence) (Original horn rule confidence is used)
+
+_LIFT_: Association Rules [Lift measurement](https://en.wikipedia.org/wiki/Association_rule_learning#Lift) (Original horn rule confidence is used)
+
+_HEAD_CONF_: Sort according to head then confidence.
+
+_HEAD_LIFT_: Sort according to head then lift.
+
+_NEW_LIFT_: Revised Rules Lift
+
+_CONV_: [Conviction measurement] (www3.di.uminho.pt/~pja/ps/conviction.pdf).
+
+**Exception ranking Methods**
+
+_SUPP_: Used in the naive approach. Only consider increase in support.
+_LIFT_: Only consider increase in lift 
+_CONF_: Only consider increase in confidence 
+
+_PNCONF_: Used in partial materialization. Considers the increase of average confidence of positive and negative predictions. 
+
+_PNCONV_: Used in partial materialization. Considers the increase of average conviction of positive and negative predictions. 
+
+_PNJACC_: Used in partial materialization. Considers the increase of average Jaccard Coefficient of positive and negative predictions. 
+
 
 
 **Running Experiments:**
+==========================
 
 To Run YAGO experiments
 
@@ -80,9 +116,11 @@ Note: fix the directories inside the scripts to point to facts_to_mine.tsv file
 
 
 
-**Important Scripts:**
+**Other Important Scripts:**
+=======================
 
 To convert the KB from RDF to different formats
+
 `rdf2int.sh <required conversion [SPMF|DLV_SAFE|PrASP]> <input file path> <output prefix>`
 
 Ex: `sh assemble/bin/rdf2int.sh DLV_SAFE /GW/D5data-5/gadelrab/imdb/facts_to_mine_imdb.tsv /GW/D5data-5/gadelrab/imdb/in/facts_to_mine_imdb`
@@ -93,9 +131,6 @@ PrASP : outputs in PrASP format without encoding for example isMarriedToScientis
 
 A mapping will be generated in case of encoding
 
-<Other scripts to come>
-
-for running examples
- running_scripts_sample.txt for examples running the main rule mining script mine_rules.sh
+_P.S: Other scripts to be added_
 
 
