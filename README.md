@@ -18,7 +18,7 @@
  `sh scripts/download_large_data.sh`
  
 
-2. Import the project as maven project
+2. Import the project as maven project to intellij if needed
 
 
 
