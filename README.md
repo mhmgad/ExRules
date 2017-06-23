@@ -106,11 +106,11 @@ _PNJACC_: Used in partial materialization. Considers the increase of average Jac
 
 To Run YAGO experiments
 
-`sh run_experiment.sh <sorting_Type[LIFT|CONF|]> <RM[LIFT|PNCONF|SUPP|CONF|PNCONV|PNJACC]>` 
+`sh run_experiment.sh <sorting_Type[CONF|HEAD|BODY|LIFT|HEAD_CONF|HEAD_LIFT|NEW_LIFT|CONV]> <RM[LIFT|SUPP|CONF|CONV|JACC]>` 
 
 to Run IMDB experiments 
 
-`sh run_IMDB_experiment.sh <sorting_Type[LIFT|CONF|]> <RM[LIFT|PNCONF|SUPP|CONF|PNCONV|PNJACC]>` 
+`sh run_IMDB_experiment.sh <sorting_Type[CONF|HEAD|BODY|LIFT|HEAD_CONF|HEAD_LIFT|NEW_LIFT|CONV]> <RM[LIFT|SUPP|CONF|CONV|JACC]>` 
 
 Note: fix the directories inside the scripts to point to facts_to_mine.tsv file
 
