@@ -7,6 +7,7 @@ import mpi.tools.basics3.Fact;
 import mpi.tools.basics3.FactSource;
 import mpi.tools.javatools.filehandlers.UTF8Reader;
 
+import java.io.File;
 import java.net.MalformedURLException;
 /**
  * Created by gadelrab on 2/11/16.
@@ -17,6 +18,9 @@ public class YagoDataReader {
 
 
     public static Multimap<String,String> loadDataInMap(String filePath, String [] relations, MapType type) {
+        return loadDataInMap(new File(filePath) ,relations, type);
+    }
+    public static Multimap<String,String> loadDataInMap(File file, String [] relations, MapType type) {
         // add them to set for searching
         ImmutableSet<String> relationsSet=null;
         if (relations!=null)
@@ -24,39 +28,35 @@ public class YagoDataReader {
 
         Multimap<String,String> subjectObjectMap= HashMultimap.create();
 
-        UTF8Reader fileReader;
-        try {
 
 
 
-            //String line;
+        //String line;
 
-           for(Fact f: FactSource.from(filePath))
-                if(relationsSet==null||relationsSet.contains(f.getRelation())){
-                    String key=null;
-                    String value=null;
-                    switch (type){
-                        case SUBJ_2_OBJ:
-                            key=f.getSubject();
-                            value=f.getObject();
-                            break;
-                        case PRED_OBJ_2_SUBJ:
-                            key=f.getRelation()+"\t"+f.getObject();
-                            value=f.getSubject();
-                            break;
-                    }
-                    subjectObjectMap.put(key,value);}
+       for(Fact f: FactSource.from(file))
+            if(relationsSet==null||relationsSet.contains(f.getRelation())){
+                String key=null;
+                String value=null;
+                switch (type){
+                    case SUBJ_2_OBJ:
+                        key=f.getSubject();
+                        value=f.getObject();
+                        break;
+                    case PRED_OBJ_2_SUBJ:
+                        key=f.getRelation()+"\t"+f.getObject();
+                        value=f.getSubject();
+                        break;
+                }
+                subjectObjectMap.put(key,value);}
 
-            System.out.println( "Dictionary size: "+ subjectObjectMap.size());
+        System.out.println( "Dictionary size: "+ subjectObjectMap.size());
 
-            return subjectObjectMap;
+        return subjectObjectMap;
 
 
-        } catch (MalformedURLException e2) {
-            e2.printStackTrace();
-        }
 
-        return null;
+
+
 
     }
 

@@ -4,6 +4,7 @@ import com.google.common.collect.Multimap;
 import de.mpii.yagotools.utils.YagoDataReader;
 import de.mpii.yagotools.utils.YagoRelations;
 
+import java.io.File;
 import java.util.*;
 
 
@@ -13,7 +14,8 @@ import java.util.*;
 public class YagoTaxonomy {
 
     //private static final String SUB_CLASS_OF = "rdfs:subClassOf";
-    String TAXONOMY_FILE_PATH="resources/bigData/yagoTaxonomy_withGeo.tsv";
+//    String TAXONOMY_FILE_PATH="resources/bigData/yagoTaxonomy_withGeo.tsv";
+    String TAXONOMY_FILE_PATH="bigData/yagoTaxonomy_withGeo.tsv";
 
     private static YagoTaxonomy instance;
 
@@ -21,7 +23,11 @@ public class YagoTaxonomy {
     private Map<String,Set<String>> transitiveParents;
 
     private YagoTaxonomy(){
-        typesParents= YagoDataReader.loadDataInMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.SUB_CLASS_OF}, YagoDataReader.MapType.SUBJ_2_OBJ);
+        ClassLoader classLoader = getClass().getClassLoader();
+        File taxonomyFile = new File(classLoader.getResource(TAXONOMY_FILE_PATH).getFile());
+
+        typesParents= YagoDataReader.loadDataInMap(taxonomyFile,new String[]{YagoRelations.SUB_CLASS_OF}, YagoDataReader.MapType.SUBJ_2_OBJ);
+//        typesParents= YagoDataReader.loadDataInMap(TAXONOMY_FILE_PATH,new String[]{YagoRelations.SUB_CLASS_OF}, YagoDataReader.MapType.SUBJ_2_OBJ);
         loadTransitiveParents();
     }
 
@@ -83,6 +89,9 @@ public class YagoTaxonomy {
 
 
     public static void main (String [] args){
+
+//        args=new String[]{"<wikicat_American_film_directors>"};
+
         YagoTaxonomy yt= YagoTaxonomy.getInstance();
 
         System.out.println(yt.getParents(args[0]));
