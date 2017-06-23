@@ -11,6 +11,14 @@
 
     <build>
 
+
+        <resources>
+            <resource>
+                <directory>resources</directory>
+            </resource>
+        </resources>
+
+
         <finalName>rules-generator</finalName>
         <plugins>
             <plugin>
@@ -93,6 +101,11 @@
                         <program>
                             <mainClass>de.mpii.frequentrulesminning.utils.DLV2Transactions</mainClass>
                             <id>dlv2kb</id>
+                        </program>
+
+                        <program>
+                            <mainClass>de.mpii.yagotools.YagoTaxonomy</mainClass>
+                            <id>get_parents</id>
                         </program>
                     </programs>
                 </configuration>
