@@ -1,4 +1,4 @@
-
+This is the implementation of the paper _"Exception-Enriched Rule Learning from Knowledge Graphs_" [Link](https://link.springer.com/chapter/10.1007/978-3-319-46523-4_15).
 
 **Requirements:**
 =================
