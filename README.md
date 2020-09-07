@@ -133,4 +133,13 @@ A mapping will be generated in case of encoding
 
 _P.S: Other scripts to be added_
 
+## References
+
+This is an implementation of the paper:
+
+
+*Exception-enriched Rule Learning from Knowledge Graphs* 
+Mohamed Gad-Elrab, Daria Stepanova, Jacopo Urbani, Gerhard Weikum
+In 15th International Semantic Web Conference (ISWC 2016),234-251, Springer 2016.
+
 
